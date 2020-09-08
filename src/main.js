@@ -16,6 +16,8 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import "@/styles/index.scss"; // global css
 
+import VCharts from "v-charts";
+
 import App from "./App";
 import router from "./router";
 import store from "./store";
@@ -38,6 +40,7 @@ Vue.use(ElementUI, { locale });
 Vue.use(VueSweetalert2);
 Vue.use(VueContextMenu);
 Vue.use(VueQuillEditor);
+Vue.use(VCharts);
 
 const alertT = Vue.prototype.$swal.mixin({
   toast: true,

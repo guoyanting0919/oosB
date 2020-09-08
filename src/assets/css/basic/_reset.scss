@@ -37,6 +37,10 @@ a:active {
   text-decoration: none;
 }
 
+button:focus {
+  outline: none;
+}
+
 button,
 input,
 select,

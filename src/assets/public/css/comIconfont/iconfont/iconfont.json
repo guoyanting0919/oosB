@@ -6,6 +6,118 @@
   "description": "新北營運端",
   "glyphs": [
     {
+      "icon_id": "17004597",
+      "name": "allOrder",
+      "font_class": "allOrder",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "17002214",
+      "name": "icons8-alphabetical_sorting",
+      "font_class": "icons8-alphabetical_sorting",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "17002215",
+      "name": "icons8-generic_sorting_2 (1)",
+      "font_class": "icons8-generic_sorting_21",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "17000938",
+      "name": "icons8-checkcopy (1)",
+      "font_class": "icons8-checkcopy1",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "17000939",
+      "name": "icons8-listcopy",
+      "font_class": "icons8-listcopy",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "17000940",
+      "name": "icons8-plannercopy",
+      "font_class": "icons8-plannercopy",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "17000941",
+      "name": "icons8-edit_propertycopy",
+      "font_class": "icons8-edit_propertycopy",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "17000942",
+      "name": "icons8-trainingcopy",
+      "font_class": "icons8-trainingcopy",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "16948796",
+      "name": "console",
+      "font_class": "console",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "16944158",
+      "name": "icons8-cliniccopy",
+      "font_class": "icons8-cliniccopy",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "16944176",
+      "name": "icons8-minus_1yearcopy",
+      "font_class": "icons8-minus_1yearcopy",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "16944179",
+      "name": "icons8-map_markercopy",
+      "font_class": "icons8-map_markercopy",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "16944181",
+      "name": "icons8-sine_filledcopy",
+      "font_class": "icons8-sine_filledcopy",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "16944182",
+      "name": "icons8-point_objectscopy",
+      "font_class": "icons8-point_objectscopy",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "16944183",
+      "name": "icons8-treasure_mapcopy",
+      "font_class": "icons8-treasure_mapcopy",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "16944185",
+      "name": "icons8-weak_financial_growthcopy",
+      "font_class": "icons8-weak_financial_growthcopy",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
       "icon_id": "598147",
       "name": "Add files",
       "font_class": "addfiles",

@@ -162,8 +162,8 @@ export default {
 
       // input
       isForget: 1,
-      accountInput: "YT",
-      passwordInput: "1qaz@WSX",
+      accountInput: "System",
+      passwordInput: "123456",
       accountForgetInput: "test",
       codeInput: "",
       newPwInput: "",
@@ -209,40 +209,6 @@ export default {
     },
   },
   methods: {
-    // 獲取用戶信息
-    getUserInfoByToken() {
-      const vm = this;
-      vm.$api
-        .GetUserInfo()
-        .then((res) => {
-          if (res.code == 200) {
-            vm.getRouterTree(res.token);
-          } else {
-            vm.$alertM.fire({
-              icon: "error",
-              title: res.message,
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          //   vm.$store.dispatch("loadingHandler", false);
-        });
-    },
-
-    // 透過token獲取路由
-    getRouterTree() {
-      const vm = this;
-      vm.$api.GetRouterTree().then((res) => {
-        // console.log(res);
-        let routerTree = JSON.stringify(res.result);
-        window.localStorage.setItem("NTPC__Router", routerTree);
-        vm.$router.push("/");
-      });
-    },
-
     handleLogin() {
       const vm = this;
       vm.btnLoading = true;
