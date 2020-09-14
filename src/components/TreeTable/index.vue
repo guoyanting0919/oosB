@@ -3,20 +3,21 @@
     ref="subTable"
     :data="formatData"
     :row-key="handleRowKey"
+    height="calc(100% - 52px)"
     :default-expand-all="expandAll"
     v-bind="$attrs"
     @row-click="rowClick"
     @selection-change="handleSelectionChange"
   >
     <!-- <el-table-column align="center" type="selection" width="30"></el-table-column> -->
-    <el-table-column v-if="columns.length===0" width="150">
+    <el-table-column v-if="columns.length === 0" width="150">
       <template slot-scope="scope">
         <!-- <span v-for="space in scope.row._level" class="ms-tree-space" :key="space">1</span> -->
         <!-- <span class="tree-ctrl" v-if="iconShow(0,scope.row)" @click="toggleExpanded(scope.$index)">
           <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
           <i v-else class="el-icon-minus"></i>
         </span>-->
-        {{scope.$index}}
+        {{ scope.$index }}
       </template>
     </el-table-column>
     <el-table-column
@@ -35,9 +36,11 @@
         </span>-->
         <template>
           <span v-if="index === 0 && scope.row.parentId">
-            <el-radio v-model="radioCheck" :label="scope.row.id">{{scope.row[column.value]}}</el-radio>
+            <el-radio v-model="radioCheck" :label="scope.row.id">{{
+              scope.row[column.value]
+            }}</el-radio>
           </span>
-          <template v-else>{{scope.row[column.value]}}</template>
+          <template v-else>{{ scope.row[column.value] }}</template>
         </template>
       </template>
     </el-table-column>
@@ -76,7 +79,7 @@ export default {
   },
   computed: {
     // 格式化數據源
-    formatData: function () {
+    formatData: function() {
       let tmp;
       if (!Array.isArray(this.data)) {
         tmp = [this.data];

@@ -1,7 +1,7 @@
 <template>
   <div class="filter-items">
     <template v-for="btn of buttons">
-      <json-excel
+      <!-- <json-excel
         :key="btn.Id"
         v-if="btn.domId === 'btnExport'"
         :fetch="fetchData"
@@ -16,9 +16,9 @@
           style="margin-left: 10px;"
           :loading="excelLoading"
         >{{btn.name}}</el-button>
-      </json-excel>
+      </json-excel>-->
       <el-button
-        v-else
+        v-if="btn.attr != 'true'"
         :type="btn.class"
         :size="size"
         v-bind:key="btn.Id"
@@ -34,12 +34,10 @@
 
 <script>
 import waves from "@/directive/waves"; // 水波紋指令
-import JsonExcel from "vue-json-excel";
+// import JsonExcel from "vue-json-excel";
 export default {
   name: "permission-btn",
-  components: {
-    JsonExcel,
-  },
+  components: {},
   props: {
     moduleName: {
       type: String,

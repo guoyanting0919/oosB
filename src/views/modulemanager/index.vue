@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-column">
+  <div class="flex-column moduleManager">
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
         <el-input
@@ -17,7 +17,7 @@
         <el-checkbox
           size="mini"
           class="m-l-15"
-          @change="tableKey=tableKey+1"
+          @change="tableKey = tableKey + 1"
           v-model="showDescription"
         >Id/描述</el-checkbox>
       </div>
@@ -25,10 +25,10 @@
     <div class="app-container flex-item">
       <el-row class="fh">
         <el-col :span="10" class="fh ls-border">
-          <el-card shadow="never" class="card-body-none fh" style="overflow-y: auto">
-            <div slot="header" class="clearfix">
+          <el-card shadow="never" class="card-body-none fh" style="overflow-y: auto;height:100%">
+            <!-- <div slot="header" class="clearfix">
               <el-button type="text" style="padding: 0 11px" @click="getAllMenus">所有菜單>></el-button>
-            </div>
+            </div>-->
             <tree-table
               highlight-current-row
               :data="modulesTree"
@@ -57,47 +57,51 @@
 
               <el-table-column :label="'Id'" v-if="showDescription" min-width="120px">
                 <template slot-scope="scope">
-                  <span>{{scope.row.id}}</span>
+                  <span>{{ scope.row.id }}</span>
                 </template>
               </el-table-column>
 
               <el-table-column min-width="80px" :label="'DOM ID'">
                 <template slot-scope="scope">
-                  <span class="link-type" @click="handleEditMenu(scope.row)">{{scope.row.domId}}</span>
+                  <span class="link-type" @click="handleEditMenu(scope.row)">
+                    {{
+                    scope.row.domId
+                    }}
+                  </span>
                 </template>
               </el-table-column>
 
               <el-table-column min-width="50px" :label="'名稱'">
                 <template slot-scope="scope">
-                  <span>{{scope.row.name}}</span>
+                  <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
 
               <el-table-column min-width="30px" :label="'排序'">
                 <template slot-scope="scope">
-                  <span>{{scope.row.sort}}</span>
+                  <span>{{ scope.row.sort }}</span>
                 </template>
               </el-table-column>
 
               <el-table-column min-width="80px" :label="'樣式'">
                 <template slot-scope="scope">
-                  <span>{{scope.row.class}}</span>
+                  <span>{{ scope.row.class }}</span>
                 </template>
               </el-table-column>
               <el-table-column min-width="80px" :label="'ICON'">
                 <template slot-scope="scope">
-                  <span>{{scope.row.icon}}</span>
+                  <span>{{ scope.row.icon }}</span>
                 </template>
               </el-table-column>
 
               <el-table-column :label="'描述'" v-if="showDescription" min-width="120px">
                 <template slot-scope="scope">
-                  <span>{{scope.row.remark}}</span>
+                  <span>{{ scope.row.remark }}</span>
                 </template>
               </el-table-column>
             </el-table>
             <pagination
-              v-show="total>0"
+              v-show="total > 0"
               :total="total"
               :page.sync="listQuery.page"
               :limit.sync="listQuery.limit"
@@ -122,11 +126,11 @@
           label-position="right"
           label-width="100px"
         >
-          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogStatus=='update'">
-            <span>{{temp.id}}</span>
+          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogStatus == 'update'">
+            <span>{{ temp.id }}</span>
           </el-form-item>
-          <el-form-item size="small" :label="'層級ID'" v-show="dialogStatus=='update'">
-            <span>{{temp.cascadeId}}</span>
+          <el-form-item size="small" :label="'層級ID'" v-show="dialogStatus == 'update'">
+            <span>{{ temp.cascadeId }}</span>
           </el-form-item>
           <el-form-item size="small" :label="'名稱'" prop="name">
             <el-input v-model="temp.name"></el-input>
@@ -150,18 +154,24 @@
             >
               <el-input
                 slot="reference"
-                :class="temp.iconName ? `iconfont icon-${temp.iconName} custom-icon-input` : ''"
+                :class="
+                  temp.iconName
+                    ? `iconfont icon-${temp.iconName} custom-icon-input`
+                    : ''
+                "
                 v-model="temp.iconName"
               ></el-input>
               <el-row class="selectIcon-box">
                 <el-col
-                  :class="{'active': temp.iconName === item.font_class}"
+                  :class="{ active: temp.iconName === item.font_class }"
                   :span="3"
-                  v-for="(item,index) in iconData.glyphs"
+                  v-for="(item, index) in iconData.glyphs"
                   :key="index"
                 >
                   <i
-                    :class="`${iconData.font_family} ${iconData.css_prefix_text}${item.font_class}`"
+                    :class="
+                      `${iconData.font_family} ${iconData.css_prefix_text}${item.font_class}`
+                    "
                     @click="handleChangeTempIcon(item)"
                   ></i>
                 </el-col>
@@ -190,7 +200,12 @@
         </el-form>
         <div slot="footer">
           <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
-          <el-button size="mini" v-if="dialogStatus=='create'" type="primary" @click="createData">確認</el-button>
+          <el-button
+            size="mini"
+            v-if="dialogStatus == 'create'"
+            type="primary"
+            @click="createData"
+          >確認</el-button>
           <el-button size="mini" v-else type="primary" @click="updateData">確認</el-button>
         </div>
       </el-dialog>
@@ -209,8 +224,8 @@
           label-position="right"
           label-width="100px"
         >
-          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogMenuStatus=='update'">
-            <span>{{menuTemp.id}}</span>
+          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogMenuStatus == 'update'">
+            <span>{{ menuTemp.id }}</span>
           </el-form-item>
 
           <el-form-item size="small" :label="'名稱'" prop="name">
@@ -218,6 +233,9 @@
           </el-form-item>
           <el-form-item size="small" :label="'DOM ID'">
             <el-input v-model="menuTemp.domId"></el-input>
+          </el-form-item>
+          <el-form-item size="small" :label="'隱藏於權限組件'">
+            <el-switch v-model="menuTemp.attr" active-value="true" inactive-value="false"></el-switch>
           </el-form-item>
           <el-form-item size="small" :label="'樣式'">
             <el-input v-model="menuTemp.class"></el-input>
@@ -231,18 +249,24 @@
             >
               <el-input
                 slot="reference"
-                :class="menuTemp.icon ? `iconfont icon-${menuTemp.icon} custom-icon-input` : ''"
+                :class="
+                  menuTemp.icon
+                    ? `iconfont icon-${menuTemp.icon} custom-icon-input`
+                    : ''
+                "
                 v-model="menuTemp.icon"
               ></el-input>
               <el-row class="selectIcon-box">
                 <el-col
-                  :class="{'active': menuTemp.icon === item.font_class}"
+                  :class="{ active: menuTemp.icon === item.font_class }"
                   :span="3"
-                  v-for="(item,index) in iconData.glyphs"
+                  v-for="(item, index) in iconData.glyphs"
                   :key="index"
                 >
                   <i
-                    :class="`${iconData.font_family} ${iconData.css_prefix_text}${item.font_class}`"
+                    :class="
+                      `${iconData.font_family} ${iconData.css_prefix_text}${item.font_class}`
+                    "
                     @click="menuTemp.icon = item.font_class"
                   ></i>
                 </el-col>
@@ -273,7 +297,7 @@
           <el-button size="mini" @click="dialogMenuVisible = false">取消</el-button>
           <el-button
             size="mini"
-            v-if="dialogMenuStatus=='create'"
+            v-if="dialogMenuStatus == 'create'"
             type="primary"
             @click="addMenu"
           >確認</el-button>
@@ -376,6 +400,7 @@ export default {
         name: "",
         status: 0,
         sort: 0,
+        attr: "false",
       },
       dialogFormVisible: false, // 模塊編輯框
       dialogStatus: "",
@@ -809,6 +834,10 @@ export default {
 
 .clearfix:after {
   clear: both;
+}
+
+.moduleManager .el-card__body {
+  height: 100%;
 }
 
 .el-card__header {

@@ -43,7 +43,7 @@
             <div class="orderStatusBox">空趟</div>
             <div class="orderStatusBox">已完成</div>
           </div>
-          <div v-for="item in 9" :key="item" class="orderContainer">
+          <div v-for="(item,idx) in 9" :key="item" class="orderContainer">
             <div class="orderLeft">
               <div class="orderLeftTitle">訂單編號 TS1599449730870</div>
               <div class="orderLeftDetail">
@@ -83,7 +83,7 @@
                 <p>個案負擔 $0</p>
                 <p>(車資 + 陪同金額)</p>
                 <div class="rightBtnBox">
-                  <button class="orderDetail">查看訂單</button>
+                  <button class="orderDetail" @click="handleEdit(idx)">查看訂單</button>
                   <button class="orderFlow">訂單歷程</button>
                 </div>
               </div>
@@ -194,6 +194,9 @@ export default {
         default:
           break;
       }
+    },
+    handleEdit(idx) {
+      this.$router.push({ path: `/allorder/edit/${idx}`, query: { type: 1 } });
     },
   },
 };

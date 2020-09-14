@@ -72,7 +72,11 @@ export default {
       if (!route) {
         return false;
       }
-      this.$store.dispatch("addVisitedViews", route);
+      // console.log(route);
+      // 功能性路由不添加至tag view
+      if (route.meta.elements || route.name == "主頁") {
+        this.$store.dispatch("addVisitedViews", route);
+      }
     },
     moveToCurrentTag() {
       const tags = this.$refs.tag;

@@ -6,6 +6,41 @@
   "description": "新北營運端",
   "glyphs": [
     {
+      "icon_id": "17007526",
+      "name": "icons8-average_2",
+      "font_class": "icons8-average_2",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "17007527",
+      "name": "icons8-pixel_heart",
+      "font_class": "icons8-pixel_heart",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "17007528",
+      "name": "icons8-customer_support_filled",
+      "font_class": "icons8-customer_support_filled",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "17007529",
+      "name": "icons8-swithching_between_tabs",
+      "font_class": "icons8-swithching_between_tabs",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "17088008",
+      "name": "icons8-user_foldercopy (1)",
+      "font_class": "icons8-user_foldercopy1",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
       "icon_id": "17004597",
       "name": "allOrder",
       "font_class": "allOrder",
