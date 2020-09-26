@@ -29,8 +29,8 @@
     <div class="app-container flex-item">
       <!-- 全部訂單 -->
       <Title title="全部訂單"></Title>
-      <div class="bg-white" style="height: 94%;">
-        <div class="orderTableContainer">
+      <div class="bg-white customScrollBar" style="height: calc(100% - 50px)">
+        <div class="orderTableContainer customScrollBar">
           <div class="orderFilterContainer">
             <div class="orderStatusBox active">全部訂單</div>
             <div class="orderStatusBox">新訂單</div>
