@@ -160,7 +160,17 @@
                     : ''
                 "
                 v-model="temp.iconName"
-              ></el-input>
+              >
+                <i
+                  style="margin-left:0.5rem;margin-right:1rem;color:#3d3d3d"
+                  slot="prefix"
+                  :class="
+                  temp.iconName
+                    ? `iconfont icon-${temp.iconName} `
+                    : ''
+                "
+                ></i>
+              </el-input>
               <el-row class="selectIcon-box">
                 <el-col
                   :class="{ active: temp.iconName === item.font_class }"
@@ -238,7 +248,27 @@
             <el-switch v-model="menuTemp.attr" active-value="true" inactive-value="false"></el-switch>
           </el-form-item>
           <el-form-item size="small" :label="'樣式'">
-            <el-input v-model="menuTemp.class"></el-input>
+            <!-- <el-input v-model="menuTemp.class"></el-input> -->
+            <el-select style="width:100%" v-model="menuTemp.class" placeholder="按鈕樣式">
+              <el-option label="主色" value="primary">
+                <el-button plain style="width:100px" type="primary">primary</el-button>
+              </el-option>
+              <el-option label="藍色" value="info">
+                <el-button plain style="width:100px" type="info">info</el-button>
+              </el-option>
+              <el-option label="紅色" value="danger">
+                <el-button plain style="width:100px" type="danger">danger</el-button>
+              </el-option>
+              <el-option label="綠色" value="success">
+                <el-button plain style="width:100px" type="success">success</el-button>
+              </el-option>
+              <el-option label="淡藍色" value="warning">
+                <el-button plain style="width:100px" type="warning">warning</el-button>
+              </el-option>
+              <el-option label="白色" value>
+                <el-button plain style="width:100px">noneType</el-button>
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item size="small" :label="'圖標'">
             <el-popover
@@ -255,7 +285,17 @@
                     : ''
                 "
                 v-model="menuTemp.icon"
-              ></el-input>
+              >
+                <i
+                  style="margin-left:0.5rem;margin-right:1rem;color:#3d3d3d"
+                  slot="prefix"
+                  :class="
+                  menuTemp.icon
+                    ? `iconfont icon-${menuTemp.icon} `
+                    : ''
+                "
+                ></i>
+              </el-input>
               <el-row class="selectIcon-box">
                 <el-col
                   :class="{ active: menuTemp.icon === item.font_class }"

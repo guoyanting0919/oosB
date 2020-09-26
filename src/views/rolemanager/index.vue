@@ -12,14 +12,19 @@
           v-model="listQuery.key"
         ></el-input>
 
-        <permission-btn moduleName="rolemanager" size="mini" v-on:btn-event="onBtnClicked"></permission-btn>
+        <permission-btn
+          moduleName="rolemanager"
+          size="mini"
+          v-on:btn-event="onBtnClicked"
+        ></permission-btn>
 
         <el-checkbox
           size="small"
           style="margin-left:15px;"
-          @change="tableKey=tableKey+1"
+          @change="tableKey = tableKey + 1"
           v-model="showDescription"
-        >Id/描述</el-checkbox>
+          >Id/描述</el-checkbox
+        >
       </div>
     </sticky>
     <div class="app-container flex-item">
@@ -37,17 +42,25 @@
           @row-click="rowClick"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column align="center" type="selection" width="55"></el-table-column>
+          <el-table-column
+            align="center"
+            type="selection"
+            width="55"
+          ></el-table-column>
 
-          <el-table-column :label="'Id'" v-if="showDescription" min-width="120px">
+          <el-table-column
+            :label="'Id'"
+            v-if="showDescription"
+            min-width="120px"
+          >
             <template slot-scope="scope">
-              <span>{{scope.row.id}}</span>
+              <span>{{ scope.row.id }}</span>
             </template>
           </el-table-column>
 
           <el-table-column min-width="50px" :label="'角色名稱'">
             <template slot-scope="scope">
-              <span>{{scope.row.name}}</span>
+              <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
 
@@ -64,8 +77,10 @@
           <el-table-column class-name="status-col" :label="'狀態'" width="100">
             <template slot-scope="scope">
               <span :class="scope.row.status | statusFilter">
-                {{statusOptions.find(u =>u.key ==
-                scope.row.status).display_name}}
+                {{
+                  statusOptions.find((u) => u.key == scope.row.status)
+                    .display_name
+                }}
               </span>
             </template>
           </el-table-column>
@@ -77,18 +92,24 @@
             class-name="small-padding fixed-width"
           >
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
               <el-button
-                v-if="scope.row.status==0"
+                type="primary"
+                size="mini"
+                @click="handleUpdate(scope.row)"
+                >編輯</el-button
+              >
+              <el-button
+                v-if="scope.row.status == 0"
                 size="mini"
                 type="danger"
-                @click="handleModifyStatus(scope.row,1)"
-              >停用</el-button>
+                @click="handleModifyStatus(scope.row, 1)"
+                >停用</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
         <pagination
-          v-show="total>0"
+          v-show="total > 0"
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
@@ -110,16 +131,29 @@
           label-position="right"
           label-width="100px"
         >
-          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogStatus=='update'">
-            <el-input v-model="temp.id" :disabled="true" placeholder="系統自動處理"></el-input>
+          <el-form-item
+            size="small"
+            :label="'Id'"
+            prop="id"
+            v-show="dialogStatus == 'update'"
+          >
+            <el-input
+              v-model="temp.id"
+              :disabled="true"
+              placeholder="系統自動處理"
+            ></el-input>
           </el-form-item>
           <el-form-item size="small" :label="'角色名稱'" prop="name">
             <el-input v-model="temp.name"></el-input>
           </el-form-item>
           <el-form-item size="small" :label="'狀態'">
-            <el-select class="filter-item" v-model="temp.status" placeholder="Please select">
+            <el-select
+              class="filter-item"
+              v-model="temp.status"
+              placeholder="Please select"
+            >
               <el-option
-                v-for="item in  statusOptions"
+                v-for="item in statusOptions"
                 :key="item.key"
                 :label="item.display_name"
                 :value="item.key"
@@ -128,14 +162,19 @@
           </el-form-item>
         </el-form>
         <div slot="footer">
-          <el-button size="small" @click="dialogFormVisible = false">取消</el-button>
+          <el-button size="small" @click="dialogFormVisible = false"
+            >取消</el-button
+          >
           <el-button
             size="small"
-            v-if="dialogStatus=='create'"
+            v-if="dialogStatus == 'create'"
             type="primary"
             @click="createData"
-          >確認</el-button>
-          <el-button size="small" v-else type="primary" @click="updateData">確認</el-button>
+            >確認</el-button
+          >
+          <el-button size="small" v-else type="primary" @click="updateData"
+            >確認</el-button
+          >
         </div>
       </el-dialog>
       <!--只有這麼寫dialog，才能正常觸發ESC關閉-->
@@ -151,7 +190,7 @@
           v-if="dialogAccessModules"
           :role-id="multipleSelection[0].id"
           @change-title="changeTitle"
-          @close="dialogAccessModules=false"
+          @close="dialogAccessModules = false"
         ></access-modules>
       </el-dialog>
 
@@ -165,7 +204,7 @@
           ref="accessResource"
           v-if="dialogAccessResource"
           :role-id="multipleSelection[0].id"
-          @close="dialogAccessResource=false"
+          @close="dialogAccessResource = false"
         ></access-resource>
       </el-dialog>
       <!-- 添加角色用戶 -->
@@ -180,11 +219,20 @@
           v-if="roleUsers.dialogUserResource"
           :hiddenFooter="true"
           :loginKey="'loginUser'"
-          :selectUsers.sync="roleUsers.rowIndex > -1 && roleUsers.list[roleUsers.rowIndex]"
+          :selectUsers.sync="
+            roleUsers.rowIndex > -1 && roleUsers.list[roleUsers.rowIndex]
+          "
         ></selectUsersCom>
         <div style="text-align:right;" slot="footer">
-          <el-button size="small" type="cancel" @click="roleUsers.dialogUserResource = false">取消</el-button>
-          <el-button size="small" type="primary" @click="handleSaveUsers">確定</el-button>
+          <el-button
+            size="small"
+            type="cancel"
+            @click="roleUsers.dialogUserResource = false"
+            >取消</el-button
+          >
+          <el-button size="small" type="primary" @click="handleSaveUsers"
+            >確定</el-button
+          >
         </div>
       </el-dialog>
     </div>
@@ -270,7 +318,7 @@ export default {
         name: [
           {
             required: true,
-            message: "賬號不能為空",
+            message: "帳號不能為空",
             trigger: "blur",
           },
         ],
@@ -317,7 +365,7 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    onBtnClicked: function (domId) {
+    onBtnClicked: function(domId) {
       console.log(domId);
       switch (domId) {
         case "btnAdd":

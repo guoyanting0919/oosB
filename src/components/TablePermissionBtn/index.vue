@@ -1,32 +1,15 @@
 <template>
-  <div class="filter-items">
+  <div class="filter-items" style="display:flex;">
     <template v-for="btn of buttons">
-      <!-- <json-excel
-        :key="btn.Id"
-        v-if="btn.domId === 'btnExport'"
-        :fetch="fetchData"
-        :before-finish="finishDownload"
-        class="export-excel-wrapper"
-        :fields="excelInfo.json_fields"
-        :name="excelInfo.excelName"
-      >
-        <el-button
-          :type="btn.class || 'primary'"
-          size="mini"
-          style="margin-left: 10px;"
-          :loading="excelLoading"
-        >{{btn.name}}</el-button>
-      </json-excel>-->
       <el-button
-        v-if="btn.attr != 'true'"
+        v-if="btn.attr == 'true'"
         :type="btn.class"
         :size="size"
         v-bind:key="btn.Id"
         class="filter-item"
         @click="$emit('btn-event', btn.domId)"
-        plain
       >
-        <i :class="`iconfont icon-${btn.icon}`"></i>
+        <!-- <i :class="`iconfont icon-${btn.icon}`"></i> -->
         {{ btn.name }}
       </el-button>
     </template>

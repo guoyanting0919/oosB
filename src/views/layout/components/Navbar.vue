@@ -8,7 +8,7 @@
     <div class="breads">
       <!-- breads -->
       <el-breadcrumb separator="/" class="breadItems">
-        <el-breadcrumb-item class="breadLink" v-for="item in $route.matched" :key="item.path">
+        <el-breadcrumb-item class="breadLink" v-for="(item,index) in $route.matched" :key="index">
           <router-link :to="item.path" class="breadLink">{{ item.meta.title || item.name }}</router-link>
         </el-breadcrumb-item>
       </el-breadcrumb>

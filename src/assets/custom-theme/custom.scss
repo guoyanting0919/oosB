@@ -1,13 +1,12 @@
 @charset "UTF-8";
 $primary: #f3971a;
-// $primary: #0076c8;
 $primaryHover: #f4ac28;
 $primaryActive: #e79600;
-// $primaryHover: #3391d3;
+$primaryPlain: #e9cd99;
 $success: #409167;
 $successHover: #66a785;
-$warning: #0076c8;
-$warningHover: #3391d3;
+$warning: #13c2c2;
+$warningHover: #31c9c9;
 $danger: #d63737;
 $dangerHover: #de5f5f;
 $info: #227294;
@@ -1037,7 +1036,7 @@ $infoHover: #3b91b6;
   }
 
   .el-tag {
-    background-color: rgba(0, 118, 200, 0.1);
+    background-color: #fffcf1;
     display: inline-block;
     padding: 0 10px;
     height: 32px;
@@ -1047,7 +1046,7 @@ $infoHover: #3b91b6;
     border-radius: 4px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    border: 1px solid rgba(0, 118, 200, 0.2);
+    border: 1px solid #e4e4e4;
     white-space: nowrap;
 
     .el-icon-close {
@@ -2631,7 +2630,7 @@ $infoHover: #3b91b6;
     &:focus,
     &:hover {
       color: $primary;
-      border-color: #b3d6ef;
+      border-color: #dfdfdf;
       background-color: #fff3e1;
     }
 
@@ -2774,7 +2773,7 @@ $infoHover: #3b91b6;
     &.is-plain {
       color: $primary;
       background: #fff3e1;
-      border-color: #99c8e9;
+      border-color: $primaryPlain;
 
       &:focus,
       &:hover {
@@ -2921,8 +2920,8 @@ $infoHover: #3b91b6;
 
     &.is-plain {
       color: $warning;
-      background: #f5f6e6;
-      border-color: #d8db9c;
+      background: #e8fdfd;
+      border-color: #a5dddd;
 
       &:focus,
       &:hover {
@@ -3069,7 +3068,7 @@ $infoHover: #3b91b6;
 
     &.is-plain {
       color: $info;
-      background: #fff4df;
+      background: #e4f3ff;
       border-color: #9dc8db;
 
       &:focus,
@@ -6481,7 +6480,7 @@ $infoHover: #3b91b6;
   }
 
   .el-tag {
-    background-color: rgba(0, 118, 200, 0.1);
+    background-color: #fffcf1;
     display: inline-block;
     padding: 0 10px;
     height: 32px;
@@ -6491,7 +6490,7 @@ $infoHover: #3b91b6;
     border-radius: 4px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    border: 1px solid rgba(0, 118, 200, 0.2);
+    border: 1px solid #e4e4e4;
     white-space: nowrap;
 
     .el-icon-close {
@@ -6958,7 +6957,7 @@ $infoHover: #3b91b6;
     &:focus,
     &:hover {
       color: $primary;
-      border-color: #b3d6ef;
+      border-color: #dfdfdf;
       background-color: #fff3e1;
     }
 
@@ -7101,7 +7100,7 @@ $infoHover: #3b91b6;
     &.is-plain {
       color: $primary;
       background: #fff3e1;
-      border-color: #99c8e9;
+      border-color: $primaryPlain;
 
       &:focus,
       &:hover {
@@ -7248,8 +7247,8 @@ $infoHover: #3b91b6;
 
     &.is-plain {
       color: $warning;
-      background: #f5f6e6;
-      border-color: #d8db9c;
+      background: #e8fdfd;
+      border-color: #a5dddd;
 
       &:focus,
       &:hover {
@@ -7988,7 +7987,7 @@ $infoHover: #3b91b6;
   }
 
   .el-tag {
-    background-color: rgba(0, 118, 200, 0.1);
+    background-color: #fffcf1;
     display: inline-block;
     padding: 0 10px;
     height: 32px;
@@ -7998,7 +7997,7 @@ $infoHover: #3b91b6;
     border-radius: 4px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    border: 1px solid rgba(0, 118, 200, 0.2);
+    border: 1px solid #e4e4e4;
     white-space: nowrap;
 
     .el-icon-close {
@@ -9315,7 +9314,7 @@ $infoHover: #3b91b6;
   }
 
   .el-tag {
-    background-color: rgba(0, 118, 200, 0.1);
+    background-color: #fffcf1;
     display: inline-block;
     padding: 0 10px;
     height: 32px;
@@ -9325,7 +9324,7 @@ $infoHover: #3b91b6;
     border-radius: 4px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    border: 1px solid rgba(0, 118, 200, 0.2);
+    border: 1px solid #e4e4e4;
     white-space: nowrap;
 
     .el-icon-close {
@@ -13684,7 +13683,7 @@ $infoHover: #3b91b6;
     &:focus,
     &:hover {
       color: $primary;
-      border-color: #b3d6ef;
+      border-color: #dfdfdf;
       background-color: #fff3e1;
     }
 
@@ -13827,7 +13826,7 @@ $infoHover: #3b91b6;
     &.is-plain {
       color: $primary;
       background: #fff3e1;
-      border-color: #99c8e9;
+      border-color: $primaryPlain;
 
       &:focus,
       &:hover {
@@ -13974,8 +13973,8 @@ $infoHover: #3b91b6;
 
     &.is-plain {
       color: $warning;
-      background: #f5f6e6;
-      border-color: #d8db9c;
+      background: #e8fdfd;
+      border-color: #a5dddd;
 
       &:focus,
       &:hover {
@@ -15017,7 +15016,7 @@ $infoHover: #3b91b6;
     float: none;
     display: inline-block;
     text-align: left;
-    padding: 0 0 10px 0;
+    // padding: 0 0 10px 0;
   }
 
   .el-form--inline {
@@ -16042,7 +16041,7 @@ $infoHover: #3b91b6;
   }
 
   .el-tag {
-    background-color: rgba(0, 118, 200, 0.1);
+    background-color: #fffcf1;
     display: inline-block;
     padding: 0 10px;
     height: 32px;
@@ -16052,7 +16051,7 @@ $infoHover: #3b91b6;
     border-radius: 4px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    border: 1px solid rgba(0, 118, 200, 0.2);
+    border: 1px solid #e4e4e4;
     white-space: nowrap;
 
     .el-icon-close {
@@ -22369,7 +22368,7 @@ $infoHover: #3b91b6;
     &:focus,
     &:hover {
       color: $primary;
-      border-color: #b3d6ef;
+      border-color: #dfdfdf;
       background-color: #fff3e1;
     }
 
@@ -22512,7 +22511,7 @@ $infoHover: #3b91b6;
     &.is-plain {
       color: $primary;
       background: #fff3e1;
-      border-color: #99c8e9;
+      border-color: $primaryPlain;
 
       &:focus,
       &:hover {
@@ -22659,8 +22658,8 @@ $infoHover: #3b91b6;
 
     &.is-plain {
       color: $warning;
-      background: #f5f6e6;
-      border-color: #d8db9c;
+      background: #e8fdfd;
+      border-color: #a5dddd;
 
       &:focus,
       &:hover {
@@ -22807,7 +22806,7 @@ $infoHover: #3b91b6;
 
     &.is-plain {
       color: $info;
-      background: #fff4df;
+      background: #e4f3ff;
       border-color: #9dc8db;
 
       &:focus,

@@ -17,7 +17,7 @@
         <el-checkbox
           size="mini"
           style="margin-left:15px;"
-          @change="tableKey=tableKey+1"
+          @change="tableKey = tableKey + 1"
           v-model="showDescription"
         >Id/描述</el-checkbox>
       </div>
@@ -58,38 +58,44 @@
 
               <el-table-column :label="'Id'" v-if="showDescription" min-width="120px">
                 <template slot-scope="scope">
-                  <span>{{scope.row.id}}</span>
+                  <span>{{ scope.row.id }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column min-width="80px" :label="'賬號'">
+              <el-table-column min-width="80px" :label="'帳號'">
                 <template slot-scope="scope">
-                  <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.account}}</span>
+                  <span class="link-type" @click="handleUpdate(scope.row)">
+                    {{
+                    scope.row.account
+                    }}
+                  </span>
                 </template>
               </el-table-column>
 
               <el-table-column min-width="80px" :label="'姓名'">
                 <template slot-scope="scope">
-                  <span>{{scope.row.name}}</span>
+                  <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
 
               <el-table-column width="120px" :label="'所屬部門'">
                 <template slot-scope="scope">
-                  <span>{{scope.row.organizations}}</span>
+                  <span>{{ scope.row.organizations }}</span>
                 </template>
               </el-table-column>
               <el-table-column min-width="150px" v-if="showDescription" :label="'描述'">
                 <template slot-scope="scope">
-                  <span style="color:red;">{{scope.row.description}}</span>
+                  <span style="color:red;">{{ scope.row.description }}</span>
                 </template>
               </el-table-column>
 
               <el-table-column class-name="status-col" :label="'狀態'" width="100">
                 <template slot-scope="scope">
                   <span :class="scope.row.status | statusFilter">
-                    {{statusOptions.find(u =>u.key ==
-                    scope.row.status).display_name}}
+                    {{
+                    statusOptions.find((u) => u.key == scope.row.status)
+                    .display_name
+                    }}
                   </span>
                 </template>
               </el-table-column>
@@ -103,10 +109,10 @@
                 <template slot-scope="scope">
                   <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
                   <el-button
-                    v-if="scope.row.status==0"
+                    v-if="scope.row.status == 0"
                     size="mini"
                     type="danger"
-                    @click="handleModifyStatus(scope.row,1)"
+                    @click="handleModifyStatus(scope.row, 1)"
                   >停用</el-button>
                 </template>
               </el-table-column>
@@ -119,7 +125,7 @@
             </el-pagination>
             </div>-->
             <pagination
-              v-show="total>0"
+              v-show="total > 0"
               :total="total"
               :page.sync="listQuery.page"
               :limit.sync="listQuery.limit"
@@ -143,28 +149,32 @@
           label-position="right"
           label-width="100px"
         >
-          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogStatus=='update'">
+          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogStatus == 'update'">
             <el-input v-model="temp.id" :disabled="true" size="small" placeholder="系統自動處理"></el-input>
           </el-form-item>
           <el-form-item size="small" :label="'姓名'">
             <el-input v-model="temp.name"></el-input>
           </el-form-item>
-          <el-form-item size="small" :label="'賬號'" prop="account">
+          <el-form-item size="small" :label="'帳號'" prop="account">
             <el-input v-model="temp.account"></el-input>
           </el-form-item>
           <el-form-item size="small" :label="'密碼'">
             <el-input
               v-model="temp.password"
-              :placeholder="dialogStatus=='update'?'如果為空則不修改密碼':'如果為空則默認與賬號相同'"
+              :placeholder="
+                dialogStatus == 'update'
+                  ? '如果為空則不修改密碼'
+                  : '如果為空則默認與帳號相同'
+              "
             ></el-input>
           </el-form-item>
-          <el-form-item size="small" :label="'單位代碼'">
+          <!-- <el-form-item size="small" :label="'單位代碼'">
             <el-input v-model="temp.BizCode"></el-input>
-          </el-form-item>
+          </el-form-item>-->
           <el-form-item size="small" :label="'狀態'">
             <el-select class="filter-item" v-model="temp.status" placeholder="Please select">
               <el-option
-                v-for="item in  statusOptions"
+                v-for="item in statusOptions"
                 :key="item.key"
                 :label="item.display_name"
                 :value="item.key"
@@ -187,7 +197,7 @@
           <el-form-item size="small" :label="'描述'">
             <el-input
               type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4}"
+              :autosize="{ minRows: 2, maxRows: 4 }"
               placeholder="Please input"
               v-model="temp.description"
             ></el-input>
@@ -195,7 +205,12 @@
         </el-form>
         <div slot="footer">
           <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
-          <el-button size="mini" v-if="dialogStatus=='create'" type="primary" @click="createData">確認</el-button>
+          <el-button
+            size="mini"
+            v-if="dialogStatus == 'create'"
+            type="primary"
+            @click="createData"
+          >確認</el-button>
           <el-button size="mini" v-else type="primary" @click="updateData">確認</el-button>
         </div>
       </el-dialog>
@@ -297,7 +312,7 @@ export default {
         account: "",
         name: "",
         password: "",
-        BizCode: "",
+        // BizCode: "",
         status: 0,
       },
       dialogFormVisible: false,
@@ -311,7 +326,7 @@ export default {
         account: [
           {
             required: true,
-            message: "賬號不能為空",
+            message: "帳號不能為空",
             trigger: "blur",
           },
         ],
@@ -616,4 +631,12 @@ export default {
   padding-right: 0px;
   padding-top: 0px;
 }
+.vue-treeselect__multi-value-item {
+  color: orange;
+  background: rgb(255, 244, 226);
+}
+.vue-treeselect__value-remove {
+  color: orange;
+}
 </style>
+

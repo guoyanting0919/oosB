@@ -4,13 +4,24 @@
       <el-row style="height: 100%;">
         <el-col :span="11" style="height: 100%;">
           <div class="bg-white" style="height: 50%;">
-            <el-card shadow="never" class="body-small" style="height: 100%;overflow:auto;">
+            <el-card
+              shadow="never"
+              class="body-small"
+              style="height: 100%;overflow:auto;"
+            >
               <div slot="header" class="clearfix">
-                <el-button type="text" style="padding: 0 11px">基本資料</el-button>
+                <el-button type="text" style="padding: 0 11px"
+                  >基本資料</el-button
+                >
               </div>
-              <el-form ref="dataForm" :model="temp" label-position="right" label-width="100px">
-                <el-form-item size="small" :label="'賬號'" prop="account">
-                  <span>{{temp.account}}</span>
+              <el-form
+                ref="dataForm"
+                :model="temp"
+                label-position="right"
+                label-width="100px"
+              >
+                <el-form-item size="small" :label="'帳號'" prop="account">
+                  <span>{{ temp.account }}</span>
                 </el-form-item>
 
                 <el-form-item size="small" :label="'姓名'" prop="name">
@@ -21,22 +32,37 @@
                   <el-radio v-model="temp.sex" :label="1">女</el-radio>
                 </el-form-item>
                 <el-form-item size="small" :label="' '">
-                  <el-button size="mini" type="primary" @click="changeProfile">確認修改</el-button>
+                  <el-button size="mini" type="primary" @click="changeProfile"
+                    >確認修改</el-button
+                  >
                 </el-form-item>
               </el-form>
             </el-card>
           </div>
           <div class="bg-white" style="height: 50%;">
-            <el-card shadow="never" class="body-small" style="height: 100%;overflow:auto;">
+            <el-card
+              shadow="never"
+              class="body-small"
+              style="height: 100%;overflow:auto;"
+            >
               <div slot="header" class="clearfix">
-                <el-button type="text" style="padding: 0 11px">修改密碼</el-button>
+                <el-button type="text" style="padding: 0 11px"
+                  >修改密碼</el-button
+                >
               </div>
-              <el-form ref="dataForm" :model="temp" label-position="right" label-width="100px">
+              <el-form
+                ref="dataForm"
+                :model="temp"
+                label-position="right"
+                label-width="100px"
+              >
                 <el-form-item size="small" :label="'新密碼'" prop="name">
                   <el-input v-model="newpwd" show-password></el-input>
                 </el-form-item>
                 <el-form-item size="small" :label="' '">
-                  <el-button size="mini" type="primary" @click="changePassword">確認修改</el-button>
+                  <el-button size="mini" type="primary" @click="changePassword"
+                    >確認修改</el-button
+                  >
                 </el-form-item>
               </el-form>
             </el-card>
@@ -44,9 +70,15 @@
         </el-col>
         <el-col :span="6" style="height: 100%;">
           <div class="bg-white" style="height: 100%;">
-            <el-card shadow="never" class="body-small" style="height: 100%;overflow:auto;">
+            <el-card
+              shadow="never"
+              class="body-small"
+              style="height: 100%;overflow:auto;"
+            >
               <div slot="header" class="clearfix">
-                <el-button type="text" style="padding: 0 11px">可訪問的模塊</el-button>
+                <el-button type="text" style="padding: 0 11px"
+                  >可訪問的模塊</el-button
+                >
               </div>
 
               <el-tree
@@ -59,9 +91,15 @@
           </div>
         </el-col>
         <el-col :span="7" style="height: 100%;border: 1px solid #EBEEF5;">
-          <el-card shadow="never" class="body-small" style="height: 100%;overflow:auto;">
+          <el-card
+            shadow="never"
+            class="body-small"
+            style="height: 100%;overflow:auto;"
+          >
             <div slot="header" class="clearfix">
-              <el-button type="text" style="padding: 0 11px">可訪問的機構（✅為當前默認,點擊可切換）</el-button>
+              <el-button type="text" style="padding: 0 11px"
+                >可訪問的機構（✅為當前默認,點擊可切換）</el-button
+              >
             </div>
 
             <el-tree
@@ -165,7 +203,7 @@ export default {
     getModulesTree() {
       var _this = this; // 記錄vuecomponent
       login.getModules().then((response) => {
-        _this.modules = response.result.map(function (item) {
+        _this.modules = response.result.map(function(item) {
           return {
             id: item.id,
             label: item.name,
@@ -180,7 +218,7 @@ export default {
     getOrgTree() {
       var _this = this; // 記錄vuecomponent
       login.getOrgs().then((response) => {
-        _this.orgs = response.result.map(function (item) {
+        _this.orgs = response.result.map(function(item) {
           var name = item.name;
           if (_this.defaultorgid === item.id) {
             name = name + "✅";

@@ -16,17 +16,18 @@
         <el-checkbox
           size="mini"
           style="margin-left:15px;"
-          @change="tableKey=tableKey+1"
+          @change="tableKey = tableKey + 1"
           v-model="showDescription"
         >Id/描述</el-checkbox>
       </div>
     </sticky>
     <div class="app-container flex-item">
-      <el-row style="height: 100%;">
+      <Title title="組織管理"></Title>
+      <el-row style="height:calc(100% - 50px);">
         <el-col :span="4" style="height: 100%;border: 1px solid #EBEEF5;">
           <el-card shadow="never" class="body-small" style="height: 100%;overflow:auto;">
             <div slot="header" class="clearfix">
-              <el-button type="text" style="padding: 0 11px" @click="getAllOrgs">所有機構>></el-button>
+              <el-button type="text" style="padding: 0 11px" @click="getAllOrgs">所有組織>></el-button>
             </div>
 
             <el-tree
@@ -57,56 +58,122 @@
 
               <el-table-column :label="'Id'" v-if="showDescription" min-width="120px">
                 <template slot-scope="scope">
-                  <span>{{scope.row.id}}</span>
+                  <span>{{ scope.row.id }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column min-width="80px" :label="'層級ID'">
+              <!-- <el-table-column min-width="80px" :label="'層級ID'">
                 <template slot-scope="scope">
                   <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.cascadeId}}</span>
                 </template>
-              </el-table-column>
+              </el-table-column>-->
 
-              <el-table-column min-width="80px" :label="'名稱'">
+              <el-table-column min-width="400px" :label="'組織名稱'">
                 <template slot-scope="scope">
-                  <span>{{scope.row.name}}</span>
+                  <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column width="120px" :label="'上級部門'">
+              <el-table-column min-width="150px" :label="'統一編號'">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.einno }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column min-width="150px" :label="'主要聯絡人'">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.chargeName }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column min-width="150px" :label="'主要聯絡人市話'">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.chargeTel }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column min-width="150px" :label="'主要聯絡人手機'">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.chargePhone }}</span>
+                </template>
+              </el-table-column>
+
+              <!-- <el-table-column width="120px" :label="'上級部門'">
                 <template slot-scope="scope">
                   <span>{{scope.row.parentName}}</span>
                 </template>
-              </el-table-column>
+              </el-table-column>-->
 
               <el-table-column class-name="status-col" :label="'狀態'" width="100">
                 <template slot-scope="scope">
                   <span :class="scope.row.status | statusFilter">
-                    {{statusOptions.find(u =>u.key ==
-                    scope.row.status).display_name}}
+                    {{
+                    statusOptions.find((u) => u.key == scope.row.status)
+                    .display_name
+                    }}
                   </span>
                 </template>
               </el-table-column>
 
               <el-table-column
+                fixed="right"
                 align="center"
                 :label="'操作'"
-                width="150"
+                width="120"
                 class-name="small-padding fixed-width"
               >
                 <template slot-scope="scope">
-                  <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
+                  <div class="buttonFlexBox">
+                    <el-tooltip effect="dark" content="編輯" placement="top" :open-delay="500">
+                      <div
+                        class="editIcon"
+                        @click="handleUpdate(scope.row)"
+                        v-if="hasButton('btnEdit')"
+                      >
+                        <i class="iconfont icon-edit"></i>
+                      </div>
+                    </el-tooltip>
+
+                    <el-tooltip effect="dark" content="停用" placement="top" :open-delay="500">
+                      <div
+                        v-show="!scope.row.status"
+                        class="status0Icon"
+                        @click="handleChangeStatus(scope.row, 1)"
+                        v-if="hasButton('btnEdit')"
+                      >
+                        <i class="iconfont icon-Vector2"></i>
+                      </div>
+                    </el-tooltip>
+
+                    <el-tooltip effect="dark" content="啟用" placement="top" :open-delay="500">
+                      <div
+                        v-show="scope.row.status"
+                        class="status1Icon"
+                        @click="handleChangeStatus(scope.row, 0)"
+                        v-if="hasButton('btnEdit')"
+                      >
+                        <i class="iconfont icon-Vector11"></i>
+                      </div>
+                    </el-tooltip>
+                  </div>
+                  <!-- <el-button
+                    type="primary"
+                    size="mini"
+                    @click="handleUpdate(scope.row)"
+                    >編輯</el-button
+                  >
                   <el-button
-                    v-if="scope.row.status==0"
+                    v-if="scope.row.status == 0"
                     size="mini"
                     type="danger"
-                    @click="handleModifyStatus(scope.row,1)"
-                  >停用</el-button>
+                    @click="handleModifyStatus(scope.row, 1)"
+                    >停用</el-button
+                  >-->
                 </template>
               </el-table-column>
             </el-table>
             <pagination
-              v-show="total>0"
+              v-show="total > 0"
               :total="total"
               :page.sync="listQuery.page"
               :limit.sync="listQuery.limit"
@@ -119,7 +186,7 @@
       <el-dialog
         v-el-drag-dialog
         class="dialog-mini"
-        width="500px"
+        width="700px"
         :title="textMap[dialogStatus]"
         :visible.sync="dialogFormVisible"
       >
@@ -127,44 +194,100 @@
           :rules="rules"
           ref="dataForm"
           :model="temp"
-          label-position="right"
-          label-width="100px"
+          label-position="top"
+          label-width="auto"
         >
-          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogStatus=='update'">
-            <span>{{temp.id}}</span>
-          </el-form-item>
-          <el-form-item size="small" :label="'層級ID'" v-show="dialogStatus=='update'">
-            <span>{{temp.cascadeId}}</span>
-          </el-form-item>
-          <el-form-item size="small" :label="'名稱'" prop="name">
-            <el-input v-model="temp.name"></el-input>
-          </el-form-item>
-          <el-form-item size="small" :label="'狀態'">
-            <el-select class="filter-item" v-model="temp.status" placeholder="Please select">
-              <el-option
-                v-for="item in  statusOptions"
-                :key="item.key"
-                :label="item.display_name"
-                :value="item.key"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item size="small" :label="'上級機構'">
-            <treeselect
-              ref="orgsTree"
-              :options="mechOrgsTree"
-              :default-expand-level="3"
-              :multiple="false"
-              :open-on-click="true"
-              :open-on-focus="true"
-              :clear-on-select="true"
-              v-model="selectOrgs"
-            ></treeselect>
-          </el-form-item>
+          <el-row :gutter="10">
+            <!-- <el-form-item
+              size="small"
+              :label="'Id'"
+              prop="id"
+              v-show="dialogStatus == 'update'"
+            >
+              <span>{{ temp.id }}</span>
+            </el-form-item>
+
+            <el-form-item
+              size="small"
+              :label="'層級ID'"
+              v-show="dialogStatus == 'update'"
+            >
+              <span>{{ temp.cascadeId }}</span>
+            </el-form-item>-->
+
+            <el-col :span="24">
+              <el-form-item size="small" :label="'組織名稱'" prop="name">
+                <el-input v-model="temp.name" :disabled="dialogStatus == 'update'"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <!-- <el-col :span="24" v-show="dialogStatus == 'update'">
+              <el-form-item size="small" :label="'組織名稱'" prop="name">
+                <div class="updateName">{{ temp.name }}</div>
+              </el-form-item>
+            </el-col>-->
+
+            <el-col :span="12">
+              <el-form-item size="small" :label="'統一編號'" prop="einno">
+                <el-input v-model="temp.einno" :disabled="dialogStatus == 'update'"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item size="small" :label="'主要聯絡人'" prop="chargeName">
+                <el-input v-model="temp.chargeName"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item size="small" :label="'主要聯絡人市話'" prop="chargeTel">
+                <el-input v-model="temp.chargeTel"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item size="small" :label="'主要聯絡人手機'" prop="chargePhone">
+                <el-input v-model="temp.chargePhone"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item size="small" :label="'狀態'">
+                <el-select class="filter-item" v-model="temp.status" placeholder="Please select">
+                  <el-option
+                    v-for="item in statusOptions"
+                    :key="item.key"
+                    :label="item.display_name"
+                    :value="item.key"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12">
+              <el-form-item size="small" :label="'上級組織'">
+                <treeselect
+                  ref="orgsTree"
+                  :options="mechOrgsTree"
+                  :default-expand-level="3"
+                  :multiple="false"
+                  :open-on-click="true"
+                  :open-on-focus="true"
+                  :clear-on-select="true"
+                  v-model="selectOrgs"
+                ></treeselect>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
         <div slot="footer">
           <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
-          <el-button size="mini" v-if="dialogStatus=='create'" type="primary" @click="createData">確認</el-button>
+          <el-button
+            size="mini"
+            v-if="dialogStatus == 'create'"
+            type="primary"
+            @click="createData"
+          >確認</el-button>
           <el-button size="mini" v-else type="primary" @click="updateData">確認</el-button>
         </div>
       </el-dialog>
@@ -181,7 +304,9 @@
           :orgId="multipleSelection[0].id"
           :hiddenFooter="true"
           :loginKey="'loginUser'"
-          :selectUsers.sync="roleUsers.rowIndex > -1 && roleUsers.list[roleUsers.rowIndex]"
+          :selectUsers.sync="
+            roleUsers.rowIndex > -1 && roleUsers.list[roleUsers.rowIndex]
+          "
         ></selectUsersCom>
         <div style="text-align:right;" slot="footer">
           <el-button size="small" type="cancel" @click="roleUsers.dialogUserResource = false">取消</el-button>
@@ -204,6 +329,7 @@ import Sticky from "@/components/Sticky";
 import permissionBtn from "@/components/PermissionBtn";
 import Pagination from "@/components/Pagination";
 import elDragDialog from "@/directive/el-dragDialog";
+import Title from "@/components/ConsoleTableTitle";
 import selectUsersCom from "@/components/SelectUsersCom";
 
 export default {
@@ -214,6 +340,7 @@ export default {
     Treeselect,
     Pagination,
     selectUsersCom,
+    Title,
   },
   directives: {
     waves,
@@ -221,6 +348,7 @@ export default {
   },
   data() {
     return {
+      buttons: [],
       defaultProps: {
         // tree配置項
         children: "children",
@@ -248,7 +376,7 @@ export default {
         },
         {
           key: 0,
-          display_name: "正常",
+          display_name: "啟用",
         },
       ],
       showDescription: false,
@@ -261,6 +389,10 @@ export default {
         parentId: null,
         name: "",
         status: 0,
+        chargeName: "", //主要聯絡人
+        chargePhone: "", //主要聯絡人手機
+        chargeTel: "", //主要聯絡人電話
+        einno: "", //統一編號
       },
       dialogFormVisible: false,
       chkRoot: false, // 根節點是否選中
@@ -268,13 +400,34 @@ export default {
       dialogStatus: "",
       textMap: {
         update: "編輯",
-        create: "添加",
+        create: "新增",
       },
       rules: {
         name: [
           {
             required: true,
             message: "名稱不能為空",
+            trigger: "blur",
+          },
+        ],
+        chargeName: [
+          {
+            required: true,
+            message: "主要聯絡人名稱不能為空",
+            trigger: "blur",
+          },
+        ],
+        chargeTel: [
+          {
+            required: true,
+            message: "主要聯絡人市話不能為空",
+            trigger: "blur",
+          },
+        ],
+        einno: [
+          {
+            required: true,
+            message: "統一編號不能為空",
             trigger: "blur",
           },
         ],
@@ -354,8 +507,39 @@ export default {
   },
   mounted() {
     this.getOrgTree();
+    this.getButtons();
   },
   methods: {
+    // 獲取本路由下所有功能按鈕
+    getButtons() {
+      this.$route.meta.elements.forEach((el) => {
+        this.buttons.push(el.domId);
+      });
+    },
+
+    // 是否擁有按鈕功能權限
+    hasButton(domId) {
+      return this.buttons.includes(domId);
+    },
+
+    handleChangeStatus(row, status) {
+      this.temp = Object.assign({}, row); // copy obj
+      this.temp.status = status;
+      console.log(this.temp);
+      const tempData = Object.assign({}, this.temp);
+      orgs.update(tempData).then(() => {
+        this.dialogFormVisible = false;
+        this.$notify({
+          title: "成功",
+          message: "更新成功",
+          type: "success",
+          duration: 2000,
+        });
+
+        this.getOrgTree();
+        this.getList();
+      });
+    },
     loadRoleUsers() {
       var _this = this;
       this.isLoading = true;
@@ -447,6 +631,7 @@ export default {
           orgId: this.currentOrgId,
           limit: this.listQuery.limit,
           page: this.listQuery.page,
+          // key: this.listQuery.key,
         })
         .then((response) => {
           this.subLists = Object.assign([], response.data);
@@ -565,13 +750,7 @@ export default {
             });
 
             this.getOrgTree();
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v);
-                this.list.splice(index, 1, this.temp);
-                break;
-              }
-            }
+            this.getList();
           });
         }
       });
@@ -601,6 +780,69 @@ export default {
   font-size: 14px;
 }
 
+.updateName {
+  margin-left: 8px;
+  border-bottom: 1px dashed #ffc691;
+}
+
+.buttonFlexBox {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.editIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 200px;
+  background: #3e79ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  i {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+  }
+}
+
+.status0Icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 200px;
+  background: #ff4d4f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  i {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+  }
+}
+
+.status1Icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 200px;
+  background: #389e0d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  i {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+  }
+}
+
 .item {
   margin-bottom: 18px;
 }
@@ -613,6 +855,15 @@ export default {
 
 .clearfix:after {
   clear: both;
+}
+
+.el-form {
+  padding-right: 0 !important;
+  padding-top: 0 !important ;
+}
+
+.el-form-item {
+  margin-bottom: 18px !important;
 }
 
 .el-select.filter-item.el-select--small {

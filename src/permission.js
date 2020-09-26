@@ -20,8 +20,16 @@ let routerMappingList = [
     path: "/alluser/index",
     title: "個案資料 / 全部個案",
   },
+  {
+    path: "/driver/index",
+    title: "司機車輛管理 / 司機資料",
+  },
+  {
+    path: "/car/index",
+    title: "司機車輛管理 / 車輛資料",
+  },
 ];
-let elementMappingList = ["add", "edit", "detail"];
+let elementMappingList = ["add", "edit", "detail", "dispatch"];
 
 const whiteList = [
   "/login",

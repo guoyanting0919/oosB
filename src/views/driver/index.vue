@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-column allUser">
+  <div class="flex-column driver">
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
         <!-- 關鍵字搜尋 -->
@@ -10,19 +10,43 @@
           clearable
           placeholder="請輸入關鍵字"
         ></el-input>
+        <el-select
+          size="mini"
+          @change="end = end + 200"
+          v-model="value"
+          clearable
+          placeholder="可否派發"
+          style="margin-right:0.5rem"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+
+        <!-- 公司選擇 -->
+        <el-select size="mini" v-model="value" clearable placeholder="請選擇公司">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
         <!-- 權限按鈕 -->
         <permission-btn moduleName="builderTables" size="mini" v-on:btn-event="onBtnClicked"></permission-btn>
       </div>
     </sticky>
-
     <div class="app-container flex-item">
-      <!-- 全部個案資料 -->
-      <Title title="全部個案資料"></Title>
-      <div class="bg-white" style="height:calc(100% - 50px)">
+      <Title title="司機資料"></Title>
+      <div class="bg-white" style="height: 93%;">
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"
           :data="gridData"
+          v-if="gridData"
           border
           fit
           highlight-current-row
@@ -32,28 +56,10 @@
         >
           <el-table-column type="selection" width="55" align="center"></el-table-column>
           <el-table-column property="pic" label="照片" width="80" align="center"></el-table-column>
-          <el-table-column property="lock" label="鎖定狀態" width="100" align="center">
-            <template slot-scope="scope">
-              <div>
-                <i style="color:#409167" v-if="scope.row.lock" class="iconfont icon-Vector21"></i>
-                <i style="color:#d63737" v-else class="iconfont icon-Vector31"></i>
-              </div>
-            </template>
-          </el-table-column>
           <el-table-column property="name" label="姓名" width="120" align="center"></el-table-column>
-          <el-table-column property="code" label="個案編號" width="140" align="center"></el-table-column>
-          <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-          <el-table-column property="birth" label="生日" width="140" align="center"></el-table-column>
-          <el-table-column property="sex" label="性別" width="70" align="center">
-            <template slot-scope="scope">
-              <div>
-                <i style="color:#d63737" v-if="scope.row.sex" class="iconfont icon-Vector5"></i>
-                <i style="color:#227294" v-else class="iconfont icon-Vector6"></i>
-              </div>
-            </template>
-          </el-table-column>
+          <el-table-column property="uid" label="身分證字號" min-width="140" align="center"></el-table-column>
           <el-table-column property="phone" label="手機" width="170" align="center"></el-table-column>
-          <el-table-column property="tel" label="市話" width="170" align="center"></el-table-column>
+          <el-table-column property="tel" label="駕照" min-width="170" align="center"></el-table-column>
           <el-table-column property="status" label="狀態" width="130" align="center">
             <template slot-scope="scope">
               <div>
@@ -62,33 +68,27 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column property="setting" label="操作" fixed="right" width="270">
+          <el-table-column property="setting" label="操作" fixed="right" width="220">
             <template slot-scope="scope">
               <div class="buttonFlexBox">
                 <el-button
                   size="mini"
-                  @click="handleDispatch(scope.row)"
-                  type="info"
-                  v-if="hasButton('dispatch')"
-                >派車</el-button>
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.row)"
                   type="warning"
+                  @click="handleEdit(scope.row)"
                   v-if="hasButton('edit')"
                 >編輯</el-button>
                 <el-button
                   size="mini"
-                  @click="handleDetail(scope.row)"
                   type="success"
+                  @click="handleDetail(scope.row)"
                   v-if="hasButton('detail')"
                 >檢視</el-button>
                 <el-button
                   size="mini"
-                  @click="handleQuota(scope.row)"
-                  type="primary"
-                  v-if="hasButton('quota')"
-                >額度</el-button>
+                  type="danger"
+                  @click="getButtons(scope)"
+                  v-if="hasButton('delete')"
+                >刪除</el-button>
               </div>
             </template>
           </el-table-column>
@@ -101,24 +101,6 @@
         />
       </div>
     </div>
-
-    <!-- quotaDialog -->
-    <el-dialog title="可用額度" :visible.sync="quotaDialog" width="30%">
-      <span>可用額度可用額度可用額度可用額度</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="quotaDialog = false">取 消</el-button>
-        <el-button type="primary" @click="quotaDialog = false">確 定</el-button>
-      </span>
-    </el-dialog>
-
-    <!-- unitBDialog -->
-    <el-dialog title="B單位" :visible.sync="unitBDialog" width="30%">
-      <span>B單位B單位B單位B單位B單位B單位</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="unitBDialog = false">取 消</el-button>
-        <el-button type="primary" @click="unitBDialog = false">確 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -126,80 +108,19 @@
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
 import permissionBtn from "@/components/PermissionBtn";
-// import tablePermissionBtn from "@/components/TablePermissionBtn";
-import elDragDialog from "@/directive/el-dragDialog";
 import Pagination from "@/components/Pagination";
 export default {
-  name: "allUser",
+  name: "driver",
   components: {
     Sticky,
     Title,
     permissionBtn,
     Pagination,
   },
-  directives: {
-    elDragDialog,
-  },
   data() {
     return {
-      // button
       buttons: [],
-
-      // dialog
-      quotaDialog: false,
-      unitBDialog: false,
-
-      // main data
-      total: 200,
-      listQuery: {
-        page: 20,
-        limit: 20,
-      },
-      multipleSelection: [], // 列表checkbox選中的值
-
       value: "",
-      value1: "",
-      gridData: [
-        {
-          lock: 1,
-          pic: "Ｏ",
-          name: "王小虎",
-          code: "109X20404",
-          uid: "A203******",
-          birth: "1954-07-18",
-          sex: 0,
-          phone: "0921079303",
-          tel: "0921079303",
-          status: 1,
-          setting: "功能按鈕",
-        },
-        {
-          lock: 1,
-          pic: "Ｏ",
-          name: "王小虎",
-          code: "109X20404",
-          uid: "A203******",
-          birth: "1954-07-18",
-          sex: 0,
-          phone: "0921079303",
-          tel: "0921079303",
-          status: 0,
-          setting: "功能按鈕",
-        },
-        {
-          lock: 0,
-          pic: "Ｏ",
-          name: "王小虎",
-          code: "109X20404",
-          uid: "A203******",
-          birth: "1954-07-18",
-          sex: 1,
-          phone: "0921079303",
-          tel: "0921079303",
-          status: 1,
-          setting: "功能按鈕",
-        },
-      ],
       options: [
         {
           value: "选项1",
@@ -222,12 +143,61 @@ export default {
           label: "北京烤鸭",
         },
       ],
+      // main data
+      total: 200,
+      listQuery: {
+        page: 20,
+        limit: 20,
+      },
+      multipleSelection: [], // 列表checkbox選中的值
+      gridData: [
+        {
+          lock: 1,
+          pic: "Ｏ",
+          name: "王小虎",
+          code: "109X20404",
+          uid: "A203******",
+          birth: "1954-07-18",
+          sex: 0,
+          phone: "0921079303",
+          tel: "職業小客車",
+          status: 1,
+          setting: "功能按鈕",
+        },
+        {
+          lock: 1,
+          pic: "Ｏ",
+          name: "王小虎",
+          code: "109X20404",
+          uid: "A203******",
+          birth: "1954-07-18",
+          sex: 0,
+          phone: "0921079303",
+          tel: "職業小客車",
+          status: 0,
+          setting: "功能按鈕",
+        },
+        {
+          lock: 0,
+          pic: "Ｏ",
+          name: "王小虎",
+          code: "109X20404",
+          uid: "A203******",
+          birth: "1954-07-18",
+          sex: 1,
+          phone: "0921079303",
+          tel: "職業小客車",
+          status: 1,
+          setting: "功能按鈕",
+        },
+      ],
     };
   },
   methods: {
     // 獲取本路由下所有功能按鈕
     getButtons() {
       this.$route.meta.elements.forEach((el) => {
+        // console.log(el.domId);
         this.buttons.push(el.domId);
       });
     },
@@ -235,24 +205,7 @@ export default {
     hasButton(domId) {
       return this.buttons.includes(domId);
     },
-    // 主要按鈕
-    handleEdit(user) {
-      this.$router.push(`/alluser/edit/${user.uid}`);
-    },
-    handleQuota(user) {
-      console.log(user);
-      this.quotaDialog = true;
-    },
-    handleUnitB(user) {
-      this.unitBDialog = true;
-      console.log(user);
-    },
-    handleDetail(user) {
-      this.$router.push(`/alluser/detail/${user.uid}`);
-    },
-    handleDispatch(user) {
-      this.$router.push(`/alluser/dispatch/${user.uid}`);
-    },
+
     // table 功能
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -261,6 +214,8 @@ export default {
       this.$refs.mainTable.clearSelection();
       this.$refs.mainTable.toggleRowSelection(row);
     },
+
+    // 主要功能按鈕
     onBtnClicked(domId) {
       console.log(domId);
       switch (domId) {
@@ -275,11 +230,17 @@ export default {
           this.handleUnitB(this.multipleSelection[0]);
           break;
         case "add":
-          this.$router.push("/alluser/add/1");
+          this.$router.push("/driver/add/1");
           break;
         default:
           break;
       }
+    },
+    handleDetail(driver) {
+      this.$router.push(`/driver/detail/${driver.uid}`);
+    },
+    handleEdit(driver) {
+      this.$router.push(`/driver/edit/${driver.uid}`);
     },
   },
   mounted() {
@@ -288,9 +249,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.buttonFlexBox {
-  display: flex;
-  justify-content: center;
-}
+<style>
 </style>

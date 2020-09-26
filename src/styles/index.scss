@@ -165,10 +165,10 @@ code {
 
 .link-type,
 .link-type:focus {
-  color: #337ab7;
+  color: #f3971a;
   cursor: pointer;
   &:hover {
-    color: rgb(32, 160, 255);
+    color: #ff9c10;
   }
 }
 
@@ -279,7 +279,7 @@ table thead th {
     }
     .el-dialog__headerbtn {
       color: #333;
-      top: 11.5px;
+      top: 2.5px;
       right: 11.5px;
     }
   }
@@ -294,7 +294,7 @@ table thead th {
     line-height: 50px;
   }
   .el-dialog__body {
-    padding: 10px !important;
+    padding: 24px !important;
     .el-form {
       padding-right: 20px;
       padding-top: 10px;

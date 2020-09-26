@@ -1,6 +1,6 @@
 <template>
   <div class="consoleTableTitle">
-    <h4>{{ title }}</h4>
+    <h2 style="font-size:22px">{{ title }}</h2>
     <div class="baseline"></div>
   </div>
 </template>

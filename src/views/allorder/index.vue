@@ -83,7 +83,7 @@
                 <p>個案負擔 $0</p>
                 <p>(車資 + 陪同金額)</p>
                 <div class="rightBtnBox">
-                  <button class="orderDetail" @click="handleEdit(idx)">查看訂單</button>
+                  <button class="orderDetail" @click="handleDetail(idx)">查看訂單</button>
                   <button class="orderFlow">訂單歷程</button>
                 </div>
               </div>
@@ -195,8 +195,11 @@ export default {
           break;
       }
     },
-    handleEdit(idx) {
-      this.$router.push({ path: `/allorder/edit/${idx}`, query: { type: 1 } });
+    handleDetail(idx) {
+      this.$router.push({
+        path: `/allorder/detail/${idx}`,
+        query: { type: "first" },
+      });
     },
   },
 };

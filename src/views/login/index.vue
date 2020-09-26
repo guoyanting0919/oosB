@@ -21,7 +21,7 @@
             type="text"
             v-model="loginForm.username"
             autocomplete="on"
-            placeholder="請輸入登錄賬號"
+            placeholder="請輸入登錄帳號"
           />
         </el-form-item>
         <el-form-item prop="password">
@@ -37,12 +37,16 @@
             placeholder="請輸入密碼"
           ></el-input>
           <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="pwdType === 'password' ? 'eye' : 'eye-open'" />
+            <svg-icon
+              :icon-class="pwdType === 'password' ? 'eye' : 'eye-open'"
+            />
           </span>
         </el-form-item>
         <div class="tips" v-if="isIdentityAuth">
           <router-link to="/oidcRedirect">
-            <el-badge is-dot>接口服務器啟用了Oauth認證，請點擊這裡登錄</el-badge>
+            <el-badge is-dot
+              >接口服務器啟用了Oauth認證，請點擊這裡登錄</el-badge
+            >
           </router-link>
         </div>
         <el-form-item v-else>
@@ -52,11 +56,16 @@
             style="width:100%;background:#4452D5;font-size: 24px;height: 50px;"
             :loading="loading"
             @click.native.prevent="handleLogin"
-          >登 錄</el-button>
+            >登 錄</el-button
+          >
         </el-form-item>
         <p class="tips">默認System登錄後，你可以無法無天</p>
-        <p class="tips">admin/admin登錄後，會少一點權限，資源管理/分類管理的字段會少一點</p>
-        <p class="tips">test/test登錄後，權限會更少,資源管理/分類管理的字段也更少</p>
+        <p class="tips">
+          admin/admin登錄後，會少一點權限，資源管理/分類管理的字段會少一點
+        </p>
+        <p class="tips">
+          test/test登錄後，權限會更少,資源管理/分類管理的字段也更少
+        </p>
       </el-form>
     </div>
 

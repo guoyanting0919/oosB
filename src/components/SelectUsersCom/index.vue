@@ -2,9 +2,15 @@
   <div style="height: 100%;" class="select-users-wrap">
     <div class="flex-row" style="height: 100%;">
       <div class="part-box" v-if="loginKey === 'loginUser' && !orgId">
-        <el-card shadow="never" class="body-small custom-card" style="height: 100%;">
+        <el-card
+          shadow="never"
+          class="body-small custom-card"
+          style="height: 100%;"
+        >
           <div slot="header" class="clearfix">
-            <el-button type="text" style="padding: 0 11px" @click="getAllUsers">全部用戶>></el-button>
+            <el-button type="text" style="padding: 0 11px" @click="getAllUsers"
+              >全部用戶>></el-button
+            >
           </div>
 
           <el-tree
@@ -30,13 +36,21 @@
           >
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
           </el-input>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleSearchUser">查詢</el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            size="mini"
+            @click="handleSearchUser"
+            >查詢</el-button
+          >
           <div
             style="text-align: right;padding: 5px 10px;"
             :title="names"
             v-if="names"
             class="flex-item ellipsis"
-          >選中用戶：{{names}}</div>
+          >
+            選中用戶：{{ names }}
+          </div>
         </div>
         <el-table
           ref="multipleTable"
@@ -50,31 +64,42 @@
           @select="handleSelectionUser"
           @select-all="handleSelectionUser"
         >
-          <el-table-column align="center" type="selection" width="55"></el-table-column>
+          <el-table-column
+            align="center"
+            type="selection"
+            width="55"
+          ></el-table-column>
 
-          <el-table-column align="center" min-width="80px" :label="'賬號'">
+          <el-table-column align="center" min-width="80px" :label="'帳號'">
             <template slot-scope="scope">
-              <span class="link-type">{{scope.row.account}}</span>
+              <span class="link-type">{{ scope.row.account }}</span>
             </template>
           </el-table-column>
 
           <el-table-column align="center" min-width="80px" :label="'姓名'">
             <template slot-scope="scope">
-              <span>{{scope.row.name}}</span>
+              <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
 
           <el-table-column align="center" :label="'所屬部門'">
             <template slot-scope="scope">
-              <span>{{scope.row.organizations}}</span>
+              <span>{{ scope.row.organizations }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column align="center" class-name="status-col" :label="'狀態'" width="100">
+          <el-table-column
+            align="center"
+            class-name="status-col"
+            :label="'狀態'"
+            width="100"
+          >
             <template slot-scope="scope">
               <span :class="scope.row.status | userStatusFilter">
-                {{statusOptions.find(u =>u.key ==
-                scope.row.status).display_name}}
+                {{
+                  statusOptions.find((u) => u.key == scope.row.status)
+                    .display_name
+                }}
               </span>
             </template>
           </el-table-column>
@@ -92,11 +117,15 @@
           @select="handleSelectionUser"
           @select-all="handleSelectionUser"
         >
-          <el-table-column align="center" type="selection" width="55"></el-table-column>
+          <el-table-column
+            align="center"
+            type="selection"
+            width="55"
+          ></el-table-column>
 
           <el-table-column align="center" min-width="50px" :label="'角色名稱'">
             <template slot-scope="scope">
-              <span>{{scope.row.name}}</span>
+              <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
 
@@ -106,11 +135,18 @@
             </template>
           </el-table-column>-->
 
-          <el-table-column align="center" class-name="status-col" :label="'狀態'" width="100">
+          <el-table-column
+            align="center"
+            class-name="status-col"
+            :label="'狀態'"
+            width="100"
+          >
             <template slot-scope="scope">
               <span :class="scope.row.status | userStatusFilter">
-                {{statusOptions.find(u =>u.key ==
-                scope.row.status).display_name}}
+                {{
+                  statusOptions.find((u) => u.key == scope.row.status)
+                    .display_name
+                }}
               </span>
             </template>
           </el-table-column>
@@ -127,8 +163,12 @@
       </div>
     </div>
     <div style="text-align:right;margin-top: 10px;" v-if="!hiddenFooter">
-      <el-button size="small" type="cancel" @click="handleClose">取消</el-button>
-      <el-button size="small" type="primary" @click="handleSaveUsers">確定</el-button>
+      <el-button size="small" type="cancel" @click="handleClose"
+        >取消</el-button
+      >
+      <el-button size="small" type="primary" @click="handleSaveUsers"
+        >確定</el-button
+      >
     </div>
   </div>
 </template>
@@ -288,7 +328,7 @@ export default {
     // 獲取部門信息
     getPartData() {
       login.getOrgs().then((response) => {
-        this.partDatas = response.result.map(function (item) {
+        this.partDatas = response.result.map(function(item) {
           return {
             id: item.id,
             label: item.name,
@@ -362,4 +402,3 @@ export default {
   }
 }
 </style>
-
