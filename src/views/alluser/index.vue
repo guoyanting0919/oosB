@@ -11,7 +11,11 @@
           placeholder="請輸入關鍵字"
         ></el-input>
         <!-- 權限按鈕 -->
-        <permission-btn moduleName="builderTables" size="mini" v-on:btn-event="onBtnClicked"></permission-btn>
+        <permission-btn
+          moduleName="builderTables"
+          size="mini"
+          v-on:btn-event="onBtnClicked"
+        ></permission-btn>
       </div>
     </sticky>
 
@@ -30,31 +34,101 @@
           @selection-change="handleSelectionChange"
           @row-click="rowClick"
         >
-          <el-table-column type="selection" width="55" align="center"></el-table-column>
-          <el-table-column property="pic" label="照片" width="80" align="center"></el-table-column>
-          <el-table-column property="lock" label="鎖定狀態" width="100" align="center">
+          <el-table-column
+            type="selection"
+            width="55"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="pic"
+            label="照片"
+            width="80"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="lock"
+            label="鎖定狀態"
+            width="100"
+            align="center"
+          >
             <template slot-scope="scope">
               <div>
-                <i style="color:#409167" v-if="scope.row.lock" class="iconfont icon-Vector21"></i>
-                <i style="color:#d63737" v-else class="iconfont icon-Vector31"></i>
+                <i
+                  style="color:#409167"
+                  v-if="scope.row.lock"
+                  class="iconfont icon-Vector21"
+                ></i>
+                <i
+                  style="color:#d63737"
+                  v-else
+                  class="iconfont icon-Vector31"
+                ></i>
               </div>
             </template>
           </el-table-column>
-          <el-table-column property="name" label="姓名" width="120" align="center"></el-table-column>
-          <el-table-column property="code" label="個案編號" width="140" align="center"></el-table-column>
-          <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-          <el-table-column property="birth" label="生日" width="140" align="center"></el-table-column>
-          <el-table-column property="sex" label="性別" width="70" align="center">
+          <el-table-column
+            property="name"
+            label="姓名"
+            width="120"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="code"
+            label="個案編號"
+            width="140"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="uid"
+            label="身分證字號"
+            width="140"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="birth"
+            label="生日"
+            width="140"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="sex"
+            label="性別"
+            width="70"
+            align="center"
+          >
             <template slot-scope="scope">
               <div>
-                <i style="color:#d63737" v-if="scope.row.sex" class="iconfont icon-Vector5"></i>
-                <i style="color:#227294" v-else class="iconfont icon-Vector6"></i>
+                <i
+                  style="color:#d63737"
+                  v-if="scope.row.sex"
+                  class="iconfont icon-Vector5"
+                ></i>
+                <i
+                  style="color:#227294"
+                  v-else
+                  class="iconfont icon-Vector6"
+                ></i>
               </div>
             </template>
           </el-table-column>
-          <el-table-column property="phone" label="手機" width="170" align="center"></el-table-column>
-          <el-table-column property="tel" label="市話" width="170" align="center"></el-table-column>
-          <el-table-column property="status" label="狀態" width="130" align="center">
+          <el-table-column
+            property="phone"
+            label="手機"
+            width="170"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="tel"
+            label="市話"
+            width="170"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="status"
+            label="狀態"
+            width="130"
+            align="center"
+          >
             <template slot-scope="scope">
               <div>
                 <el-tag v-if="scope.row.status" type="success">可派發</el-tag>
@@ -62,7 +136,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column property="setting" label="操作" fixed="right" width="270">
+          <el-table-column
+            property="setting"
+            label="操作"
+            :fixed="isMobile()"
+            width="270"
+          >
             <template slot-scope="scope">
               <div class="buttonFlexBox">
                 <el-button
@@ -70,25 +149,29 @@
                   @click="handleDispatch(scope.row)"
                   type="info"
                   v-if="hasButton('dispatch')"
-                >派車</el-button>
+                  >派車</el-button
+                >
                 <el-button
                   size="mini"
                   @click="handleEdit(scope.row)"
                   type="warning"
                   v-if="hasButton('edit')"
-                >編輯</el-button>
+                  >編輯</el-button
+                >
                 <el-button
                   size="mini"
                   @click="handleDetail(scope.row)"
                   type="success"
                   v-if="hasButton('detail')"
-                >檢視</el-button>
+                  >檢視</el-button
+                >
                 <el-button
                   size="mini"
                   @click="handleQuota(scope.row)"
                   type="primary"
                   v-if="hasButton('quota')"
-                >額度</el-button>
+                  >額度</el-button
+                >
               </div>
             </template>
           </el-table-column>
@@ -225,6 +308,15 @@ export default {
     };
   },
   methods: {
+    // 是否為移動端
+    isMobile() {
+      const vm = this;
+      if (vm.$store.state.app.device === "mobile") {
+        return null;
+      } else {
+        return "right";
+      }
+    },
     // 獲取本路由下所有功能按鈕
     getButtons() {
       this.$route.meta.elements.forEach((el) => {

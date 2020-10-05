@@ -2,14 +2,16 @@
   <div class="flex-column carDetail">
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
-        <el-button type="info" size="mini" @click="handleEdit">編輯車輛資料</el-button>
+        <el-button type="info" size="mini" @click="handleEdit"
+          >編輯車輛資料</el-button
+        >
         <el-button type="info" size="mini">列印</el-button>
         <el-button type="info" plain size="mini">回列表</el-button>
       </div>
     </sticky>
     <div class="app-container flex-item">
       <Title title="檢視車輛資料"></Title>
-      <div class="bg-white formContainer">
+      <div class="bg-white formContainer customScrollBar">
         <el-form
           :label-position="labelPosition"
           label-width="200px"
@@ -26,39 +28,39 @@
               <el-row :gutter="16">
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">車牌號碼</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">車輛類別</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">車身顏色</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">廠牌型號</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">車輛來源</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">捐贈單位</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">座椅數量</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">輪椅數量</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">車身高度</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
               </el-row>
             </el-col>
@@ -66,31 +68,31 @@
           <el-row :gutter="16">
             <el-col :sm="12" :md="6">
               <div class="detailLabel">司機姓名</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">可否派發</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">出廠年月</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">最後驗車日</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">車輛審核</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">車輛設備</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="12">
               <div class="detailLabel">車行</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
           </el-row>
 
@@ -100,14 +102,23 @@
               <div class="headerCheckBox">保險類型</div>
               <div class="expireDate">保險到期日</div>
             </div>
-            <div v-for="item in 2" :key="item" style="border-bottom:1px solid #ddd;display:flex">
+            <div
+              v-for="item in 2"
+              :key="item"
+              style="border-bottom:1px solid #ddd;display:flex"
+            >
               <p class="typeBox">乘客險</p>
               <p class="expireBox">2020-02-12</p>
             </div>
           </div>
 
           <SubTitle title="備註"></SubTitle>
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="temp.Id"></el-input>
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="temp.Id"
+          ></el-input>
         </el-form>
       </div>
     </div>
@@ -162,12 +173,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
-.formContainer {
-  padding: 8px 16px;
-  overflow: auto;
-}
-
+<style lang="scss" scoped>
 .formTitle:nth-child(1) {
   margin-top: 1rem;
 }

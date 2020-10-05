@@ -2,15 +2,19 @@
   <div class="flex-column driverDetail">
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
-        <el-button type="info" size="mini" @click="handleEdit">編輯司機資料</el-button>
-        <el-button type="info" size="mini" @click="handleClock">查看打卡記錄</el-button>
+        <el-button type="info" size="mini" @click="handleEdit"
+          >編輯司機資料</el-button
+        >
+        <el-button type="info" size="mini" @click="handleClock"
+          >查看打卡記錄</el-button
+        >
         <el-button type="info" size="mini">列印</el-button>
         <el-button type="info" plain size="mini">回列表</el-button>
       </div>
     </sticky>
     <div class="app-container flex-item">
       <Title title="檢視司機資料"></Title>
-      <div class="bg-white formContainer">
+      <div class="bg-white formContainer customScrollBar">
         <el-form
           :label-position="labelPosition"
           label-width="200px"
@@ -27,23 +31,23 @@
               <el-row :gutter="16">
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">姓名</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">身分證字號</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">手機</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <div class="detailLabel">可否派發</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
                 <el-col :sm="12" :md="16">
                   <div class="detailLabel">車行</div>
-                  <div class="detailValue">{{temp.Id}}</div>
+                  <div class="detailValue">{{ temp.Id }}</div>
                 </el-col>
               </el-row>
             </el-col>
@@ -62,7 +66,11 @@
               <div class="headerCheckBox">駕駛類型</div>
               <div class="expireDate">駕照到期日</div>
             </div>
-            <div v-for="item in 2" :key="item" style="border-bottom:1px solid #ddd;display:flex">
+            <div
+              v-for="item in 2"
+              :key="item"
+              style="border-bottom:1px solid #ddd;display:flex"
+            >
               <p class="typeBox">職業小客車</p>
               <p class="expireBox">2020-02-12</p>
             </div>
@@ -75,7 +83,11 @@
               <div class="expireDate">保險到期日</div>
             </div>
 
-            <div v-for="item in 2" :key="item" style="border-bottom:1px solid #ddd;display:flex">
+            <div
+              v-for="item in 2"
+              :key="item"
+              style="border-bottom:1px solid #ddd;display:flex"
+            >
               <p class="typeBox">勞保</p>
               <p class="expireBox">2020-02-12</p>
             </div>
@@ -88,14 +100,23 @@
               <div class="expireDate">證照到期日</div>
             </div>
 
-            <div v-for="item in 2" :key="item" style="border-bottom:1px solid #ddd;display:flex">
+            <div
+              v-for="item in 2"
+              :key="item"
+              style="border-bottom:1px solid #ddd;display:flex"
+            >
               <p class="typeBox">計程車執業登記證</p>
               <p class="expireBox">2020-02-12</p>
             </div>
           </div>
 
           <SubTitle title="備註"></SubTitle>
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="temp.Id"></el-input>
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="temp.Id"
+          ></el-input>
         </el-form>
       </div>
     </div>
@@ -161,7 +182,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .formContainer {
   padding: 8px 16px;
   overflow: auto;

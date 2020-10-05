@@ -22,7 +22,11 @@
         ></el-date-picker>
 
         <!-- 權限按鈕 -->
-        <permission-btn moduleName="builderTables" size="mini" v-on:btn-event="onBtnClicked"></permission-btn>
+        <permission-btn
+          moduleName="builderTables"
+          size="mini"
+          v-on:btn-event="onBtnClicked"
+        ></permission-btn>
       </div>
     </sticky>
 
@@ -43,7 +47,7 @@
             <div class="orderStatusBox">空趟</div>
             <div class="orderStatusBox">已完成</div>
           </div>
-          <div v-for="(item,idx) in 9" :key="item" class="orderContainer">
+          <div v-for="(item, idx) in 9" :key="item" class="orderContainer">
             <div class="orderLeft">
               <div class="orderLeftTitle">訂單編號 TS1599449730870</div>
               <div class="orderLeftDetail">
@@ -83,7 +87,9 @@
                 <p>個案負擔 $0</p>
                 <p>(車資 + 陪同金額)</p>
                 <div class="rightBtnBox">
-                  <button class="orderDetail" @click="handleDetail(idx)">查看訂單</button>
+                  <button class="orderDetail" @click="handleDetail(idx)">
+                    查看訂單
+                  </button>
                   <button class="orderFlow">訂單歷程</button>
                 </div>
               </div>
@@ -92,7 +98,7 @@
         </div>
 
         <pagination
-          v-show="total>0"
+          v-show="total > 0"
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
@@ -101,10 +107,22 @@
     </div>
 
     <!-- violation dialog -->
-    <el-dialog v-el-drag-dialog title="各車行違規點數" :visible.sync="violationDialog">
+    <el-dialog
+      v-el-drag-dialog
+      title="各車行違規點數"
+      :visible.sync="violationDialog"
+    >
       <el-table :data="gridData">
-        <el-table-column property="date" label="日期" width="150"></el-table-column>
-        <el-table-column property="name" label="姓名" width="200"></el-table-column>
+        <el-table-column
+          property="date"
+          label="日期"
+          width="150"
+        ></el-table-column>
+        <el-table-column
+          property="name"
+          label="姓名"
+          width="200"
+        ></el-table-column>
         <el-table-column property="address" label="地址"></el-table-column>
       </el-table>
     </el-dialog>
@@ -205,5 +223,4 @@ export default {
 };
 </script>
 
-<style lang='scss'>
-</style>
+<style lang="scss"></style>

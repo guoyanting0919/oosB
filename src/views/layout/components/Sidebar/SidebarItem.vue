@@ -1,16 +1,25 @@
 <template>
   <div v-if="!item.hidden" class="menu-wrapper">
-    <template v-if="!item.children || item.children.length <= 0 || item.alwaysShow">
-      <el-menu-item :index="item.path" :class="{'submenu-title-noDropdown':!isNest}">
+    <template
+      v-if="!item.children || item.children.length <= 0 || item.alwaysShow"
+    >
+      <el-menu-item
+        :index="item.path"
+        :class="{ 'submenu-title-noDropdown': !isNest }"
+      >
         <i :class="`iconfont icon-${item.meta.icon}`"></i>
-        <span v-if="item.meta && item.meta.title" slot="title">{{item.meta.title}}</span>
+        <span v-if="item.meta && item.meta.title" slot="title">{{
+          item.meta.title
+        }}</span>
       </el-menu-item>
     </template>
 
     <el-submenu v-else :index="item.path">
       <template slot="title">
         <i :class="`iconfont icon-${item.meta.icon}`"></i>
-        <span v-if="item.meta&&item.meta.title" slot="title">{{item.meta.title}}</span>
+        <span v-if="item.meta && item.meta.title" slot="title">{{
+          item.meta.title
+        }}</span>
       </template>
 
       <template v-for="child in routes">
@@ -18,13 +27,15 @@
           <sidebar-item
             :is-nest="true"
             class="nest-menu"
-            v-if="child.children && child.children.length>0"
+            v-if="child.children && child.children.length > 0"
             :item="child"
             :key="child.path"
           ></sidebar-item>
           <el-menu-item v-else :key="child.name" :index="child.path">
             <i :class="`iconfont icon-${child.meta.icon}`"></i>
-            <span v-if="child.meta&&child.meta.title" slot="title">{{child.meta.title}}</span>
+            <span v-if="child.meta && child.meta.title" slot="title">{{
+              child.meta.title
+            }}</span>
           </el-menu-item>
         </template>
       </template>
@@ -80,5 +91,3 @@ export default {
   vertical-align: middle;
 }
 </style>
-
-

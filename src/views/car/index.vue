@@ -12,7 +12,12 @@
         ></el-input>
 
         <!-- 公司選擇 -->
-        <el-select size="mini" v-model="value" clearable placeholder="請選擇公司">
+        <el-select
+          size="mini"
+          v-model="value"
+          clearable
+          placeholder="請選擇公司"
+        >
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -21,7 +26,11 @@
           ></el-option>
         </el-select>
         <!-- 權限按鈕 -->
-        <permission-btn moduleName="builderTables" size="mini" v-on:btn-event="onBtnClicked"></permission-btn>
+        <permission-btn
+          moduleName="builderTables"
+          size="mini"
+          v-on:btn-event="onBtnClicked"
+        ></permission-btn>
       </div>
     </sticky>
     <div class="app-container flex-item">
@@ -39,15 +48,59 @@
           @selection-change="handleSelectionChange"
           @row-click="rowClick"
         >
-          <el-table-column type="selection" width="55" align="center"></el-table-column>
-          <el-table-column property="pic" label="照片" width="80" align="center"></el-table-column>
-          <el-table-column property="name" label="車牌號碼" width="120" align="center"></el-table-column>
-          <el-table-column property="uid" label="車輛類別" min-width="140" align="center"></el-table-column>
-          <el-table-column property="phone" label="廠牌型號" width="170" align="center"></el-table-column>
-          <el-table-column property="tel" label="輪椅數量" min-width="170" align="center"></el-table-column>
-          <el-table-column property="tel" label="座椅數量" min-width="170" align="center"></el-table-column>
-          <el-table-column property="tel" label="司機姓名" min-width="170" align="center"></el-table-column>
-          <el-table-column property="status" label="狀態" width="130" align="center">
+          <el-table-column
+            type="selection"
+            width="55"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="pic"
+            label="照片"
+            width="80"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="name"
+            label="車牌號碼"
+            width="120"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="uid"
+            label="車輛類別"
+            min-width="140"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="phone"
+            label="廠牌型號"
+            width="170"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="tel"
+            label="輪椅數量"
+            min-width="170"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="tel"
+            label="座椅數量"
+            min-width="170"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="tel"
+            label="司機姓名"
+            min-width="170"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="status"
+            label="狀態"
+            width="130"
+            align="center"
+          >
             <template slot-scope="scope">
               <div>
                 <el-tag v-if="scope.row.status" type="success">可派發</el-tag>
@@ -55,7 +108,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column property="setting" label="操作" fixed="right" width="220">
+          <el-table-column
+            property="setting"
+            label="操作"
+            :fixed="isMobile()"
+            width="220"
+          >
             <template slot-scope="scope">
               <div class="buttonFlexBox">
                 <el-button
@@ -63,19 +121,22 @@
                   type="warning"
                   @click="handleEdit(scope.row)"
                   v-if="hasButton('edit')"
-                >編輯</el-button>
+                  >編輯</el-button
+                >
                 <el-button
                   size="mini"
                   type="success"
                   @click="handleDetail(scope.row)"
                   v-if="hasButton('detail')"
-                >檢視</el-button>
+                  >檢視</el-button
+                >
                 <el-button
                   size="mini"
                   type="danger"
                   @click="getButtons(scope)"
                   v-if="hasButton('delete')"
-                >刪除</el-button>
+                  >刪除</el-button
+                >
               </div>
             </template>
           </el-table-column>
@@ -181,6 +242,15 @@ export default {
     };
   },
   methods: {
+    // 是否為移動端
+    isMobile() {
+      const vm = this;
+      if (vm.$store.state.app.device === "mobile") {
+        return null;
+      } else {
+        return "right";
+      }
+    },
     // 獲取本路由下所有功能按鈕
     getButtons() {
       this.$route.meta.elements.forEach((el) => {
@@ -236,5 +306,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

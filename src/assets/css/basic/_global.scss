@@ -2,6 +2,12 @@
 .swal2-container {
   z-index: 9999;
 }
+//文字水平置中
+.textCenter {
+  text-align: center;
+}
+
+// 共用scrollBar
 .customScrollBar {
   &::-webkit-scrollbar {
     z-index: 11;
@@ -15,7 +21,8 @@
   &::-webkit-scrollbar-thumb {
     border-radius: 5px;
     width: 6px;
-    background: $colorOrange;
+    background: #69696982;
+    // opacity: 0.5;
   }
 
   &::-webkit-scrollbar-corner,
@@ -26,5 +33,59 @@
   &::-webkit-scrollbar-track-piece {
     background: transparent;
     width: 6px;
+  }
+}
+
+// 共用formContainer
+.formContainer {
+  padding: 8px 16px;
+  overflow: auto;
+  height: calc(100% - 50px);
+  // height: auto;
+}
+
+// 頭像上傳
+.avatar-uploader {
+  background: #949596;
+  height: 240px;
+  width: 240px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  transition: background 0.3s;
+
+  &:hover {
+    background: #4f4f50;
+  }
+
+  @include rwd($lg) {
+    height: 200px;
+    width: 200px;
+    margin-top: 1rem;
+  }
+
+  .el-upload {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  i {
+    font-size: 1.5rem;
+    border: 2px solid #fff;
+    border-radius: 200px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  span {
+    font-weight: 700;
   }
 }

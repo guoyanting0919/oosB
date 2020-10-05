@@ -19,7 +19,12 @@
         </el-select>
 
         <!-- 公司選擇 -->
-        <el-select size="mini" v-model="value" clearable placeholder="請選擇公司">
+        <el-select
+          size="mini"
+          v-model="value"
+          clearable
+          placeholder="請選擇公司"
+        >
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -28,7 +33,12 @@
           ></el-option>
         </el-select>
         <!-- 日期選擇 -->
-        <el-date-picker size="mini" v-model="value1" type="date" placeholder="選擇日期"></el-date-picker>
+        <el-date-picker
+          size="mini"
+          v-model="value1"
+          type="date"
+          placeholder="選擇日期"
+        ></el-date-picker>
       </div>
     </sticky>
 
@@ -36,32 +46,57 @@
       <!-- 本日接送 -->
       <div class="todayContainer">
         <Title title="本日接送狀況"></Title>
-        <div class="todayDataContainer">
+        <div class="todayDataContainer ">
           <div class="dataBox">
             <i class="iconfont icon-console"></i>
             <p>總趟次</p>
-            <count-to class="card-panel-num" :startVal="0" :endVal="end" :duration="2000"></count-to>
+            <count-to
+              class="card-panel-num"
+              :startVal="0"
+              :endVal="end"
+              :duration="2000"
+            ></count-to>
           </div>
           <div class="dataBox">
             <i class="iconfont icon-console"></i>
             <p>總趟次</p>
 
-            <count-to class="card-panel-num" :startVal="0" :endVal="end" :duration="2000"></count-to>
+            <count-to
+              class="card-panel-num"
+              :startVal="0"
+              :endVal="end"
+              :duration="2000"
+            ></count-to>
           </div>
           <div class="dataBox">
             <i class="iconfont icon-console"></i>
             <p>總趟次</p>
-            <count-to class="card-panel-num" :startVal="0" :endVal="end" :duration="2000"></count-to>
+            <count-to
+              class="card-panel-num"
+              :startVal="0"
+              :endVal="end"
+              :duration="2000"
+            ></count-to>
           </div>
           <div class="dataBox">
             <i class="iconfont icon-console"></i>
             <p>總趟次</p>
-            <count-to class="card-panel-num" :startVal="0" :endVal="end" :duration="2000"></count-to>
+            <count-to
+              class="card-panel-num"
+              :startVal="0"
+              :endVal="end"
+              :duration="2000"
+            ></count-to>
           </div>
           <div class="dataBox">
             <i class="iconfont icon-console"></i>
             <p>總趟次</p>
-            <count-to class="card-panel-num" :startVal="0" :endVal="end" :duration="2000"></count-to>
+            <count-to
+              class="card-panel-num"
+              :startVal="0"
+              :endVal="end"
+              :duration="2000"
+            ></count-to>
           </div>
         </div>
       </div>

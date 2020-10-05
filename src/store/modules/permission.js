@@ -1,4 +1,5 @@
 import { constantRouterMap } from "@/router";
+import { deepClone } from "@/utils/index";
 import Layout from "@/views/layout/Layout";
 const groupRoutes = (data, dispatch) => {
   const parentPath =
@@ -68,7 +69,8 @@ const groupRouterLists = (data) => {
       }
       arr.push(item);
     });
-  arr = arr.concat(Object.assign(constantRouterMap));
+
+  arr = arr.concat(deepClone(constantRouterMap));
   arr.length > 0 &&
     arr.forEach((item) => {
       if (item.name === "layout") {
@@ -139,6 +141,7 @@ const permission = {
               }
             });
           commit("SET_ROUTERS", { addRouters: newPaths, routers: routers });
+          // console.log(newPaths);
           commit("SAVE_KEEP_ALIVE_DATA", newPaths);
           resolve(newPaths);
         })();

@@ -13,7 +13,7 @@
       <Title title="檢視個案基本資料"></Title>
 
       <!-- 基本資料 -->
-      <div class="formContainer bg-white">
+      <div class="formContainer bg-white customScrollBar">
         <el-form
           :label-position="labelPosition"
           label-width="200px"
@@ -24,90 +24,94 @@
           <SubTitle title="基本資料編輯"></SubTitle>
           <el-row :gutter="16">
             <el-col :sm="12" :md="6">
+              <div class="detailLabel">個案照片</div>
+              <div class="userPicBox">{{ temp.Id }}</div>
+            </el-col>
+            <el-col :sm="12" :md="6">
               <div class="detailLabel">個案編號</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">性別</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">姓名</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">生日</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">身分證字號</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">社會福利身份</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">手機</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">市話</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">個案身份</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">額度控管留用首月</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="24" :md="12">
               <div class="detailLabel">管理單位</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">失能等級</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">綁定手機</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">啟用日期</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">失效日期</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">可否派發</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="18">
               <div class="detailLabel">不可派發原因</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
 
             <el-col :sm="24" :md="24">
               <div class="detailLabel">居住地</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
 
             <el-col :sm="18" :md="18">
               <div class="detailLabel">輪住地址</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="3">
               <div class="detailLabel">經度</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="3">
               <div class="detailLabel">緯度</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
           </el-row>
 
@@ -115,24 +119,24 @@
           <el-row :gutter="24">
             <el-col :sm="12" :md="6">
               <div class="detailLabel">聯絡人姓名</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">關係</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">聯絡人手機</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
             <el-col :sm="12" :md="6">
               <div class="detailLabel">聯絡人市話</div>
-              <div class="detailValue">{{temp.Id}}</div>
+              <div class="detailValue">{{ temp.Id }}</div>
             </el-col>
           </el-row>
 
           <SubTitle title="備註"></SubTitle>
-          <div class="detailValue">{{temp.Id}}</div>
+          <div class="detailValue">{{ temp.Id }}</div>
         </el-form>
       </div>
 
@@ -163,15 +167,58 @@
             highlight-current-row
             style="width: 100%;"
           >
-            <el-table-column type="selection" width="55" align="center"></el-table-column>
-            <el-table-column property="pic" label="照片" width="80" align="center"></el-table-column>
-            <el-table-column property="name" label="姓名" width="120" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" align="center"></el-table-column>
+            <el-table-column
+              type="selection"
+              width="55"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="pic"
+              label="照片"
+              width="80"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="name"
+              label="姓名"
+              width="120"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              width="140"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              width="140"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              width="140"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              width="140"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              width="140"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              align="center"
+            ></el-table-column>
           </el-table>
           <pagination
             v-show="total > 0"
@@ -209,15 +256,58 @@
             highlight-current-row
             style="width: 100%;"
           >
-            <el-table-column type="selection" width="55" align="center"></el-table-column>
-            <el-table-column property="pic" label="照片" width="80" align="center"></el-table-column>
-            <el-table-column property="name" label="姓名" width="120" align="center"></el-table-column>
-            <el-table-column property="code" label="個案編號" width="140" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
-            <el-table-column property="uid" label="身分證字號" width="140" align="center"></el-table-column>
+            <el-table-column
+              type="selection"
+              width="55"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="pic"
+              label="照片"
+              width="80"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="name"
+              label="姓名"
+              width="120"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="code"
+              label="個案編號"
+              width="140"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              width="140"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              width="140"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              width="140"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              property="uid"
+              label="身分證字號"
+              width="140"
+              align="center"
+            ></el-table-column>
           </el-table>
           <pagination
             v-show="total > 0"
@@ -338,9 +428,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.formContainer {
-  padding: 8px 16px;
-}
 .formTitle {
   font-size: 18px;
   color: #fd8115;
@@ -378,5 +465,12 @@ export default {
   color: #606266;
   border-bottom: 1px dashed #fd8115;
   margin-bottom: 1rem;
+}
+.userPicBox {
+  height: 200px;
+  margin: auto;
+  width: 200px;
+  margin-top: 1rem;
+  background: rgb(221, 221, 221);
 }
 </style>

@@ -28,7 +28,8 @@
       </div>
     </sticky>
     <div class="app-container flex-item">
-      <div class="bg-white fh">
+      <Title title="角色管理"></Title>
+      <div class="bg-white" style="height:calc(100% - 50px)">
         <el-table
           ref="mainTable"
           :key="tableKey"
@@ -243,6 +244,7 @@
 import * as roles from "@/api/roles";
 import waves from "@/directive/waves"; // 水波紋指令
 import Sticky from "@/components/Sticky";
+import Title from "@/components/ConsoleTableTitle";
 import RoleUsers from "@/components/RoleUsers";
 import permissionBtn from "@/components/PermissionBtn";
 import accessModules from "@/components/AccessModules";
@@ -261,6 +263,7 @@ export default {
     accessResource,
     Pagination,
     selectUsersCom,
+    Title,
   },
   directives: {
     waves,

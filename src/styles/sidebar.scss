@@ -106,16 +106,21 @@
     .sidebar-container {
       transition: 0.3s;
       width: 240px !important;
+      position: absolute;
       @include rwd($md) {
         position: absolute;
       }
     }
     &.hideSidebar {
       .sidebar-container {
-        width: 36px !important;
+        width: 0 !important;
         transition-duration: 0.3s;
+        position: absolute;
+
         @include rwd($md) {
           width: 0 !important;
+          transition-duration: 0.3s;
+          position: absolute;
         }
         // transform: translate3d(-180px, 0, 0);//me
       }

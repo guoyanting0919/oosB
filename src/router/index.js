@@ -85,13 +85,13 @@ export const constantRouterMap = [
         meta: { title: "主頁", icon: "iconfont icon-home", sortNo: 0 },
         component: () => import("@/views/dashboard/index"),
       },
-      {
-        path: "/qa",
-        name: "問題",
-        meta: { title: "問題", icon: "iconfont icon-home", sortNo: 0 },
-        hidden: true,
-        component: () => import("@/views/QA/index"),
-      },
+      // {
+      //   path: "/qa",
+      //   name: "問題",
+      //   meta: { title: "問題", icon: "iconfont icon-home", sortNo: 0 },
+      //   hidden: true,
+      //   component: () => import("@/views/QA/index"),
+      // },
       {
         path: "/profile",
         name: "profile",

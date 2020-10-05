@@ -8,7 +8,7 @@
     </sticky>
     <div class="app-container flex-item">
       <Title title="編輯司機"></Title>
-      <div class="bg-white formContainer">
+      <div class="bg-white formContainer customScrollBar">
         <el-form
           :label-position="labelPosition"
           label-width="200px"
@@ -25,30 +25,51 @@
               <el-row :gutter="16">
                 <el-col :sm="12" :md="8">
                   <el-form-item label="姓名" prop="Id">
-                    <el-input v-model="temp.Id" placeholder="請輸入姓名"></el-input>
+                    <el-input
+                      v-model="temp.Id"
+                      placeholder="請輸入姓名"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <el-form-item label="身分證字號" prop="Id">
-                    <el-input disabled v-model="temp.Id" placeholder="請輸入身分證字號"></el-input>
+                    <el-input
+                      disabled
+                      v-model="temp.Id"
+                      placeholder="請輸入身分證字號"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <el-form-item label="手機" prop="Id">
-                    <el-input disabled v-model="temp.Id" placeholder="請輸入手機"></el-input>
+                    <el-input
+                      disabled
+                      v-model="temp.Id"
+                      placeholder="請輸入手機"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="12" :md="8">
                   <el-form-item label="可否派發" prop="Id">
-                    <el-select v-model="temp.Id" placeholder="請選擇可否派發" style="width:100%">
+                    <el-select
+                      v-model="temp.Id"
+                      placeholder="請選擇可否派發"
+                      style="width:100%"
+                    >
                       <el-option :value="1" :label="'可派發'">可派發</el-option>
-                      <el-option :value="2" :label="'不可派發'">不可派發</el-option>
+                      <el-option :value="2" :label="'不可派發'"
+                        >不可派發</el-option
+                      >
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="12" :md="16">
                   <el-form-item label="車行" prop="Id">
-                    <el-input disabled v-model="temp.Id" placeholder="請輸入身分證字號"></el-input>
+                    <el-input
+                      disabled
+                      v-model="temp.Id"
+                      placeholder="請輸入身分證字號"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -61,7 +82,11 @@
               <div class="expireDate">駕照到期日</div>
             </div>
             <el-checkbox-group v-model="temp.Type">
-              <div v-for="item in 2" :key="item" style="border-bottom:1px solid #ddd;display:flex">
+              <div
+                v-for="item in 2"
+                :key="item"
+                style="border-bottom:1px solid #ddd;display:flex"
+              >
                 <el-checkbox
                   label="職業小客車"
                   name="type"
@@ -87,7 +112,11 @@
               <div class="expireDate">保險到期日</div>
             </div>
             <el-checkbox-group v-model="temp.Type">
-              <div v-for="item in 2" :key="item" style="border-bottom:1px solid #ddd;display:flex">
+              <div
+                v-for="item in 2"
+                :key="item"
+                style="border-bottom:1px solid #ddd;display:flex"
+              >
                 <el-checkbox
                   label="勞保"
                   name="type"
@@ -113,7 +142,11 @@
               <div class="expireDate">證照到期日</div>
             </div>
             <el-checkbox-group v-model="temp.Type">
-              <div v-for="item in 2" :key="item" style="border-bottom:1px solid #ddd;display:flex">
+              <div
+                v-for="item in 2"
+                :key="item"
+                style="border-bottom:1px solid #ddd;display:flex"
+              >
                 <el-checkbox
                   label="計程車執業登記證"
                   name="type"
@@ -133,7 +166,12 @@
           </div>
 
           <SubTitle title="備註"></SubTitle>
-          <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="temp.Id"></el-input>
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入内容"
+            v-model="temp.Id"
+          ></el-input>
         </el-form>
       </div>
     </div>
@@ -179,12 +217,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
-.formContainer {
-  padding: 8px 16px;
-  // overflow: auto;
-  height: auto;
-}
+<style lang="scss" scoped>
 .formTitle:nth-child(1) {
   margin-top: 1rem;
 }

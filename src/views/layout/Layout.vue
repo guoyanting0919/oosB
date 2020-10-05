@@ -1,5 +1,15 @@
 <template>
   <div class="app-wrapper" :class="classObj">
+    <!-- <div class="globalSearchOrder">
+      <i class="iconfont icon-search"></i>
+      <input
+        placeholder="快速搜尋訂單編號"
+        class="searchOrderInput"
+        type="text"
+        v-model="orderId"
+        @keydown.enter="handleSearch"
+      />
+    </div> -->
     <el-container class="flex-column">
       <el-header height="64px">
         <navbar></navbar>
@@ -27,6 +37,11 @@ export default {
     AppMain,
     TagsView,
   },
+  data() {
+    return {
+      orderId: "",
+    };
+  },
   mixins: [ResizeMixin],
   computed: {
     sidebar() {
@@ -47,6 +62,10 @@ export default {
   methods: {
     handleClickOutside() {
       this.$store.dispatch("CloseSideBar", { withoutAnimation: false });
+    },
+    handleSearch() {
+      console.log(this.orderId);
+      this.$router.push(`/allorder/detail/${this.orderId}?type=first`);
     },
   },
 };
@@ -90,5 +109,52 @@ export default {
 }
 .custom-tags-view {
   margin-top: 0 !important;
+}
+.globalSearchOrder {
+  min-width: 50px;
+  height: 50px;
+  position: absolute;
+  transition: 0.5s;
+  background: #ffd28f;
+  opacity: 0.6;
+  border-radius: 200px;
+  right: 1rem;
+  bottom: 2rem;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+
+  .icon-search {
+    transform: translateX(2.5px);
+    // transform: translateY(-1px);
+  }
+
+  .searchOrderInput {
+    width: 0px;
+    // opacity: 0;
+    background: transparent;
+    // border: 1px solid #fff;
+    border: none;
+    transition: 0.5s;
+
+    &:focus {
+      width: 200px;
+      // border: 1px solid #fff;
+      outline: none;
+      padding-left: 0.5rem;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+    .searchOrderInput {
+      width: 200px;
+      padding-left: 0.5rem;
+      opacity: 0.8;
+    }
+  }
 }
 </style>

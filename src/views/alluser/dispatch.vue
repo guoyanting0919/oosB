@@ -21,7 +21,7 @@
         <!-- dispatch -->
         <div class="dispatchContainer">
           <div class="caseUserName">name</div>
-          <div class="dispatchDetail">
+          <div class="dispatchDetail customScrollBar">
             <el-form
               :label-position="labelPosition"
               label-width="200px"
@@ -42,12 +42,18 @@
                 </el-col>
                 <el-col :sm="24" :md="9" v-if="temp.Id">
                   <el-form-item label="乘車時間" prop="Id">
-                    <el-time-picker v-model="temp.Id2" placeholder="請選擇乘車時間" style="width:100%"></el-time-picker>
+                    <el-time-picker
+                      v-model="temp.Id2"
+                      placeholder="請選擇乘車時間"
+                      style="width:100%"
+                    ></el-time-picker>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="24">
                   <div>
-                    <span class="unitBTitle">優先搭乘車行排序 (請依序點擊完成排序)</span>
+                    <span class="unitBTitle"
+                      >優先搭乘車行排序 (請依序點擊完成排序)</span
+                    >
                     <div class="unitBContainer">
                       <div class="unitBBox"></div>
                       <div class="unitBBox"></div>
@@ -71,12 +77,20 @@
                 </el-col>
                 <el-col :sm="24" :md="18">
                   <el-form-item label="起點" prop="Id">
-                    <el-input v-model="temp.Id" placeholder="請輸入起點"></el-input>
+                    <el-input
+                      v-model="temp.Id"
+                      placeholder="請輸入起點"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="6">
                   <el-form-item label="起點備註" prop="Id">
-                    <el-select clearable v-model="temp.Id" placeholder="請選擇備註" style="width:100%">
+                    <el-select
+                      clearable
+                      v-model="temp.Id"
+                      placeholder="請選擇備註"
+                      style="width:100%"
+                    >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
                     </el-select>
@@ -84,17 +98,28 @@
                 </el-col>
                 <el-col :sm="24" :md="24">
                   <el-form-item label="起點備註-其他" prop="Id">
-                    <el-input v-model="temp.Id" placeholder="請輸入起點備註"></el-input>
+                    <el-input
+                      v-model="temp.Id"
+                      placeholder="請輸入起點備註"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="18">
                   <el-form-item label="訖點" prop="Id">
-                    <el-input v-model="temp.Id" placeholder="請輸入訖點"></el-input>
+                    <el-input
+                      v-model="temp.Id"
+                      placeholder="請輸入訖點"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="6">
                   <el-form-item label="訖點備註" prop="Id">
-                    <el-select clearable v-model="temp.Id" placeholder="請選擇備註" style="width:100%">
+                    <el-select
+                      clearable
+                      v-model="temp.Id"
+                      placeholder="請選擇備註"
+                      style="width:100%"
+                    >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
                     </el-select>
@@ -102,7 +127,10 @@
                 </el-col>
                 <el-col :sm="24" :md="24">
                   <el-form-item label="訖點備註-其他" prop="Id">
-                    <el-input v-model="temp.Id" placeholder="請輸入訖點備註"></el-input>
+                    <el-input
+                      v-model="temp.Id"
+                      placeholder="請輸入訖點備註"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="12">
@@ -133,7 +161,12 @@
                 </el-col>
                 <el-col :sm="24" :md="6">
                   <el-form-item label="車種" prop="Id">
-                    <el-select clearable v-model="temp.Id" placeholder="請選擇車種" style="width:100%">
+                    <el-select
+                      clearable
+                      v-model="temp.Id"
+                      placeholder="請選擇車種"
+                      style="width:100%"
+                    >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
                     </el-select>
@@ -141,7 +174,12 @@
                 </el-col>
                 <el-col :sm="24" :md="6">
                   <el-form-item label="輪椅" prop="Id">
-                    <el-select clearable v-model="temp.Id" placeholder="請選擇輪椅" style="width:100%">
+                    <el-select
+                      clearable
+                      v-model="temp.Id"
+                      placeholder="請選擇輪椅"
+                      style="width:100%"
+                    >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
                     </el-select>
@@ -149,7 +187,12 @@
                 </el-col>
                 <el-col :sm="24" :md="12">
                   <el-form-item label="陪同人數" prop="Id">
-                    <el-select clearable v-model="temp.Id" placeholder="請選擇陪同人數" style="width:100%">
+                    <el-select
+                      clearable
+                      v-model="temp.Id"
+                      placeholder="請選擇陪同人數"
+                      style="width:100%"
+                    >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
                     </el-select>
@@ -157,7 +200,10 @@
                 </el-col>
                 <el-col :sm="24" :md="12">
                   <el-form-item label="簡訊號碼" prop="Id">
-                    <el-input v-model="temp.Id" placeholder="請輸入簡訊號碼"></el-input>
+                    <el-input
+                      v-model="temp.Id"
+                      placeholder="請輸入簡訊號碼"
+                    ></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -173,10 +219,10 @@
   </div>
 </template>
 <script
-      async
-      defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkLxJzOtyQ6Oyv4e1rTlMxGSixHr0to3Q"
-    ></script>
+  async
+  defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAkLxJzOtyQ6Oyv4e1rTlMxGSixHr0to3Q"
+></script>
 <script>
 import Sticky from "@/components/Sticky";
 export default {
@@ -276,7 +322,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .allUserDispatch {
   .mainContainer {
     // background: lightblue;
