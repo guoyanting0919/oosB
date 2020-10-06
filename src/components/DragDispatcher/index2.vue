@@ -16,6 +16,7 @@
       <div class="driverFakeBox">
         <div class="driverCard" v-for="(item, key) in dragData" :key="key">
           {{ key }}
+          <!-- <div class="orderBox" draggable="true"></div> -->
         </div>
       </div>
 
@@ -25,25 +26,20 @@
           {{ item }}
         </div>
       </div>
-
-      <div
-        class="distatchContainer"
-        @dragover.prevent
-        @mousedown.prevent="mouseDownHandler"
+      <!-- @mousedown.prevent="mouseDownHandler"
         @mouseup.prevent="mouseUpHandler"
         @mouseleave.prevent="mouseUpHandler"
-        @mousemove.prevent="ToScroll"
-      >
+        @mousemove.prevent="ToScroll" -->
+      <div class="distatchContainer" @dragover.prevent>
         <div class="driverBox">
           <!-- 司機迴圈 -->
           <div
             @mouseenter="driverMouseUp"
             @dragend="driverDragleave"
-            @drop="driverDrop($event)"
             :class="{ active: isActive }"
             class="driver"
             draggable="true"
-            v-for="(driver, index, key) in dragData"
+            v-for="(driver, key) in dragData"
             :key="key"
           >
             <!-- <div class="driverCard">司機</div> -->
@@ -51,23 +47,44 @@
             <div
               @mouseenter="driverMouseUp"
               @dragover.self="showShadow"
-              @dragleave="clearShadow"
-              @dragend="clearShadow"
-              @drop="driverDrop($event)"
-              v-for="(time, key) in driver"
-              :key="key"
+              @dragleave.self="clearShadow"
+              @dragend.self="clearShadow"
+              @drop="driverDrop($event, driver, time, key, key2)"
+              v-for="(time, key2) in driver"
+              :key="key2"
               class="timeBox"
             >
-              <!-- <el-button @click="click(item, item2)">{{ key }}</el-button> -->
-              <template v-if="time"> </template>
               <div
-                @dragstart="test($event)"
-                @click="test2()"
-                class="dispatchTest"
-                draggable="true"
+                @mouseenter="driverMouseUp"
+                @dragover.self="showShadow"
+                @dragleave="clearShadow"
+                @dragend="clearShadow"
+                @drop="driverDrop($event, driver, time, key, key2)"
+                class="whiteDriverTime"
               >
-                {{ time.Id }}
+                {{ key + "" + key2 }}
               </div>
+              <!-- <el-button @click="click(item, item2)">{{ key }}</el-button> -->
+              <template v-if="time">
+                <div
+                  @mouseenter.stop="test2()"
+                  @dragend="test()"
+                  @mouseleave="test()"
+                  @drop.stop="driverDropD($event, driver, time, key, key2)"
+                  class="dispatchCard"
+                  draggable="true"
+                >
+                  <div class="dispatchCardTitle">
+                    <p>6分</p>
+                    <p>NEW</p>
+                  </div>
+                  <p>王小明</p>
+                  <p>王小明</p>
+                  <p>王小明</p>
+                  <p>王小明</p>
+                  <p>{{ time.Id }}</p>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -100,6 +117,7 @@ export default {
   },
   data() {
     return {
+      canDrag: true,
       scroll: null,
       dragData: "",
       driverList: ["YT", "阿華", "安哥", "阿智", "冰鳥"],
@@ -126,6 +144,27 @@ export default {
     },
   },
   methods: {
+    dragSetting() {
+      const vm = this;
+      this.scroll = new IScroll(".distatchContainer", {
+        mouseWheel: true, // 允许鼠标滚轮
+        scrollX: true,
+        scrollY: true,
+        probeType: 3,
+        momentum: false,
+      });
+
+      this.scroll.on("scroll", function () {
+        if (vm.canDrag) {
+          document.querySelectorAll(".timeFakeBox")[0].style.transform =
+            "translate(0px," + this.y + "px) ";
+          document.querySelectorAll(".driverFakeBox")[0].style.transform =
+            "translate(" + this.x + "px,0px) ";
+        } else {
+          return;
+        }
+      });
+    },
     mouseDownHandler(e) {
       let ele = document.querySelectorAll(".distatchContainer")[0];
       // console.log(ele.scrollLeft);
@@ -168,22 +207,33 @@ export default {
     driverMouseUp() {
       //   console.log("a");
     },
-    driverDrop(e) {
+    driverDrop(e, driver, time, key, key2) {
+      console.log(e, driver, time, key, key2);
       this.isActive = true;
-      e.target.style.boxShadow = "none";
+      e.target.style.background = "#fff";
     },
-    test(e) {
-      console.log(e);
+    driverDropD() {
+      console.log("aaaa");
+    },
+    test() {
+      this.scroll.enabled = true;
     },
     test2() {
       console.log("a");
+      // this.canDrag = false;
+      this.scroll.enabled = !this.scroll.enabled;
+      console.log(this.scroll.enabled);
+      // this.scroll = {};
+      // console.log(this.scroll);
     },
     showShadow(e) {
       //   this.isActive = true;
-      e.target.style.boxShadow = "inset 0px 0px 20px #888";
+      // e.target.style.boxShadow = "inset 0px 0px 20px #888";
+      e.target.style.background = "#00000057";
     },
     clearShadow(e) {
-      e.target.style.boxShadow = "none";
+      // e.target.style.boxShadow = "none";
+      e.target.style.background = "#fff";
     },
   },
   created() {
@@ -207,20 +257,7 @@ export default {
     console.log(resObj);
   },
   mounted() {
-    this.scroll = new IScroll(".distatchContainer", {
-      mouseWheel: true, // 允许鼠标滚轮
-      scrollX: true,
-      scrollY: true,
-      probeType: 3,
-      momentum: false,
-    });
-
-    this.scroll.on("scroll", function() {
-      document.querySelectorAll(".timeFakeBox")[0].style.transform =
-        "translate(0px," + this.y + "px) ";
-      document.querySelectorAll(".driverFakeBox")[0].style.transform =
-        "translate(" + this.x + "px,0px) ";
-    });
+    this.dragSetting();
   },
 };
 </script>
@@ -346,13 +383,42 @@ export default {
     // margin-top: 100px;
   }
 
-  .dispatchTest {
-    background: lightpink;
-    z-index: 19999;
+  .dispatchCard {
+    background: #ffefde;
+    padding: 0.5rem;
+    border: 2px solid #fa8c16;
+    border-top: 5px solid #fa8c16;
+    border-radius: 0px 0px 8px 8px;
+    width: 33%;
+    z-index: 1;
+    transition: 0.3s;
+    height: 90px;
+    overflow: hidden;
 
     &:hover {
-      background: lightsalmon;
+      // transform: translate(4px, -4px);
+      z-index: 2;
+      height: auto;
     }
+  }
+
+  .dispatchCardTitle {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .whiteDriverTime {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-size: 2rem;
+    line-height: 90px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: #fff;
+    transition: 0.3s;
+    position: absolute;
+    width: 100%;
   }
 }
 </style>
