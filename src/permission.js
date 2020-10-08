@@ -29,7 +29,7 @@ let routerMappingList = [
     title: "司機車輛管理 / 車輛資料",
   },
 ];
-let elementMappingList = ["add", "edit", "detail", "dispatch"];
+let elementMappingList = ["add", "edit", "detail", "dispatch", "dispatchA"];
 
 const whiteList = [
   "/login",

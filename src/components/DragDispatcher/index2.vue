@@ -1,22 +1,49 @@
 <template>
   <div class="dragDispatcherContainer">
-    <div class="orderContainer">
-      <div draggable="true" class="orderBox" @dragstart="test($event)"></div>
-      <div class="orderBox"></div>
-      <div class="orderBox"></div>
-      <div class="orderBox"></div>
+    <div class="orderContainer customScrollBar">
+      <div
+        v-for="item in 10"
+        :key="item"
+        draggable="true"
+        class="orderCard"
+        @dragstart="test($event)"
+      >
+        <div class="orderCardTitle">
+          <p>一般車</p>
+          <p>普通輪椅(可收拆)</p>
+        </div>
+        <div class="orderCardMain">
+          <div class="orderInfo">
+            <p class="orderInfoName">吳阿花</p>
+            <p>可共乘</p>
+            <p>0人陪同</p>
+          </div>
+          <p class="orderTime">06:55 | 32分鐘</p>
+          <div class="orderAddr">
+            <i class="iconfont icon-circle"></i>
+            <i class="iconfont icon-Vector10"></i>
+            <p class="startAddr">新北市板橋區板新路27號</p>
+            <p class="endAddr">臺北市內湖區內湖路一段285號</p>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="outsideContainer">
       <div class="driverTimeCard">
-        <p>車輛</p>
-        <p>時間</p>
+        <p>車輛 <i class="iconfont icon-right1"></i></p>
+        <p style="margin-top: 0.5rem">
+          時間 <i class="iconfont icon-right1 iconRoate"></i>
+        </p>
       </div>
 
       <!-- driver fake box -->
       <div class="driverFakeBox">
         <div class="driverCard" v-for="(item, key) in dragData" :key="key">
-          {{ key }}
-          <!-- <div class="orderBox" draggable="true"></div> -->
+          <div class="driverCardTitle">
+            <div class="driverImg"></div>
+            <p class="driverName">{{ key }}(V53857)</p>
+          </div>
+          <p class="carInfo">座位:8 | 輪椅:0 | 一般車</p>
         </div>
       </div>
 
@@ -75,7 +102,7 @@
                   draggable="true"
                 >
                   <div class="dispatchCardTitle">
-                    <p>6分</p>
+                    <p>{{ time[0].OrderDetails.ExpectedMinute }}分</p>
                     <p>NEW</p>
                   </div>
                   <p>王小明</p>
@@ -235,6 +262,10 @@ export default {
       // e.target.style.boxShadow = "none";
       e.target.style.background = "#fff";
     },
+    getHeight(x) {
+      let step = 100 / this.step;
+      return x * step + "px";
+    },
   },
   created() {
     let resObj = {};
@@ -249,7 +280,7 @@ export default {
           `${moment(item2.DespatchDetails?.[0]?.Despatch?.StartDate).format(
             "HH:mm"
           )}`
-        ] = item2.DespatchDetails?.[0]?.Despatch;
+        ] = item2.DespatchDetails;
       });
     });
     this.dragData = resObj;
@@ -267,61 +298,149 @@ export default {
   display: flex;
   height: calc(100vh - 104px);
   width: 100%;
-  background: lightcyan;
+  // background: #fff;
   padding: 1rem;
 
   .orderContainer {
-    width: 25%;
+    width: 286px;
     min-height: 100%;
-    padding-top: 1rem;
-    background: lightgreen;
+    overflow: auto;
+    // padding-top: 1rem;
+    // background: lightgreen;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    margin-right: 2rem;
+    margin-right: 1rem;
   }
 
-  .orderBox {
-    width: 90px;
-    height: 100px;
-    background: lightseagreen;
+  .orderCard {
+    width: 270px;
+    height: auto;
+    background: #fff;
+    border: 2px solid #fa8c16;
+    border-top: 5px solid #fa8c16;
+    border-radius: 0px 0px 8px 8px;
     margin-bottom: 1rem;
+  }
+  .orderCardTitle {
+    height: 38px;
+    color: #fff;
+    background: #fa8c16;
+    padding: 0.5rem;
+    display: flex;
+    font-size: 14px;
+    font-weight: 700;
+    p {
+      margin-right: 1rem;
+    }
+  }
+  .orderCardMain {
+    padding: 0.5rem;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .orderInfo {
+    color: #fa8c16;
+    display: flex;
+    margin-bottom: 0.5rem;
+
+    p {
+      margin-right: 1rem;
+    }
+  }
+  .orderInfoName {
+    color: #000;
+    font-size: 1rem;
+  }
+  .orderTime {
+    margin-bottom: 0.5rem;
+  }
+  .orderAddr {
+    padding-left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 45px;
+    border-left: 3px dotted #fa8c16;
+    position: relative;
+
+    .icon-circle {
+      font-weight: 500;
+      color: #fa8c16;
+      position: absolute;
+      left: -9px;
+      top: -1px;
+      background: #fff;
+    }
+
+    .icon-Vector10 {
+      font-weight: 500;
+      color: #fa8c16;
+      position: absolute;
+      left: -9px;
+      bottom: -1px;
+      background: #fff;
+    }
+  }
+
+  .startAddr {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .endAddr {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .outsideContainer {
     display: flex;
     flex-wrap: wrap;
     overflow: hidden;
-    width: 100%;
+    width: calc(100% - 286px - 16px);
     position: relative;
   }
 
   .driverTimeCard {
+    color: #fa8c16;
     position: absolute;
     width: 100px;
     height: 100px;
     background: #fff;
     z-index: 999;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
     flex-direction: column;
     display: flex;
     align-items: center;
     justify-content: center;
   }
+  .iconRoate {
+    transform: rotate(90deg);
+  }
 
   .driverFakeBox {
     display: flex;
     // min-width: 100%;
-    background: forestgreen;
+    // background: forestgreen;
   }
 
   .driverCard {
-    background: lemonchiffon;
+    background: #fff;
     height: 100px;
     z-index: 999;
-    // position: fixed;
     width: 320px;
     border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem;
 
     &:nth-child(1) {
       // background: brown;
@@ -329,9 +448,32 @@ export default {
     }
   }
 
+  .driverCardTitle {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+  }
+  .driverImg {
+    width: 40px;
+    height: 40px;
+    background: #ddd;
+    border-radius: 200px;
+    margin-right: 1rem;
+  }
+  .driverName {
+  }
+  .carInfo {
+    width: 100%;
+    letter-spacing: 2px;
+  }
+
   .timeFakeBox {
     width: 100px;
-    // background: lime;
+    background: #fff;
+    border-right: 1px solid #ddd;
   }
 
   .timeCard {
@@ -347,7 +489,7 @@ export default {
   .distatchContainer {
     width: calc(100% - 100px);
     height: 100%;
-    background: lightpink;
+    // background: lightpink;
     overflow: auto;
     display: flex;
     flex-wrap: wrap;
@@ -394,11 +536,12 @@ export default {
     transition: 0.3s;
     height: 90px;
     overflow: hidden;
+    box-shadow: 4px 4px 10px #ddd;
 
     &:hover {
       // transform: translate(4px, -4px);
       z-index: 2;
-      height: auto;
+      height: auto !important;
     }
   }
 

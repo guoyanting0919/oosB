@@ -4,7 +4,7 @@
       <div class="filter-container">
         <!-- 關鍵字搜尋 -->
         <el-input
-          style="width:200px;margin-right:0.5rem"
+          style="width: 200px; margin-right: 0.5rem"
           size="mini"
           v-model="value"
           clearable
@@ -21,8 +21,8 @@
 
     <div class="app-container flex-item">
       <!-- 全部個案資料 -->
-      <Title title="全部個案資料"></Title>
-      <div class="bg-white" style="height:calc(100% - 50px)">
+      <Title title="全部個案"></Title>
+      <div class="bg-white" style="height: calc(100% - 50px)">
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"
@@ -30,7 +30,7 @@
           border
           fit
           highlight-current-row
-          style="width: 100%;"
+          style="width: 100%"
           @selection-change="handleSelectionChange"
           @row-click="rowClick"
         >
@@ -39,12 +39,12 @@
             width="55"
             align="center"
           ></el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             property="pic"
             label="照片"
             width="80"
             align="center"
-          ></el-table-column>
+          ></el-table-column> -->
           <el-table-column
             property="lock"
             label="鎖定狀態"
@@ -54,12 +54,12 @@
             <template slot-scope="scope">
               <div>
                 <i
-                  style="color:#409167"
+                  style="color: #409167"
                   v-if="scope.row.lock"
                   class="iconfont icon-Vector21"
                 ></i>
                 <i
-                  style="color:#d63737"
+                  style="color: #d63737"
                   v-else
                   class="iconfont icon-Vector31"
                 ></i>
@@ -72,12 +72,12 @@
             width="120"
             align="center"
           ></el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             property="code"
             label="個案編號"
             width="140"
             align="center"
-          ></el-table-column>
+          ></el-table-column> -->
           <el-table-column
             property="uid"
             label="身分證字號"
@@ -99,12 +99,12 @@
             <template slot-scope="scope">
               <div>
                 <i
-                  style="color:#d63737"
+                  style="color: #d63737"
                   v-if="scope.row.sex"
                   class="iconfont icon-Vector5"
                 ></i>
                 <i
-                  style="color:#227294"
+                  style="color: #227294"
                   v-else
                   class="iconfont icon-Vector6"
                 ></i>
@@ -117,13 +117,13 @@
             width="170"
             align="center"
           ></el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             property="tel"
             label="市話"
             width="170"
             align="center"
-          ></el-table-column>
-          <el-table-column
+          ></el-table-column> -->
+          <!-- <el-table-column
             property="status"
             label="狀態"
             width="130"
@@ -135,12 +135,31 @@
                 <el-tag v-else type="danger">不可派發</el-tag>
               </div>
             </template>
+          </el-table-column> -->
+          <el-table-column property="setting" label="身份" width="200">
+            <template slot-scope="scope">
+              <el-select
+                style="margin-right:0.5rem"
+                size="mini"
+                v-model="roles[scope.row.uid]"
+                placeholder="選擇身份"
+              >
+                <el-option
+                  v-for="item in options2"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                  :disabled="item.disabled"
+                >
+                </el-option>
+              </el-select>
+            </template>
           </el-table-column>
           <el-table-column
             property="setting"
             label="操作"
             :fixed="isMobile()"
-            width="270"
+            width="350"
           >
             <template slot-scope="scope">
               <div class="buttonFlexBox">
@@ -162,8 +181,16 @@
                   size="mini"
                   @click="handleDetail(scope.row)"
                   type="success"
+                  disabled
                   v-if="hasButton('detail')"
                   >檢視</el-button
+                >
+                <el-button
+                  size="mini"
+                  @click="handleUnitB(scope.row)"
+                  type="primary"
+                  v-if="hasButton('unitB')"
+                  >B單位</el-button
                 >
                 <el-button
                   size="mini"
@@ -184,6 +211,79 @@
         />
       </div>
     </div>
+
+    <!-- addOrUpdateDialog 新增用戶-->
+    <el-dialog
+      :title="userDialogMap[userDialogTitle]"
+      :visible.sync="addOrUpdateDialog"
+      width="50%"
+      style="min-width:375px"
+    >
+      <el-form
+        :label-position="labelPosition"
+        label-width="200px"
+        :model="userTemp"
+        :rules="userRules"
+        ref="userForm"
+      >
+        <el-row :gutter="16">
+          <el-col :sm="24" :md="12">
+            <el-form-item label="姓名" prop="name">
+              <el-input
+                v-model="userTemp.name"
+                placeholder="請輸入姓名"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :sm="24" :md="12">
+            <el-form-item label="出生年月日" prop="birthday">
+              <el-date-picker
+                v-model="userTemp.birthday"
+                type="date"
+                placeholder="請選擇生日"
+                style="width:100%"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :sm="24" :md="12">
+            <el-form-item label="身分證字號" prop="uid">
+              <el-input
+                v-model="userTemp.uid"
+                placeholder="請輸入身分證字號"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :sm="24" :md="12">
+            <el-form-item label="性別" prop="sex">
+              <el-select
+                clearable
+                v-model="userTemp.sex"
+                placeholder="請選擇性別"
+                style="width:100%"
+              >
+                <el-option :value="1" :label="'男'">男</el-option>
+                <el-option :value="2" :label="'女'">女</el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :sm="24" :md="12">
+            <el-form-item label="手機" prop="phone">
+              <span slot="label">手機</span>
+              <el-input
+                placeholder="格式:0987654321"
+                v-model="userTemp.phone"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addOrUpdateDialog = false">取 消</el-button>
+        <el-button type="primary" @click="confirmAddOrUpdate('add')"
+          >確 定</el-button
+        >
+      </span>
+    </el-dialog>
 
     <!-- quotaDialog -->
     <el-dialog title="可用額度" :visible.sync="quotaDialog" width="30%">
@@ -225,12 +325,43 @@ export default {
   },
   data() {
     return {
+      roles: {},
       // button
       buttons: [],
 
       // dialog
+      addOrUpdateDialog: false,
+      userDialogTitle: "add",
+      userDialogMap: {
+        add: "新增用戶",
+        edit: "編輯用戶",
+      },
       quotaDialog: false,
       unitBDialog: false,
+
+      // 表單相關
+      labelPosition: "top",
+      userTemp: {
+        id: undefined,
+        account: "",
+        password: "",
+        name: "",
+        birthday: "",
+        uid: "",
+        phone: "",
+        sex: "",
+        status: 1,
+        organizationIds: "",
+      },
+      userRules: {
+        name: [{ required: true, message: "請輸入姓名", trigger: "blur" }],
+        birthday: [
+          { required: true, message: "請選擇出生日期", trigger: "blur" },
+        ],
+        uid: [{ required: true, message: "請輸入身分證字號", trigger: "blur" }],
+        sex: [{ required: true, message: "請選擇性別", trigger: "change" }],
+        phone: [{ required: true, message: "請輸入手機號碼", trigger: "blur" }],
+      },
 
       // main data
       total: 200,
@@ -248,7 +379,7 @@ export default {
           pic: "Ｏ",
           name: "王小虎",
           code: "109X20404",
-          uid: "A203******",
+          uid: "A213******",
           birth: "1954-07-18",
           sex: 0,
           phone: "0921079303",
@@ -261,7 +392,7 @@ export default {
           pic: "Ｏ",
           name: "王小虎",
           code: "109X20404",
-          uid: "A203******",
+          uid: "A223******",
           birth: "1954-07-18",
           sex: 0,
           phone: "0921079303",
@@ -274,7 +405,7 @@ export default {
           pic: "Ｏ",
           name: "王小虎",
           code: "109X20404",
-          uid: "A203******",
+          uid: "A233******",
           birth: "1954-07-18",
           sex: 1,
           phone: "0921079303",
@@ -305,6 +436,20 @@ export default {
           label: "北京烤鸭",
         },
       ],
+      options2: [
+        {
+          value: "1",
+          label: "長照",
+        },
+        {
+          value: "2",
+          label: "白牌",
+        },
+        {
+          value: "3",
+          label: "幸福巴士",
+        },
+      ],
     };
   },
   methods: {
@@ -328,6 +473,26 @@ export default {
       return this.buttons.includes(domId);
     },
     // 主要按鈕
+    handleAddOrUpdate(act) {
+      this.userDialogTitle = act;
+      this.addOrUpdateDialog = true;
+      if (act == "add") {
+        this.handleResetUserTemp();
+      }
+    },
+    confirmAddOrUpdate(act) {
+      if (act == "add") {
+        this.$refs.userForm.validate((valid) => {
+          if (valid) {
+            // alert("submit!");
+            console.log(this.userTemp);
+          } else {
+            console.log("error submit!!");
+            return false;
+          }
+        });
+      }
+    },
     handleEdit(user) {
       this.$router.push(`/alluser/edit/${user.uid}`);
     },
@@ -337,13 +502,31 @@ export default {
     },
     handleUnitB(user) {
       this.unitBDialog = true;
-      console.log(user);
+      console.log(this.roles, user);
     },
     handleDetail(user) {
       this.$router.push(`/alluser/detail/${user.uid}`);
     },
     handleDispatch(user) {
       this.$router.push(`/alluser/dispatch/${user.uid}`);
+    },
+    handleResetUserTemp() {
+      // this.$refs.userForm.resetFields();
+      this.userTemp = {
+        id: undefined,
+        account: "",
+        password: "",
+        name: "",
+        birthday: "",
+        uid: "",
+        phone: "",
+        sex: "",
+        status: 1,
+        organizationIds: "",
+      };
+      if (this.$refs.userForm) {
+        this.$refs.userForm.resetFields();
+      }
     },
     // table 功能
     handleSelectionChange(val) {
@@ -367,7 +550,8 @@ export default {
           this.handleUnitB(this.multipleSelection[0]);
           break;
         case "add":
-          this.$router.push("/alluser/add/1");
+          // this.$router.push("/alluser/add/1");
+          this.handleAddOrUpdate("add");
           break;
         default:
           break;
@@ -375,7 +559,13 @@ export default {
     },
   },
   mounted() {
-    this.getButtons();
+    const vm = this;
+    vm.getButtons();
+
+    vm.gridData.forEach((user) => {
+      vm.$set(vm.roles, `${user.uid}`, null);
+    });
+    console.log(vm.roles);
   },
 };
 </script>

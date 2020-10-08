@@ -6,6 +6,62 @@
   "description": "新北營運端",
   "glyphs": [
     {
+      "icon_id": "401157",
+      "name": "table",
+      "font_class": "table",
+      "unicode": "e87d",
+      "unicode_decimal": 59517
+    },
+    {
+      "icon_id": "587086",
+      "name": "save",
+      "font_class": "save",
+      "unicode": "e7e6",
+      "unicode_decimal": 59366
+    },
+    {
+      "icon_id": "1404747",
+      "name": "circle",
+      "font_class": "circle",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "5504361",
+      "name": "mouse",
+      "font_class": "mouse",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
+      "icon_id": "7372785",
+      "name": "right",
+      "font_class": "right",
+      "unicode": "e6ea",
+      "unicode_decimal": 59114
+    },
+    {
+      "icon_id": "8827173",
+      "name": "right",
+      "font_class": "right1",
+      "unicode": "e93e",
+      "unicode_decimal": 59710
+    },
+    {
+      "icon_id": "14737698",
+      "name": "sort-1",
+      "font_class": "sort-1",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "17544605",
+      "name": "Vector",
+      "font_class": "Vector10",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
       "icon_id": "17479652",
       "name": "Pic",
       "font_class": "Vector9",
