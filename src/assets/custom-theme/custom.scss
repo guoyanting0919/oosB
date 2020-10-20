@@ -11,6 +11,7 @@ $danger: #d63737;
 $dangerHover: #de5f5f;
 $info: #227294;
 $infoHover: #3b91b6;
+$disableGray: #949494;
 .custom-theme {
   .fade-in-linear-enter-active,
   .fade-in-linear-leave-active {
@@ -829,7 +830,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -2133,7 +2134,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -4250,7 +4251,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -4650,7 +4651,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -5655,7 +5656,7 @@ $infoHover: #3b91b6;
   }
 
   .el-checkbox + .el-checkbox {
-    margin-left: 30px;
+    margin-left: 0px;
   }
 
   .el-checkbox-button {
@@ -6273,7 +6274,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -7845,7 +7846,7 @@ $infoHover: #3b91b6;
   }
 
   .el-checkbox + .el-checkbox {
-    margin-left: 30px;
+    margin-left: 0px;
   }
 
   .el-checkbox-button {
@@ -9172,7 +9173,7 @@ $infoHover: #3b91b6;
   }
 
   .el-checkbox + .el-checkbox {
-    margin-left: 30px;
+    margin-left: 0px;
   }
 
   .el-checkbox-button {
@@ -10898,7 +10899,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -12952,7 +12953,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -14515,7 +14516,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -16593,7 +16594,7 @@ $infoHover: #3b91b6;
   }
 
   .el-checkbox + .el-checkbox {
-    margin-left: 30px;
+    margin-left: 0px;
   }
 
   .el-checkbox-button {
@@ -17287,7 +17288,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -20960,7 +20961,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -22126,7 +22127,7 @@ $infoHover: #3b91b6;
       .el-input__inner {
         background-color: #fff8ee;
         border-color: #e4e7ed;
-        color: #c0c4cc;
+        color: $disableGray;
         cursor: not-allowed;
 
         &::-webkit-input-placeholder,
@@ -23256,7 +23257,7 @@ $infoHover: #3b91b6;
   }
 
   .el-checkbox + .el-checkbox {
-    margin-left: 30px;
+    margin-left: 0px;
   }
 
   .el-checkbox-button {
@@ -26422,3 +26423,4 @@ $infoHover: #3b91b6;
     stroke-dashoffset: -124;
   }
 }
+//26426

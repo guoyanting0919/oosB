@@ -45,7 +45,7 @@
                   clearable
                   v-model="temp.Id"
                   placeholder="請選擇性別"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="1" :label="'男'">男</el-option>
                   <el-option :value="2" :label="'女'">女</el-option>
@@ -66,7 +66,7 @@
                   v-model="temp.Id"
                   type="date"
                   placeholder="請選擇生日"
-                  style="width:100%"
+                  style="width: 100%"
                 ></el-date-picker>
               </el-form-item>
             </el-col>
@@ -83,7 +83,7 @@
                 <el-select
                   v-model="temp.Id"
                   placeholder="社會福利身份"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="1" :label="'低收入戶'">低收入戶</el-option>
                   <el-option :value="2" :label="'中低收入戶'"
@@ -114,7 +114,7 @@
                 <el-select
                   v-model="temp.Id"
                   placeholder="請選擇個案身份"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="1" :label="'公費個案'">公費個案</el-option>
                   <el-option :value="2" :label="'自費個案'">自費個案</el-option>
@@ -126,7 +126,7 @@
                 <el-date-picker
                   v-model="temp.Id"
                   type="month"
-                  style="width:100%"
+                  style="width: 100%"
                   placeholder="請選擇額度控管留用首月"
                 ></el-date-picker>
               </el-form-item>
@@ -144,7 +144,7 @@
                 <el-select
                   v-model="temp.Id"
                   placeholder="請選擇失能等級"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="1" :label="'1級(無失能)'"
                     >1級(無失能)</el-option
@@ -164,7 +164,7 @@
                 <el-select
                   v-model="temp.Id"
                   placeholder="請選擇派發狀態"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="1" :label="'可派發'">可派發</el-option>
                   <el-option :value="2" :label="'不可派發'">不可派發</el-option>
@@ -180,13 +180,13 @@
             <el-col :sm="24" :md="24">
               <el-form-item label="居住地">
                 <el-row :gutter="16">
-                  <el-col :sm="12" :md="6" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="6" style="margin-bottom: 1rem">
                     <el-form-item prop="city">
                       <el-select
                         v-model="temp.city"
                         clearable
                         placeholder="請選擇居住縣市"
-                        style="width:100%"
+                        style="width: 100%"
                       >
                         <el-option :value="1" :label="'可派發'"
                           >可派發</el-option
@@ -197,12 +197,12 @@
                       </el-select>
                     </el-form-item>
                   </el-col>
-                  <el-col :sm="12" :md="6" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="6" style="margin-bottom: 1rem">
                     <el-form-item>
                       <el-select
                         v-model="temp.Id"
                         placeholder="請選擇居住區域"
-                        style="width:100%"
+                        style="width: 100%"
                       >
                         <el-option :value="1" :label="'可派發'"
                           >可派發</el-option
@@ -231,15 +231,15 @@
                   :gutter="16"
                   v-for="(item, index) in temp.lun"
                   :key="index"
-                  style="margin-bottom:1rem"
+                  style="margin-bottom: 1rem"
                 >
-                  <el-col :sm="12" :md="3" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="3" style="margin-bottom: 1rem">
                     <el-form-item>
                       <el-select
                         v-model="item.value1"
                         clearable
                         placeholder="居住縣市"
-                        style="width:100%"
+                        style="width: 100%"
                       >
                         <el-option :value="1" :label="'可派發'"
                           >可派發</el-option
@@ -250,13 +250,13 @@
                       </el-select>
                     </el-form-item>
                   </el-col>
-                  <el-col :sm="12" :md="3" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="3" style="margin-bottom: 1rem">
                     <el-form-item>
                       <el-select
                         v-model="item.value2"
                         clearable
                         placeholder="居住地區"
-                        style="width:100%"
+                        style="width: 100%"
                       >
                         <el-option :value="1" :label="'可派發'"
                           >可派發</el-option
@@ -267,7 +267,7 @@
                       </el-select>
                     </el-form-item>
                   </el-col>
-                  <el-col :sm="24" :md="8" style="margin-bottom:1rem">
+                  <el-col :sm="24" :md="8" style="margin-bottom: 1rem">
                     <el-form-item>
                       <el-input
                         placeholder="請輸入居住地址"
@@ -276,7 +276,7 @@
                     </el-form-item>
                   </el-col>
 
-                  <el-col :sm="12" :md="3" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="3" style="margin-bottom: 1rem">
                     <el-form-item>
                       <el-input
                         placeholder="請輸入居住地址"
@@ -284,7 +284,7 @@
                       ></el-input>
                     </el-form-item>
                   </el-col>
-                  <el-col :sm="12" :md="3" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="3" style="margin-bottom: 1rem">
                     <el-form-item>
                       <el-input
                         placeholder="請輸入居住地址"
@@ -295,7 +295,7 @@
                   <el-col
                     :sm="3"
                     :md="2"
-                    style="text-align:center;margin-bottom:1rem"
+                    style="text-align: center; margin-bottom: 1rem"
                   >
                     <el-button type="danger" @click="delLun(item)"
                       >刪除</el-button
@@ -304,7 +304,7 @@
                   <el-col
                     :sm="3"
                     :md="2"
-                    style="text-align:center;margin-bottom:1rem"
+                    style="text-align: center; margin-bottom: 1rem"
                   >
                     <el-button type="info" @click="delLun(item)"
                       >轉換</el-button
@@ -313,7 +313,7 @@
                 </el-row>
               </el-form-item>
             </el-col>
-            <el-col :sm="24" style="text-align:center">
+            <el-col :sm="24" style="text-align: center">
               <el-button type="primary" @click="addLun">新增輪住地址</el-button>
             </el-col>
           </el-row>
@@ -412,6 +412,17 @@ export default {
         this.temp.lun.splice(index, 1);
       }
     },
+  },
+  mounted() {
+    console.log(this.$store.getters.modules);
+    let router2 = this.$store.getters.modules;
+    let a = router2.filter((r) => {
+      return r.item.name == "個案資料";
+    });
+    let b = a[0].children.filter((r2) => {
+      return r2.item.name == "全部個案";
+    });
+    console.log(b[0].item.elements);
   },
 };
 </script>

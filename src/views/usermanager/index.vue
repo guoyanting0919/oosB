@@ -139,10 +139,10 @@
                     >編輯</el-button
                   >
                   <el-button
-                    v-if="scope.row.status == 0"
+                    v-if="scope.row.status == 1"
                     size="mini"
                     type="danger"
-                    @click="handleModifyStatus(scope.row, 1)"
+                    @click="handleModifyStatus(scope.row, 0)"
                     >停用</el-button
                   >
                 </template>
@@ -353,11 +353,11 @@ export default {
       statusOptions: [
         {
           key: 1,
-          display_name: "停用",
+          display_name: "啟用",
         },
         {
           key: 0,
-          display_name: "正常",
+          display_name: "停用",
         },
       ],
       showDescription: false,
@@ -423,7 +423,7 @@ export default {
     statusFilter(status) {
       var res = "color-success";
       switch (status) {
-        case 1:
+        case 0:
           res = "color-danger";
           break;
         default:

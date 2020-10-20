@@ -6,19 +6,24 @@
           @keyup.enter.native="handleFilter"
           prefix-icon="el-icon-search"
           size="small"
-          style="width: 200px; margin-bottom: 0;"
+          style="width: 200px; margin-bottom: 0"
           class="filter-item"
           :placeholder="'名稱'"
           v-model="listQuery.key"
         ></el-input>
-        <permission-btn moduleName="flowschemes" size="mini" v-on:btn-event="onBtnClicked"></permission-btn>
+        <permission-btn
+          moduleName="flowschemes"
+          size="mini"
+          v-on:btn-event="onBtnClicked"
+        ></permission-btn>
 
         <el-checkbox
           class="filter-item"
-          style="margin-left:15px;"
-          @change="tableKey=tableKey+1"
+          style="margin-left: 15px"
+          @change="tableKey = tableKey + 1"
           v-model="showDescription"
-        >描述</el-checkbox>
+          >描述</el-checkbox
+        >
       </div>
     </sticky>
     <div class="app-container flex-item">
@@ -31,35 +36,46 @@
         border
         fit
         highlight-current-row
-        style="width: 100%;"
+        style="width: 100%"
         @row-click="rowClick"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column align="center" type="selection" width="55"></el-table-column>
+        <el-table-column
+          align="center"
+          type="selection"
+          width="55"
+        ></el-table-column>
 
         <el-table-column :label="'Id'" min-width="120px">
           <template slot-scope="scope">
-            <span>{{scope.row.id}}</span>
+            <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
 
         <el-table-column min-width="80px" :label="'名稱'">
           <template slot-scope="scope">
-            <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.schemeName}}</span>
+            <span class="link-type" @click="handleUpdate(scope.row)">{{
+              scope.row.schemeName
+            }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column min-width="150px" v-if="showDescription" :label="'描述'">
+        <el-table-column
+          min-width="150px"
+          v-if="showDescription"
+          :label="'描述'"
+        >
           <template slot-scope="scope">
-            <span style="color:red;">{{scope.row.description}}</span>
+            <span style="color: red">{{ scope.row.description }}</span>
           </template>
         </el-table-column>
 
         <el-table-column class-name="status-col" :label="'狀態'" width="100">
           <template slot-scope="scope">
-            <span
-              :class="scope.row.disabled | statusFilter"
-            >{{statusOptions.find(u =>u.key == scope.row.disabled).display_name}}</span>
+            <span :class="scope.row.disabled | statusFilter">{{
+              statusOptions.find((u) => u.key == scope.row.disabled)
+                .display_name
+            }}</span>
           </template>
         </el-table-column>
 
@@ -70,18 +86,24 @@
           class-name="small-padding fixed-width"
         >
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
             <el-button
-              v-if="scope.row.disabled!=0"
+              type="primary"
+              size="mini"
+              @click="handleUpdate(scope.row)"
+              >編輯</el-button
+            >
+            <el-button
+              v-if="scope.row.disabled != 0"
               size="mini"
               type="danger"
-              @click="handleModifyStatus(scope.row,1)"
-            >停用</el-button>
+              @click="handleModifyStatus(scope.row, 1)"
+              >停用</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
       <pagination
-        v-show="total>0"
+        v-show="total > 0"
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
