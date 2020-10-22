@@ -128,6 +128,7 @@
                   type="month"
                   style="width:100%"
                   placeholder="請選擇額度控管留用首月"
+                  value-format="yyyy-MM"
                 ></el-date-picker>
               </el-form-item>
             </el-col>
@@ -153,13 +154,23 @@
             </el-col>
             <el-col :sm="24" :md="24">
               <el-form-item label="居住地">
+                <span class="wealSpan" slot="label"
+                  >居住地
+                  <el-button
+                    class="wealBtn"
+                    type="info"
+                    size="mini"
+                    v-if="temp.addr"
+                    >轉換經緯度</el-button
+                  >
+                </span>
                 <el-row :gutter="16">
-                  <el-col :sm="12" :md="6" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="3" style="margin-bottom:1rem">
                     <el-form-item prop="county">
                       <el-select
                         v-model="temp.county"
                         clearable
-                        placeholder="請選擇居住縣市"
+                        placeholder="居住縣市"
                         style="width:100%"
                       >
                         <el-option
@@ -173,14 +184,14 @@
                   </el-col>
                   <el-col
                     :sm="12"
-                    :md="6"
+                    :md="3"
                     style="margin-bottom:1rem"
                     v-if="temp.county"
                   >
                     <el-form-item prop="district">
                       <el-select
                         v-model="temp.district"
-                        placeholder="請選擇居住區域"
+                        placeholder="居住區域"
                         style="width:100%"
                       >
                         <el-option
@@ -199,6 +210,32 @@
                       <el-input
                         placeholder="請輸入居住地址"
                         v-model="temp.addr"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    :sm="12"
+                    :md="3"
+                    style="margin-bottom:1rem"
+                    v-if="temp.addr && temp.district && temp.county"
+                  >
+                    <el-form-item prop="county">
+                      <el-input
+                        placeholder="經度"
+                        v-model="temp.lon"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    :sm="12"
+                    :md="3"
+                    style="margin-bottom:1rem"
+                    v-if="temp.addr && temp.district && temp.county"
+                  >
+                    <el-form-item prop="county">
+                      <el-input
+                        placeholder="緯度"
+                        v-model="temp.lat"
                       ></el-input>
                     </el-form-item>
                   </el-col>
@@ -377,7 +414,7 @@
           </el-row>
 
           <SubTitle title="備註"></SubTitle>
-          <el-input type="textarea" v-model="temp.Id"></el-input>
+          <el-input type="textarea" v-model="temp.remark"></el-input>
         </el-form>
       </div>
     </div>
@@ -390,6 +427,7 @@ import Title from "@/components/ConsoleTableTitle";
 import SubTitle from "@/components/SubTitle";
 import * as taiwan from "@/assets/taiwan.js";
 import * as users from "@/api/users";
+import * as caseUsers from "@/api/caseUsers";
 import * as orgs from "@/api/orgs";
 export default {
   name: "allUserAdd",
@@ -412,8 +450,6 @@ export default {
         sex: "",
       },
       temp: {
-        Id: "",
-
         userId: "", //用戶id
         id: "", //身份id
         caseUserNo: "", //個案編號
@@ -437,16 +473,16 @@ export default {
         wealTypeName: "", //社會福利身份
         isEffectNow: true, //是否生效
 
-        cuty: "",
-        lun: [
-          {
-            value1: "",
-            value2: "",
-            value3: "",
-            value4: "",
-            value5: "",
-          },
-        ],
+        // cuty: "",
+        // lun: [
+        //   {
+        //     value1: "",
+        //     value2: "",
+        //     value3: "",
+        //     value4: "",
+        //     value5: "",
+        //   },
+        // ],
       },
       rules: {
         // Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
@@ -495,7 +531,12 @@ export default {
       const vm = this;
       vm.$refs.form.validate((valid) => {
         if (valid) {
+          vm.temp.userId = vm.$route.params.id;
+          // vm.temp.reviewDate = moment(vm.temp.reviewDate).format('yyyy')
           console.log(vm.temp);
+          caseUsers.add(vm.temp).then((res) => {
+            console.log(res);
+          });
         } else {
           console.log("submit error");
         }
@@ -527,4 +568,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.wealBtn {
+  padding: 4px 8px;
+}
+</style>

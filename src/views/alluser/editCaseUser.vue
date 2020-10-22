@@ -10,7 +10,7 @@
     </sticky>
 
     <div class="app-container flex-item">
-      <Title title="新增長照個案基本資料"></Title>
+      <Title title="編輯長照個案基本資料"></Title>
       <div class="formContainer bg-white customScrollBar">
         <el-form
           :label-position="labelPosition"
@@ -134,6 +134,7 @@
                   v-model="temp.reviewDate"
                   type="month"
                   style="width:100%"
+                  value-format="yyyy-MM"
                   placeholder="請選擇額度控管留用首月"
                 ></el-date-picker>
               </el-form-item>
@@ -161,7 +162,7 @@
             <el-col :sm="24" :md="24">
               <el-form-item label="居住地">
                 <el-row :gutter="16">
-                  <el-col :sm="12" :md="6" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="3" style="margin-bottom:1rem">
                     <el-form-item prop="county">
                       <el-select
                         v-model="temp.county"
@@ -180,7 +181,7 @@
                   </el-col>
                   <el-col
                     :sm="12"
-                    :md="6"
+                    :md="3"
                     style="margin-bottom:1rem"
                     v-if="temp.county"
                   >
@@ -206,6 +207,32 @@
                       <el-input
                         placeholder="請輸入居住地址"
                         v-model="temp.addr"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    :sm="12"
+                    :md="3"
+                    style="margin-bottom:1rem"
+                    v-if="temp.addr && temp.district && temp.county"
+                  >
+                    <el-form-item prop="county">
+                      <el-input
+                        placeholder="經度"
+                        v-model="temp.lon"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    :sm="12"
+                    :md="3"
+                    style="margin-bottom:1rem"
+                    v-if="temp.addr && temp.district && temp.county"
+                  >
+                    <el-form-item prop="county">
+                      <el-input
+                        placeholder="緯度"
+                        v-model="temp.lat"
                       ></el-input>
                     </el-form-item>
                   </el-col>
@@ -398,6 +425,7 @@ import SubTitle from "@/components/SubTitle";
 import * as taiwan from "@/assets/taiwan.js";
 import * as users from "@/api/users";
 import * as orgs from "@/api/orgs";
+import * as caseUsers from "@/api/caseUsers";
 export default {
   name: "allUserAdd",
   components: {
@@ -419,8 +447,6 @@ export default {
         sex: "",
       },
       temp: {
-        Id: "",
-
         userId: "", //用戶id
         id: "", //身份id
         caseUserNo: "", //個案編號
@@ -443,17 +469,6 @@ export default {
         wealTypeId: "", //社會福利身份
         wealTypeName: "", //社會福利身份
         isEffectNow: true, //是否生效
-
-        cuty: "",
-        lun: [
-          {
-            value1: "",
-            value2: "",
-            value3: "",
-            value4: "",
-            value5: "",
-          },
-        ],
       },
       rules: {
         // Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
@@ -493,12 +508,26 @@ export default {
       console.log(b[0].item.elements);
     },
     // 獲取用戶基本資料
-    getUserBasic() {
+    async getUserBasic() {
       const vm = this;
-      // console.log(vm.$route.params);
-      users.getClient({ id: vm.$route.params.id }).then((res) => {
+      await users
+        .getClient({ id: vm.$route.params.id.split("-")[0] })
+        .then((res) => {
+          vm.basicTemp = Object.assign({}, res.result); // copy obj
+
+          window.setTimeout(() => {
+            vm.$refs.form.clearValidate();
+          }, 100);
+        });
+    },
+    // 獲取長照資料
+    getCaseUser() {
+      const vm = this;
+      caseUsers.get({ id: vm.$route.params.id.split("-")[1] }).then((res) => {
+        vm.temp = Object.assign({}, res.result); // copy obj
+        vm.temp.caseUserStatus = vm.temp.caseUserStatus.toString();
+        vm.temp.disabilityLevel = vm.temp.disabilityLevel.toString();
         // console.log(res);
-        vm.basicTemp = Object.assign({}, res.result); // copy obj
       });
     },
     // 獲取A單位資料
@@ -515,6 +544,10 @@ export default {
       vm.$refs.form.validate((valid) => {
         if (valid) {
           console.log(vm.temp);
+          caseUsers.add(vm.temp).then((res) => {
+            console.log(res);
+            vm.getCaseUser();
+          });
         } else {
           console.log("submit error");
         }
@@ -539,9 +572,9 @@ export default {
   },
   mounted() {
     this.getUserBasic();
+    this.getCaseUser();
     this.getUnitAs();
     this.taiwanCity = taiwan.cityAndCountiesLite;
-    console.log(this.taiwanCity);
   },
 };
 </script>

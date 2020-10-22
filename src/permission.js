@@ -34,8 +34,8 @@ let elementMappingList = [
   "edit",
   "detail",
   "dispatch",
-  "addCaseUserRole",
-  "editCaseUserRole",
+  "addCaseUser",
+  "editCaseUser",
 ];
 
 const whiteList = [

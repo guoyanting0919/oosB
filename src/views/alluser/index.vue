@@ -73,6 +73,28 @@
             width="120"
             align="center"
           ></el-table-column>
+          <el-table-column property="setting" label="身份" width="200">
+            <template slot-scope="scope">
+              <el-select
+                style="margin-right:0.5rem"
+                size="mini"
+                no-data-text="該用戶尚未新增身份"
+                v-model="roles[scope.row.id]"
+                placeholder="選擇身份"
+                clearable
+              >
+                <el-option
+                  v-for="item in scope.row.caseList"
+                  :key="item.caseId"
+                  :label="userRoleMap[item.userType]"
+                  :value="`${item.userType}-${item.caseId}`"
+                  :disabled="canISelect(item.userType)"
+                >
+                  {{ userRoleMap[item.userType] }} ({{ item.caseUserNo || "" }})
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
           <el-table-column
             property="uid"
             label="身分證字號"
@@ -135,30 +157,12 @@
               </div>
             </template>
           </el-table-column> -->
-          <el-table-column property="setting" label="身份" width="200">
-            <template slot-scope="scope">
-              <el-select
-                style="margin-right:0.5rem"
-                size="mini"
-                v-model="roles[scope.row.id]"
-                placeholder="選擇身份"
-              >
-                <el-option
-                  v-for="item in options2"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                  :disabled="item.disabled"
-                >
-                </el-option>
-              </el-select>
-            </template>
-          </el-table-column>
+
           <el-table-column
             property="setting"
             label="操作"
             :fixed="isMobile()"
-            width="350"
+            width="400"
           >
             <template slot-scope="scope">
               <div class="buttonFlexBox">
@@ -169,12 +173,43 @@
                   v-if="hasButton('dispatch')"
                   >派車</el-button
                 >
+                <!-- 基本編輯 -->
                 <el-button
                   size="mini"
                   @click="handleAddOrEdit('edit', scope.row)"
                   type="warning"
-                  v-if="hasButton('edit')"
-                  >編輯</el-button
+                  v-if="hasButton('editBasic') && !roles[scope.row.id]"
+                  >基本編輯</el-button
+                >
+                <!-- 編輯長照 -->
+                <el-button
+                  size="mini"
+                  @click="handleEditCaseUser(scope.row)"
+                  type="warning"
+                  v-if="
+                    hasButton('editCaseUser') &&
+                      roles[scope.row.id] &&
+                      roles[scope.row.id].split('-')[0] == 'caseuser'
+                  "
+                  >長照編輯</el-button
+                >
+                <!-- 編輯白牌 -->
+                <el-button
+                  size="mini"
+                  @click="handleAddOrEdit('edit', scope.row)"
+                  type="warning"
+                  v-if="
+                    hasButton('editSelfPay') && roles[scope.row.id] == 'selfpay'
+                  "
+                  >白牌編輯</el-button
+                >
+                <!-- 編輯幸福巴士 -->
+                <el-button
+                  size="mini"
+                  @click="handleAddOrEdit('edit', scope.row)"
+                  type="warning"
+                  v-if="hasButton('editBus') && roles[scope.row.id] == 'bus'"
+                  >巴士編輯</el-button
                 >
                 <el-button
                   size="mini"
@@ -187,14 +222,22 @@
                   size="mini"
                   @click="handleUnitB(scope.row)"
                   type="primary"
-                  v-if="hasButton('unitB') && roles[scope.row.id] == '1'"
+                  v-if="
+                    hasButton('unitB') &&
+                      roles[scope.row.id] &&
+                      roles[scope.row.id].split('-')[0] == 'caseuser'
+                  "
                   >B單位</el-button
                 >
                 <el-button
                   size="mini"
                   @click="handleQuota(scope.row)"
                   type="primary"
-                  v-if="hasButton('quota') && roles[scope.row.id] == '1'"
+                  v-if="
+                    hasButton('quota') &&
+                      roles[scope.row.id] &&
+                      roles[scope.row.id].split('-')[0] == 'caseuser'
+                  "
                   >額度</el-button
                 >
               </div>
@@ -285,9 +328,13 @@
     </el-dialog>
 
     <!-- rolesDialog -->
-    <el-dialog title="新增身份" :visible.sync="rolesDialog" width="30%">
+    <el-dialog
+      title="請選擇欲新增的身份"
+      :visible.sync="rolesDialog"
+      width="500px"
+    >
       <!-- <span>用戶身份</span> -->
-      <el-select v-model="roleSelect" placeholder="請為用戶選擇身份">
+      <!-- <el-select v-model="roleSelect" placeholder="請為用戶選擇身份">
         <el-option
           v-for="item in options2"
           :key="item.value"
@@ -295,14 +342,29 @@
           :value="item.value"
         >
         </el-option>
-      </el-select>
+      </el-select> -->
+      <div class="rolesBox">
+        <el-button
+          v-if="hasButton('addCaseUser')"
+          type="primary"
+          plain
+          @click="handleRole('1')"
+          >長照身份</el-button
+        >
+        <el-button v-if="hasButton('addSelfPay')" type="primary" plain
+          >白牌身份</el-button
+        >
+        <el-button v-if="hasButton('addBus')" type="primary" plain
+          >幸福巴士身份</el-button
+        >
+      </div>
 
-      <span slot="footer" class="dialog-footer">
+      <!-- <span slot="footer" class="dialog-footer">
         <el-button @click="rolesDialog = false">取 消</el-button>
         <el-button type="primary" @click="handleRole(roleSelect)"
           >確 定</el-button
         >
-      </span>
+      </span> -->
     </el-dialog>
 
     <!-- quotaDialog -->
@@ -550,6 +612,11 @@ export default {
           label: "幸福巴士",
         },
       ],
+      userRoleMap: {
+        caseuser: "長照",
+        selfpay: "白牌",
+        bus: "幸福巴士",
+      },
     };
   },
   methods: {
@@ -577,8 +644,13 @@ export default {
       const vm = this;
       vm.listLoading = true;
       await users.getClientList(vm.listQuery).then((res) => {
-        // console.log(res);
-        vm.list = res.data;
+        console.log(res);
+        let users = res.data.map((user) => {
+          user.userType = [];
+          return user;
+        });
+        vm.list = users;
+        console.log(users);
         vm.total = res.count;
         vm.listLoading = false;
       });
@@ -593,6 +665,15 @@ export default {
         });
       });
     },
+    // 獲取用戶基本資料
+    getUserBasic(id) {
+      const vm = this;
+      // console.log(vm.$route.params);
+      users.getClient({ id }).then((res) => {
+        console.log(res);
+        vm.userTemp = Object.assign({}, res.result); // copy obj
+      });
+    },
     // 主要按鈕
     handleAddOrEdit(act, user) {
       const vm = this;
@@ -601,8 +682,10 @@ export default {
         vm.handleResetUserTemp();
         vm.addOrUpdateDialog = true;
       } else {
-        console.log(act, user);
-        console.log(vm.roles[user.id]);
+        // console.log(act, user);
+        // console.log(vm.roles[user.id]);
+        // vm.editEvents(vm.roles[user.id], user);
+        this.handleEditBasic(user.id);
         // vm.addOrUpdateDialog = true;
       }
     },
@@ -635,6 +718,15 @@ export default {
           if (valid) {
             // alert("submit!");
             console.log(vm.userTemp);
+            vm.userTemp.password = moment(vm.userTemp.birthday).format(
+              "YYYYMMDD"
+            );
+            vm.userTemp.account = vm.userTemp.uid;
+            users.addClient(vm.userTemp).then((res) => {
+              console.log(res);
+              vm.addOrUpdateDialog = false;
+              vm.getList();
+            });
           } else {
             console.log("error submit!!");
             return false;
@@ -642,8 +734,11 @@ export default {
         });
       }
     },
-    handleEdit(user) {
-      this.$router.push(`/alluser/edit/${user.uid}`);
+    handleEditCaseUser(user) {
+      console.log(user);
+      let caseId = this.roles[user.id].split("-")[1];
+      console.log(caseId);
+      this.$router.push(`/alluser/editCaseUser/${user.id}-${caseId}`);
     },
     handleQuota(user) {
       console.log(user);
@@ -659,10 +754,11 @@ export default {
       this.$router.push(`/alluser/detail/${user.uid}`);
     },
     handleRole(role) {
+      console.log(role);
       switch (role) {
         case "1":
           this.$router.push(
-            `/alluser/addCaseUserRole/${this.multipleSelection[0].id}`
+            `/alluser/addCaseUser/${this.multipleSelection[0].id}`
           );
           break;
         case "2":
@@ -670,12 +766,18 @@ export default {
           break;
         case "3":
           this.$router.push(
-            `/alluser/addCaseUserRole/${this.multipleSelection[0].id}`
+            `/alluser/addCaseUser/${this.multipleSelection[0].id}`
           );
           break;
         default:
           break;
       }
+    },
+    handleEditBasic(id) {
+      const vm = this;
+      vm.getUserBasic(id);
+      vm.addOrUpdateDialog = true;
+      vm.userDialogTitle = "edit";
     },
     handleDispatch(user) {
       this.$router.push(`/alluser/dispatch/${user.uid}`);
@@ -735,7 +837,10 @@ export default {
           break;
         case "addRole":
           if (this.multipleSelection.length == 0) {
-            console.log(0);
+            this.$message({
+              message: "只能選中一個進行編輯",
+              type: "error",
+            });
           } else if (this.multipleSelection.length > 1) {
             this.$message({
               message: "只能選中一個進行編輯",
@@ -744,15 +849,18 @@ export default {
             return;
           } else {
             this.rolesDialog = true;
-            // this.$router.push(
-            //   `/alluser/addCaseUserRole/${this.multipleSelection[0].id}`
-            // );
           }
 
           break;
         default:
           break;
       }
+    },
+
+    // 特殊fun
+    canISelect(str) {
+      let ex = this.buttons.join("").toLowerCase();
+      return !ex.includes(str);
     },
   },
   computed: {
@@ -772,9 +880,15 @@ export default {
     vm.getButtons();
     vm.getUnitBs();
     await vm.getList();
-    // console.log(vm.list);
+    console.log(vm.buttons);
     vm.list.forEach((user) => {
-      vm.$set(vm.roles, `${user.id}`, null);
+      let defaltVal;
+      if (user.caseList.length > 0) {
+        defaltVal = `${user.caseList[0].userType}-${user.caseList[0].caseId}`;
+      } else {
+        defaltVal = null;
+      }
+      vm.$set(vm.roles, `${user.id}`, defaltVal);
     });
     // console.log(vm.roles);
   },
@@ -793,6 +907,11 @@ export default {
     width: 50%;
     margin-right: 0;
     margin-bottom: 1rem;
+  }
+  .rolesBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>
