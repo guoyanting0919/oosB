@@ -3,38 +3,40 @@
     <div class="loginContainer">
       <!-- loginTitle -->
       <div class="loginTitle">
-        <h1 class="cityTitle">新北市政府</h1>
+        <h1 class="cityTitle">尖石鄉政府</h1>
         <h5 class="cityDescrip">長照交通接送統一預約服務及管理系統</h5>
       </div>
       <!-- adminLogin -->
-      <div class="adminLogin" v-if="isForget==1">
+      <div class="adminLogin" v-if="isForget == 1">
         <h2 class="adminLoginTitle">管理者Login</h2>
-        <h5 class="adminLoginDescrip">為了保障您的帳號安全，建議您最少於三個月變更一次密碼</h5>
+        <h5 class="adminLoginDescrip">
+          為了保障您的帳號安全，建議您最少於三個月變更一次密碼
+        </h5>
       </div>
       <!-- forgetBox -->
-      <div class="forgetBox" v-if="isForget==2">
+      <div class="forgetBox" v-if="isForget == 2">
         <h2 class="forgetTitle">忘記密碼</h2>
         <h5 class="forgetDescrip">請準備好您的手機</h5>
       </div>
       <!-- letterBox -->
-      <div class="letterBox" v-if="isForget==3">
+      <div class="letterBox" v-if="isForget == 3">
         <h2 class="letterTitle">已發送簡訊驗證碼到您的手機</h2>
         <h5 class="letterDescrip">手機號碼：0987-087-334</h5>
       </div>
       <!-- newPwBox -->
-      <div class="newPwBox" v-if="isForget==4">
+      <div class="newPwBox" v-if="isForget == 4">
         <h2 class="newPwTitle">設定登入密碼</h2>
         <div class="pwRoles">
-          <p :class="{'OkRole':auth.minLength}" class="pwRole">
+          <p :class="{ OkRole: auth.minLength }" class="pwRole">
             <i class="fas fa-check"></i>8碼以上(必要)
           </p>
-          <p :class="{'OkRole':auth.upperCase}" class="pwRole">
+          <p :class="{ OkRole: auth.upperCase }" class="pwRole">
             <i class="fas fa-check"></i>大寫英文
           </p>
-          <p :class="{'OkRole':auth.lowerCase}" class="pwRole">
+          <p :class="{ OkRole: auth.lowerCase }" class="pwRole">
             <i class="fas fa-check"></i>小寫英文
           </p>
-          <p :class="{'OkRole':auth.number}" class="pwRole">
+          <p :class="{ OkRole: auth.number }" class="pwRole">
             <i class="fas fa-check"></i>數字
           </p>
           <el-tooltip
@@ -43,61 +45,98 @@
             content="特殊符號包含 ~!@#$%^&*()"
             placement="bottom-end"
           >
-            <p :class="{'OkRole':auth.mark}" class="pwRole">
+            <p :class="{ OkRole: auth.mark }" class="pwRole">
               <i class="fas fa-check"></i>特殊符號
             </p>
           </el-tooltip>
-          <p :class="{'OkRole':num>=3}" class="pwRole">
+          <p :class="{ OkRole: num >= 3 }" class="pwRole">
             <i class="fas fa-check"></i>4選3
           </p>
         </div>
       </div>
       <!-- loginBox -->
-      <div class="loginBox" v-if="isForget==1">
-        <el-input placeholder="請輸入您的帳號" v-model="accountInput" clearable></el-input>
+      <div class="loginBox" v-if="isForget == 1">
+        <el-input
+          placeholder="請輸入您的帳號"
+          v-model="accountInput"
+          clearable
+        ></el-input>
         <el-input
           placeholder="請輸入您的密碼"
           @keyup.enter.native="handleLogin"
           v-model="passwordInput"
           show-password
         ></el-input>
-        <el-button type="warning" :loading="btnLoading" @click="handleLogin" round>登入</el-button>
-        <div @click="isForget=2" class="forgetPw">忘記密碼?</div>
+        <el-button
+          type="warning"
+          :loading="btnLoading"
+          @click="handleLogin"
+          round
+          >登入</el-button
+        >
+        <div @click="isForget = 2" class="forgetPw">忘記密碼?</div>
       </div>
       <!-- forgetInput -->
-      <div class="forgetInput" v-if="isForget==2">
-        <el-input placeholder="請輸入您的帳號" v-model="accountForgetInput" clearable></el-input>
-        <el-button :loading="btnLoading" @click="sendCode" type="warning" round>下一步</el-button>
+      <div class="forgetInput" v-if="isForget == 2">
+        <el-input
+          placeholder="請輸入您的帳號"
+          v-model="accountForgetInput"
+          clearable
+        ></el-input>
+        <el-button :loading="btnLoading" @click="sendCode" type="warning" round
+          >下一步</el-button
+        >
         <p class="fogetPwDesc">點選下一步，發送簡訊驗證碼到您的手機</p>
-        <div @click="isForget=1" class="backToLogin">返回登入</div>
+        <div @click="isForget = 1" class="backToLogin">返回登入</div>
       </div>
       <!-- letterInput -->
-      <div class="letterInput" v-if="isForget==3">
+      <div class="letterInput" v-if="isForget == 3">
         <div class="codeBox">
-          <el-input class="codeBoxInput" placeholder="請輸入驗證碼" v-model="codeInput" clearable></el-input>
+          <el-input
+            class="codeBoxInput"
+            placeholder="請輸入驗證碼"
+            v-model="codeInput"
+            clearable
+          ></el-input>
           <el-button
             :loading="btnLoading"
-            :disabled="resendCount!==0"
+            :disabled="resendCount !== 0"
             class="resendBtn"
             @click="sendCode"
             type="warning"
             round
           >
             重新送出
-            <span v-if="resendCount!==0">({{resendCount}})</span>
+            <span v-if="resendCount !== 0">({{ resendCount }})</span>
           </el-button>
         </div>
-        <el-button :loading="btnLoading" @click="valiCode" type="warning" round>下一步</el-button>
+        <el-button :loading="btnLoading" @click="valiCode" type="warning" round
+          >下一步</el-button
+        >
         <p class="fogetPwDesc">驗證碼輸入完成後點選下一步並設定新密碼</p>
-        <div @click="isForget=1" class="backToLogin">返回登入</div>
+        <div @click="isForget = 1" class="backToLogin">返回登入</div>
       </div>
       <!-- newPwInput -->
-      <div class="newPwInput" v-if="isForget==4">
-        <el-input placeholder="請輸入您的新密碼" v-model="newPwInput" show-password></el-input>
-        <el-input placeholder="請確認您的新密碼" v-model="newPwInputCheck" show-password></el-input>
-        <el-button :loading="btnLoading" @click="newPwConfirm" type="warning" round>完成</el-button>
+      <div class="newPwInput" v-if="isForget == 4">
+        <el-input
+          placeholder="請輸入您的新密碼"
+          v-model="newPwInput"
+          show-password
+        ></el-input>
+        <el-input
+          placeholder="請確認您的新密碼"
+          v-model="newPwInputCheck"
+          show-password
+        ></el-input>
+        <el-button
+          :loading="btnLoading"
+          @click="newPwConfirm"
+          type="warning"
+          round
+          >完成</el-button
+        >
         <p class="fogetPwDesc">請依照步驟完成新密碼認證</p>
-        <div @click="isForget=1" class="backToLogin">返回登入</div>
+        <div @click="isForget = 1" class="backToLogin">返回登入</div>
       </div>
     </div>
 
@@ -111,19 +150,27 @@
     >
       <div class="annCategory">
         <button
-          @click="annCategory='行車公告'"
-          :class="{'activeAnn':annCategory==='行車公告'}"
+          @click="annCategory = '行車公告'"
+          :class="{ activeAnn: annCategory === '行車公告' }"
           class="annCategoryBtn"
-        >行車公告</button>
+        >
+          行車公告
+        </button>
         <button
-          @click="annCategory='A單位公告'"
-          :class="{'activeAnn':annCategory==='A單位公告'}"
+          @click="annCategory = 'A單位公告'"
+          :class="{ activeAnn: annCategory === 'A單位公告' }"
           class="annCategoryBtn"
-        >A單位公告</button>
+        >
+          A單位公告
+        </button>
       </div>
       <el-table :data="annDataFilter" style="margin-top:1rem">
         <el-table-column property="title" label="公告事項"></el-table-column>
-        <el-table-column property="date" label="公告日期" width="120"></el-table-column>
+        <el-table-column
+          property="date"
+          label="公告日期"
+          width="120"
+        ></el-table-column>
       </el-table>
     </el-dialog>
   </div>
@@ -354,5 +401,4 @@ export default {
 };
 </script>
 
-<style lang='scss'>
-</style>
+<style lang="scss"></style>

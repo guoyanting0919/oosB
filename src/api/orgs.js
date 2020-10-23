@@ -49,3 +49,12 @@ export function getSubOrgs(data) {
     params: data,
   });
 }
+
+// 獲取所有B單位
+export function getOrgB(data) {
+  return request({
+    url: "/orgs/LoadOrgB",
+    method: "get",
+    params: data,
+  });
+}

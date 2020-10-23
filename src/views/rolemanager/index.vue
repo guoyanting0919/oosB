@@ -182,7 +182,6 @@
       <el-dialog
         class="dialog-mini"
         ref="accessModulesDlg"
-        v-el-drag-dialog
         :title="accessTitle"
         :visible.sync="dialogAccessModules"
       >
@@ -334,7 +333,7 @@ export default {
         selectUsers: [],
         list: [],
       },
-      accessTitle: "為角色分配模塊菜單",
+      accessTitle: "為角色分配左側欄權限",
     };
   },
   filters: {

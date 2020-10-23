@@ -21,7 +21,7 @@
         >
           <SubTitle title="基本資料"></SubTitle>
           <el-row :gutter="16">
-            <el-col :sm="12" :md="6">
+            <el-col :sm="12" :md="3">
               <el-form-item label="姓名">
                 <el-input
                   disabled
@@ -30,26 +30,7 @@
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :sm="12" :md="6">
-              <el-form-item label="身份證字號">
-                <el-input
-                  disabled
-                  v-model="basicTemp.uid"
-                  placeholder="請輸入個案身分證字號"
-                ></el-input>
-              </el-form-item> </el-col
-            ><el-col :sm="12" :md="6">
-              <el-form-item label="生日">
-                <el-date-picker
-                  disabled
-                  v-model="basicTemp.birthday"
-                  type="date"
-                  placeholder="請選擇生日"
-                  style="width:100%"
-                ></el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :sm="12" :md="6">
+            <el-col :sm="12" :md="3">
               <el-form-item label="性別">
                 <el-select
                   disabled
@@ -61,6 +42,35 @@
                   <el-option :value="1" :label="'男'">男</el-option>
                   <el-option :value="0" :label="'女'">女</el-option>
                 </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="身份證字號">
+                <el-input
+                  disabled
+                  v-model="basicTemp.uid"
+                  placeholder="請輸入個案身分證字號"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="生日">
+                <el-date-picker
+                  disabled
+                  v-model="basicTemp.birthday"
+                  type="date"
+                  placeholder="請選擇生日"
+                  style="width:100%"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="手機">
+                <el-input
+                  disabled
+                  v-model="basicTemp.phone"
+                  placeholder="請輸入手機"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -92,35 +102,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <!-- <el-col :sm="12" :md="6">
-              <el-form-item label="手機">
-                <span slot="label">手機(手機市話 擇一輸入)</span>
-                <el-input
-                  placeholder="格式:0987654321"
-                  v-model="temp.Id"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :sm="12" :md="6">
-              <el-form-item label="市話">
-                <el-input
-                  placeholder="格式:0287654321"
-                  v-model="temp.Id"
-                ></el-input>
-              </el-form-item>
-            </el-col> -->
-            <!-- <el-col :sm="12" :md="6">
-              <el-form-item label="個案身份">
-                <el-select
-                  v-model="temp.Id"
-                  placeholder="請選擇個案身份"
-                  style="width:100%"
-                >
-                  <el-option :value="1" :label="'公費個案'">公費個案</el-option>
-                  <el-option :value="2" :label="'自費個案'">自費個案</el-option>
-                </el-select>
-              </el-form-item>
-            </el-col> -->
+
             <el-col :sm="12" :md="6">
               <el-form-item label="額度控管留用首月" prop="reviewDate">
                 <el-date-picker
@@ -139,16 +121,16 @@
                   placeholder="請選擇失能等級"
                   style="width:100%"
                 >
-                  <el-option :value="'1'" :label="'1級(無失能)'"
+                  <el-option :value="'0'" :label="'1級(無失能)'"
                     >1級(無失能)</el-option
                   >
-                  <el-option :value="'2'" :label="'2級'">2級</el-option>
-                  <el-option :value="'3'" :label="'3級'">3級</el-option>
-                  <el-option :value="'4'" :label="'4級'">4級</el-option>
-                  <el-option :value="'5'" :label="'5級'">5級</el-option>
-                  <el-option :value="'6'" :label="'6級'">6級</el-option>
-                  <el-option :value="'7'" :label="'7級'">7級</el-option>
-                  <el-option :value="'8'" :label="'8級'">8級</el-option>
+                  <el-option :value="'1'" :label="'2級'">2級</el-option>
+                  <el-option :value="'2'" :label="'3級'">3級</el-option>
+                  <el-option :value="'3'" :label="'4級'">4級</el-option>
+                  <el-option :value="'4'" :label="'5級'">5級</el-option>
+                  <el-option :value="'5'" :label="'6級'">6級</el-option>
+                  <el-option :value="'6'" :label="'7級'">7級</el-option>
+                  <el-option :value="'7'" :label="'8級'">8級</el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -472,17 +454,6 @@ export default {
         wealTypeId: "", //社會福利身份
         wealTypeName: "", //社會福利身份
         isEffectNow: true, //是否生效
-
-        // cuty: "",
-        // lun: [
-        //   {
-        //     value1: "",
-        //     value2: "",
-        //     value3: "",
-        //     value4: "",
-        //     value5: "",
-        //   },
-        // ],
       },
       rules: {
         // Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
@@ -534,8 +505,14 @@ export default {
           vm.temp.userId = vm.$route.params.id;
           // vm.temp.reviewDate = moment(vm.temp.reviewDate).format('yyyy')
           console.log(vm.temp);
-          caseUsers.add(vm.temp).then((res) => {
-            console.log(res);
+          caseUsers.add(vm.temp).then(() => {
+            // console.log(res);
+
+            vm.$alertT.fire({
+              icon: "success",
+              title: `用戶${vm.basicTemp.name} 成功新增長照身份`,
+            });
+            vm.$router.push("/alluser/index");
           });
         } else {
           console.log("submit error");

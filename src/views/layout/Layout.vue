@@ -20,6 +20,7 @@
           <tags-view class="custom-tags-view"></tags-view>
           <app-main></app-main>
         </div>
+        <p class="webVersion">{{ webStatus }} version-{{ webVersion }}</p>
       </el-container>
     </el-container>
   </div>
@@ -40,6 +41,8 @@ export default {
   data() {
     return {
       orderId: "",
+      webStatus: process.env.NODE_ENV,
+      webVersion: process.env.VUE_APP_WEB_VERSION,
     };
   },
   mixins: [ResizeMixin],
@@ -73,6 +76,14 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
+.webVersion {
+  position: absolute;
+  z-index: 9999;
+  right: 4px;
+  font-size: 10px;
+  color: #797878;
+  bottom: 4px;
+}
 .app-wrapper {
   @include clearfix;
   position: relative;

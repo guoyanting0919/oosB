@@ -40,12 +40,6 @@
             width="55"
             align="center"
           ></el-table-column>
-          <!-- <el-table-column
-            property="pic"
-            label="照片"
-            width="80"
-            align="center"
-          ></el-table-column> -->
           <el-table-column
             property="lock"
             label="鎖定狀態"
@@ -54,12 +48,16 @@
           >
             <template slot-scope="scope">
               <div>
+                <!-- 未鎖定 -->
                 <i
                   style="color: #409167"
-                  v-if="scope.row.lock"
+                  :key="scope.row.id"
+                  v-if="isLock(scope.row.unLockDate)"
                   class="iconfont icon-Vector21"
                 ></i>
+                <!-- 鎖定 -->
                 <i
+                  :key="scope.row.id"
                   style="color: #d63737"
                   v-else
                   class="iconfont icon-Vector31"
@@ -84,7 +82,7 @@
                 clearable
               >
                 <el-option
-                  v-for="item in scope.row.caseList"
+                  v-for="item in scope.row.userTypeOption"
                   :key="item.caseId"
                   :label="userRoleMap[item.userType]"
                   :value="`${item.userType}-${item.caseId}`"
@@ -138,25 +136,6 @@
             width="170"
             align="center"
           ></el-table-column>
-          <!-- <el-table-column
-            property="tel"
-            label="市話"
-            width="170"
-            align="center"
-          ></el-table-column> -->
-          <!-- <el-table-column
-            property="status"
-            label="狀態"
-            width="130"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <div>
-                <el-tag v-if="scope.row.status" type="success">可派發</el-tag>
-                <el-tag v-else type="danger">不可派發</el-tag>
-              </div>
-            </template>
-          </el-table-column> -->
 
           <el-table-column
             property="setting"
@@ -211,12 +190,24 @@
                   v-if="hasButton('editBus') && roles[scope.row.id] == 'bus'"
                   >巴士編輯</el-button
                 >
-                <el-button
+                <!-- <el-button
                   size="mini"
                   @click="handleDetail(scope.row)"
                   type="success"
                   v-if="hasButton('detail')"
                   >檢視</el-button
+                > -->
+                <!-- 檢視長照個案 -->
+                <el-button
+                  size="mini"
+                  @click="handleCheckCaseUser(scope.row)"
+                  type="success"
+                  v-if="
+                    hasButton('checkCaseUser') &&
+                      roles[scope.row.id] &&
+                      roles[scope.row.id].split('-')[0] == 'caseuser'
+                  "
+                  >檢視長照</el-button
                 >
                 <el-button
                   size="mini"
@@ -249,6 +240,7 @@
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
+          @pagination="handleCurrentChange"
         />
       </div>
     </div>
@@ -333,16 +325,6 @@
       :visible.sync="rolesDialog"
       width="500px"
     >
-      <!-- <span>用戶身份</span> -->
-      <!-- <el-select v-model="roleSelect" placeholder="請為用戶選擇身份">
-        <el-option
-          v-for="item in options2"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        >
-        </el-option>
-      </el-select> -->
       <div class="rolesBox">
         <el-button
           v-if="hasButton('addCaseUser')"
@@ -358,21 +340,44 @@
           >幸福巴士身份</el-button
         >
       </div>
-
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="rolesDialog = false">取 消</el-button>
-        <el-button type="primary" @click="handleRole(roleSelect)"
-          >確 定</el-button
-        >
-      </span> -->
     </el-dialog>
 
     <!-- quotaDialog -->
-    <el-dialog title="可用額度" :visible.sync="quotaDialog" width="30%">
-      <span>可用額度可用額度可用額度可用額度</span>
+    <el-dialog title="可用額度" :visible.sync="quotaDialog" width="600px">
+      <div class="quotaBody">
+        <div class="quotaData">
+          <div class="quotaDataItem">
+            <p>使用額度</p>
+            <h1>${{ discountTemp.useDiscount }}</h1>
+          </div>
+          <div class="quotaDataItem">
+            <p>剩餘額度</p>
+            <h1>${{ discountTemp.lastDiscount }}</h1>
+          </div>
+          <div class="quotaDataItem">
+            <p>本月可用額度</p>
+            <h1>${{ discountTemp.totalDiscount }}</h1>
+          </div>
+        </div>
+        <div class="addQuota">
+          <p>新增額度</p>
+          <el-input
+            :disabled="!hasButton('editQuota')"
+            v-model="amt"
+          ></el-input>
+        </div>
+        <div class="quotaHistory">
+          <p>修改記錄</p>
+        </div>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="quotaDialog = false">取 消</el-button>
-        <el-button type="primary" @click="quotaDialog = false">確 定</el-button>
+        <el-button
+          :disabled="!hasButton('editQuota')"
+          type="primary"
+          @click="confirmQuota"
+          >確 定</el-button
+        >
       </span>
     </el-dialog>
 
@@ -391,7 +396,7 @@
       </el-checkbox-group>
       <span slot="footer" class="dialog-footer">
         <el-button @click="unitBDialog = false">取 消</el-button>
-        <el-button type="primary" @click="unitBDialog = false">確 定</el-button>
+        <el-button type="primary" @click="confirmUnitB">確 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -407,6 +412,8 @@ import Pagination from "@/components/Pagination";
 import moment from "moment";
 import * as users from "@/api/users";
 import * as orgs from "@/api/orgs";
+import * as caseUsers from "@/api/caseUsers";
+import * as caseUserDiscounts from "@/api/caseUserDiscounts";
 export default {
   name: "allUser",
   components: {
@@ -542,6 +549,37 @@ export default {
         status: 1,
         organizationIds: "",
       },
+      caseUserTemp: {
+        userId: "", //用戶id
+        id: "", //身份id
+        caseUserNo: "", //個案編號
+        orgAId: "", //Ａ單位(管理單位)
+        orgBIds: "", //B單位
+        disabilityLevel: "", //失能等級
+        county: "", //居住縣市
+        district: "", //居住區域
+        addr: "", //居住地址
+        lat: 0, //經度
+        lon: 0, //緯度
+        urgentName: "", //聯絡人姓名
+        urgentRelationship: "", //聯絡人關係
+        urgentPhone: "", //聯絡人手機
+        urgentTel: "", //聯絡人市話
+        remark: "", //備註
+        caseUserStatus: "1", //可否派發
+        statusReason: "", //不可派發原因
+        reviewDate: "", //額度控管留用首月,
+        wealTypeId: "", //社會福利身份
+        wealTypeName: "", //社會福利身份
+        isEffectNow: true, //是否生效
+      },
+      discountTemp: {
+        caseUserId: "",
+        lastDiscount: "",
+        totalDiscount: "",
+        useDiscount: "",
+      },
+      amt: 0,
       userRules: {
         name: [
           { required: true, message: "請輸入姓名", trigger: "blur" },
@@ -576,42 +614,6 @@ export default {
       value: "",
       value1: "",
 
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
-      ],
-      options2: [
-        {
-          value: "1",
-          label: "長照",
-        },
-        {
-          value: "2",
-          label: "白牌",
-        },
-        {
-          value: "3",
-          label: "幸福巴士",
-        },
-      ],
       userRoleMap: {
         caseuser: "長照",
         selfpay: "白牌",
@@ -643,38 +645,53 @@ export default {
     async getList() {
       const vm = this;
       vm.listLoading = true;
+      let ex = vm.buttons.join("").toLowerCase();
       await users.getClientList(vm.listQuery).then((res) => {
-        console.log(res);
+        // console.log(res.data, ex);
         let users = res.data.map((user) => {
-          user.userType = [];
+          user.userTypeOption = [];
+          if (user.caseList.length > 0) {
+            user.caseList.forEach((type) => {
+              if (ex.includes(type.userType)) {
+                user.userTypeOption.push(type);
+              }
+            });
+          } else {
+            user.userTypeOption = [];
+          }
           return user;
         });
+
         vm.list = users;
-        console.log(users);
+        console.log(vm.list.userType);
         vm.total = res.count;
         vm.listLoading = false;
       });
       // console.log("ss", vm.list);
     },
+    // 換頁
+    handleCurrentChange(val) {
+      this.listQuery.page = val.page;
+      this.listQuery.limit = val.limit;
+      this.getList();
+    },
     // 獲取所有B單位
     getUnitBs() {
       const vm = this;
-      orgs.getSubOrgs({ orgId: vm.unitBId }).then((res) => {
-        vm.unitBs = res.data.filter((org) => {
-          return org.id !== vm.unitBId;
-        });
+      orgs.getOrgB().then((res) => {
+        console.log(res);
+        vm.unitBs = res.result;
       });
     },
     // 獲取用戶基本資料
     getUserBasic(id) {
       const vm = this;
-      // console.log(vm.$route.params);
       users.getClient({ id }).then((res) => {
         console.log(res);
         vm.userTemp = Object.assign({}, res.result); // copy obj
       });
     },
-    // 主要按鈕
+    // 新增/編輯用戶基本資料
     handleAddOrEdit(act, user) {
       const vm = this;
       vm.userDialogTitle = act;
@@ -682,12 +699,15 @@ export default {
         vm.handleResetUserTemp();
         vm.addOrUpdateDialog = true;
       } else {
-        // console.log(act, user);
-        // console.log(vm.roles[user.id]);
-        // vm.editEvents(vm.roles[user.id], user);
         this.handleEditBasic(user.id);
-        // vm.addOrUpdateDialog = true;
       }
+    },
+    // 編輯用戶基本資料
+    handleEditBasic(id) {
+      const vm = this;
+      vm.getUserBasic(id);
+      vm.addOrUpdateDialog = true;
+      vm.userDialogTitle = "edit";
     },
     // 確認新增/修改用戶基本資料
     confirmAddOrUpdate() {
@@ -696,7 +716,6 @@ export default {
       if (act == "add") {
         vm.$refs.userForm.validate((valid) => {
           if (valid) {
-            // alert("submit!");
             vm.userTemp.organizationIds = vm.defaultorgid;
             vm.userTemp.password = moment(vm.userTemp.birthday).format(
               "YYYYMMDD"
@@ -716,7 +735,6 @@ export default {
       } else {
         vm.$refs.userForm.validate((valid) => {
           if (valid) {
-            // alert("submit!");
             console.log(vm.userTemp);
             vm.userTemp.password = moment(vm.userTemp.birthday).format(
               "YYYYMMDD"
@@ -734,29 +752,90 @@ export default {
         });
       }
     },
+    // 編輯長照資料
     handleEditCaseUser(user) {
-      console.log(user);
       let caseId = this.roles[user.id].split("-")[1];
-      console.log(caseId);
       this.$router.push(`/alluser/editCaseUser/${user.id}-${caseId}`);
     },
-    handleQuota(user) {
-      console.log(user);
-      this.quotaDialog = true;
+    // 檢視長照資料
+    handleCheckCaseUser(user) {
+      let caseId = this.roles[user.id].split("-")[1];
+      this.$router.push(`/alluser/checkCaseUser/${user.id}-${caseId}`);
     },
+    // 帳號解鎖
+    handleUnlock(user) {
+      console.log(user);
+      const vm = this;
+      users.unlock({ id: user.id }).then((res) => {
+        console.log(res);
+        vm.$alertT.fire({
+          icon: "success",
+          title: `用戶${user.name} 解鎖成功`,
+        });
+        vm.getList();
+      });
+    },
+    // 獲取長照B單位
     handleUnitB(user) {
       const vm = this;
-      vm.unitBDialog = true;
       vm.checkedUnitBs = [];
-      console.log(user);
+      vm.rowClick(user);
+      let id = vm.roles[user.id].split("-")[1];
+      caseUsers.get({ id }).then((res) => {
+        vm.caseUserTemp = Object.assign({}, res.result); // copy obj
+        vm.caseUserTemp.orgBIds
+          ? (vm.checkedUnitBs = vm.caseUserTemp.orgBIds.split(","))
+          : (vm.checkedUnitBs = []);
+        vm.unitBDialog = true;
+      });
     },
-    handleDetail(user) {
-      this.$router.push(`/alluser/detail/${user.uid}`);
+    // 確認修改B單位
+    confirmUnitB() {
+      const vm = this;
+      vm.caseUserTemp.orgBIds = vm.checkedUnitBs.join(",");
+      console.log(vm.caseUserTemp.orgBIds);
+      caseUsers.updateUnitB(vm.caseUserTemp).then((res) => {
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        vm.unitBDialog = false;
+      });
     },
+    // 獲取額度資料
+    handleQuota(user) {
+      const vm = this;
+      vm.amt = 0;
+      vm.rowClick(user);
+      let caseid = vm.roles[user.id].split("-")[1];
+      caseUserDiscounts.get({ caseid }).then((res) => {
+        vm.discountTemp = Object.assign({}, res.result); // copy obj
+        this.quotaDialog = true;
+      });
+    },
+    // 確認新增額度
+    confirmQuota() {
+      const vm = this;
+      let temp = {
+        caseUserId: vm.discountTemp.caseUserId,
+        amt: vm.amt,
+      };
+      // console.log(temp);
+      caseUserDiscounts.add(temp).then((res) => {
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        this.quotaDialog = false;
+      });
+    },
+
+    // 替用戶添加身份
     handleRole(role) {
       console.log(role);
       switch (role) {
         case "1":
+          this.rolesDialog = false;
           this.$router.push(
             `/alluser/addCaseUser/${this.multipleSelection[0].id}`
           );
@@ -772,12 +851,6 @@ export default {
         default:
           break;
       }
-    },
-    handleEditBasic(id) {
-      const vm = this;
-      vm.getUserBasic(id);
-      vm.addOrUpdateDialog = true;
-      vm.userDialogTitle = "edit";
     },
     handleDispatch(user) {
       this.$router.push(`/alluser/dispatch/${user.uid}`);
@@ -805,9 +878,11 @@ export default {
       this.multipleSelection = val;
     },
     rowClick(row) {
+      // console.log(row);
       this.$refs.mainTable.clearSelection();
       this.$refs.mainTable.toggleRowSelection(row);
     },
+
     onBtnClicked(domId) {
       console.log(domId);
       switch (domId) {
@@ -852,21 +927,41 @@ export default {
           }
 
           break;
+        case "unlock":
+          if (this.multipleSelection.length !== 1) {
+            this.$message({
+              message: "只能選中一個進行編輯",
+              type: "error",
+            });
+            return;
+          }
+          this.handleUnlock(this.multipleSelection[0]);
+          break;
         default:
           break;
       }
     },
 
-    // 特殊fun
+    // 功能內是否包含caseuser selfpay bus
     canISelect(str) {
       let ex = this.buttons.join("").toLowerCase();
       return !ex.includes(str);
+    },
+    // 鎖定狀態
+    isLock(date) {
+      if (date != null) {
+        let today = moment().format();
+        let flag = !moment(date).isAfter(today);
+        return flag;
+      } else {
+        return true;
+      }
     },
   },
   computed: {
     ...mapGetters(["defaultorgid"]),
     unitBDialogTitle() {
-      return `B單位 ( ${this.checkedUnitBs.length}/3 )`;
+      return `編輯長照個案 ${this.multipleSelection[0]?.name} B單位 ( ${this.checkedUnitBs.length}/3 )`;
     },
   },
   filters: {
@@ -880,17 +975,16 @@ export default {
     vm.getButtons();
     vm.getUnitBs();
     await vm.getList();
-    console.log(vm.buttons);
+    // 將身份預設
     vm.list.forEach((user) => {
-      let defaltVal;
-      if (user.caseList.length > 0) {
-        defaltVal = `${user.caseList[0].userType}-${user.caseList[0].caseId}`;
+      let defaultVal;
+      if (user.userTypeOption.length > 0) {
+        defaultVal = `${user.userTypeOption[0].userType}-${user.userTypeOption[0].caseId}`;
       } else {
-        defaltVal = null;
+        defaultVal = null;
       }
-      vm.$set(vm.roles, `${user.id}`, defaltVal);
+      vm.$set(vm.roles, `${user.id}`, defaultVal);
     });
-    // console.log(vm.roles);
   },
 };
 </script>
@@ -913,5 +1007,35 @@ export default {
     justify-content: center;
     align-items: center;
   }
+  .quotaBody {
+    width: 100%;
+  }
+  .quotaData {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+  .quotaDataItem {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    p {
+      font-size: 16px;
+      margin-bottom: 0.75rem;
+    }
+  }
+  .addQuota {
+    margin-bottom: 1.25rem;
+    p {
+      font-size: 16px;
+      margin-bottom: 0.5rem;
+    }
+  }
+  // .quotaHistory {
+  //   p
+  // }
 }
 </style>

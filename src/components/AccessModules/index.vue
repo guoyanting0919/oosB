@@ -1,7 +1,11 @@
 <template>
   <div class="compent-dialog-body">
     <div class="p-m">
-      <el-form ref="form" label-position="left" :class="step=='1'?'':'hide'">
+      <el-form
+        ref="form"
+        label-position="left"
+        :class="step == '1' ? '' : 'hide'"
+      >
         <el-form-item size="small">
           <div class="block">
             <el-tree
@@ -21,16 +25,17 @@
         </el-form-item>
       </el-form>
 
-      <div :class="step=='2'?'':'hide'">
+      <div :class="step == '2' ? '' : 'hide'">
         <div class="block">
           <el-checkbox
             :indeterminate="isIndeterminate"
             v-model="roleMenuIdsAll"
             @change="handleCheckAllChange"
-          >全選</el-checkbox>
+            >全選</el-checkbox
+          >
           <template v-for="item in checkModules">
-            <div :key="item.id">
-              <h4 class="title">{{item.parentName}} > {{item.label}}</h4>
+            <div class="moduleBox" :key="item.id">
+              <h4 class="title">{{ item.parentName }} > {{ item.label }}</h4>
               <div class="p-l-m">
                 <el-checkbox-group v-model="roleMenuIds">
                   <el-checkbox
@@ -39,24 +44,28 @@
                     :label="menu.id"
                     :key="menu.Id"
                     size="small"
-                  >{{menu.name}}</el-checkbox>
+                    >{{ menu.name }}</el-checkbox
+                  >
                 </el-checkbox-group>
               </div>
             </div>
           </template>
         </div>
       </div>
-      <div :class="step=='3'?'':'hide'">
+      <div :class="step == '3' ? '' : 'hide'">
         <div class="block">
           <template v-for="(node, index) in noSystemNodes">
             <div :key="node.id">
               <h4 class="title">
-                {{node.parentName}} > {{node.label}}
+                {{ node.parentName }} > {{ node.label }}
                 <el-checkbox
                   :indeterminate="node.isIndeterminate"
                   v-model="node.checkAll"
-                  @change="handleCheckPropAllChange($event, node.properties, index)"
-                >全選</el-checkbox>
+                  @change="
+                    handleCheckPropAllChange($event, node.properties, index)
+                  "
+                  >全選</el-checkbox
+                >
               </h4>
               <div class="p-l-m">
                 <el-checkbox-group v-model="node.checks">
@@ -66,7 +75,8 @@
                       :label="propy.key"
                       :key="propy.key"
                       size="small"
-                    >{{propy.description}}</el-checkbox>
+                      >{{ propy.description }}</el-checkbox
+                    >
                   </template>
                 </el-checkbox-group>
               </div>
@@ -77,8 +87,12 @@
     </div>
     <div slot="footer" class="el-dialog__footer">
       <el-button size="small" @click="close">取消</el-button>
-      <el-button size="small" type="primary" v-show="step > 1" @click="up">上一步</el-button>
-      <el-button size="small" type="success" @click="acceRole">下一步</el-button>
+      <el-button size="small" type="primary" v-show="step > 1" @click="up"
+        >上一步</el-button
+      >
+      <el-button size="small" type="success" @click="acceRole"
+        >下一步</el-button
+      >
     </div>
   </div>
 </template>
@@ -114,9 +128,9 @@ export default {
     },
     step(val) {
       if (val === 1) {
-        this.$emit("change-title", "為角色分配【可見模塊】");
+        this.$emit("change-title", "為角色分配【左側欄】");
       } else if (val === 2) {
-        this.$emit("change-title", "為角色分配【可見菜單】");
+        this.$emit("change-title", "為角色分配【按鈕功能】");
       } else {
         this.$emit("change-title", "為角色分配【可見字段】");
       }
@@ -131,10 +145,10 @@ export default {
   mounted() {
     var _this = this;
     login.getModules().then((response) => {
-      var modules = response.result.map(function (item) {
+      var modules = response.result.map(function(item) {
         let lable = item.name;
         if (!item.isSys) {
-          lable += "(非系統模塊，可分配字段)";
+          lable += "(非系統)";
         }
         return {
           id: item.id,
@@ -161,7 +175,7 @@ export default {
     },
     filterMenus(moduleId) {
       // 按模塊過濾菜單
-      return this.menus.filter(function (menu) {
+      return this.menus.filter(function(menu) {
         return menu.moduleId === moduleId;
       });
     },
@@ -316,7 +330,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .custom-tree-node {
   flex: 1;
   display: flex;
@@ -325,15 +339,27 @@ export default {
   font-size: 14px;
   padding-right: 8px;
 }
-
+.title {
+  margin-bottom: 0.5rem;
+}
+.moduleBox {
+  background: #ffeee2;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
 .p-m {
   padding: 10px;
 }
-.p-l-m {
+/* .p-l-m {
   padding-left: 10px;
-}
+} */
 
 .hide {
   display: none;
+}
+.el-checkbox {
+  width: 25%;
 }
 </style>

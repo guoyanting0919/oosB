@@ -82,6 +82,14 @@ export function del(data) {
   });
 }
 
+export function unlock(data) {
+  return request({
+    url: "/users/unlock",
+    method: "post",
+    data,
+  });
+}
+
 export function loadByRole(params) {
   return request({
     url: "/users/loadByRole",

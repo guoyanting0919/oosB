@@ -2,7 +2,7 @@ import request from "@/utils/request";
 
 export function get(params) {
   return request({
-    url: "/caseusers/get",
+    url: "/CaseUserDiscounts/GetDiscountData",
     method: "get",
     params,
   });
@@ -10,7 +10,7 @@ export function get(params) {
 
 export function add(data) {
   return request({
-    url: "/caseusers/addorupdate",
+    url: "/CaseUserDiscounts/add",
     method: "post",
     data,
   });
