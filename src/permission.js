@@ -37,6 +37,9 @@ let elementMappingList = [
   "addCaseUser",
   "editCaseUser",
   "checkCaseUser",
+  "addBus",
+  "editBus",
+  "checkBus",
 ];
 
 const whiteList = [

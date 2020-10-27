@@ -74,7 +74,7 @@
           <el-table-column property="setting" label="身份" width="200">
             <template slot-scope="scope">
               <el-select
-                style="margin-right:0.5rem"
+                style="margin-right: 0.5rem"
                 size="mini"
                 no-data-text="該用戶尚未新增身份"
                 v-model="roles[scope.row.id]"
@@ -167,8 +167,8 @@
                   type="warning"
                   v-if="
                     hasButton('editCaseUser') &&
-                      roles[scope.row.id] &&
-                      roles[scope.row.id].split('-')[0] == 'caseuser'
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'caseuser'
                   "
                   >長照編輯</el-button
                 >
@@ -204,10 +204,34 @@
                   type="success"
                   v-if="
                     hasButton('checkCaseUser') &&
-                      roles[scope.row.id] &&
-                      roles[scope.row.id].split('-')[0] == 'caseuser'
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'caseuser'
                   "
                   >檢視長照</el-button
+                >
+                <!-- 檢視白牌個案 -->
+                <el-button
+                  size="mini"
+                  @click="handleCheckCaseUser(scope.row)"
+                  type="success"
+                  v-if="
+                    hasButton('checkSelfPay') &&
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'selfpay'
+                  "
+                  >檢視白牌</el-button
+                >
+                <!-- 檢視巴士個案 -->
+                <el-button
+                  size="mini"
+                  @click="handleCheckCaseUser(scope.row)"
+                  type="success"
+                  v-if="
+                    hasButton('checkBus') &&
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'bus'
+                  "
+                  >檢視巴士</el-button
                 >
                 <el-button
                   size="mini"
@@ -215,8 +239,8 @@
                   type="primary"
                   v-if="
                     hasButton('unitB') &&
-                      roles[scope.row.id] &&
-                      roles[scope.row.id].split('-')[0] == 'caseuser'
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'caseuser'
                   "
                   >B單位</el-button
                 >
@@ -226,8 +250,8 @@
                   type="primary"
                   v-if="
                     hasButton('quota') &&
-                      roles[scope.row.id] &&
-                      roles[scope.row.id].split('-')[0] == 'caseuser'
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'caseuser'
                   "
                   >額度</el-button
                 >
@@ -250,7 +274,7 @@
       :title="userDialogMap[userDialogTitle]"
       :visible.sync="addOrUpdateDialog"
       width="50%"
-      style="min-width:375px"
+      style="min-width: 375px"
     >
       <el-form
         :label-position="labelPosition"
@@ -275,7 +299,7 @@
                 type="date"
                 placeholder="請選擇生日"
                 value-format="yyyy-MM-dd"
-                style="width:100%"
+                style="width: 100%"
               ></el-date-picker>
             </el-form-item>
           </el-col>
@@ -293,7 +317,7 @@
                 clearable
                 v-model="userTemp.sex"
                 placeholder="請選擇性別"
-                style="width:100%"
+                style="width: 100%"
               >
                 <el-option :value="1" :label="'男'">男</el-option>
                 <el-option :value="0" :label="'女'">女</el-option>
@@ -333,10 +357,18 @@
           @click="handleRole('1')"
           >長照身份</el-button
         >
-        <el-button v-if="hasButton('addSelfPay')" type="primary" plain
+        <el-button
+          v-if="hasButton('addSelfPay')"
+          type="primary"
+          plain
+          @click="handleRole('2')"
           >白牌身份</el-button
         >
-        <el-button v-if="hasButton('addBus')" type="primary" plain
+        <el-button
+          v-if="hasButton('addBus')"
+          type="primary"
+          plain
+          @click="handleRole('3')"
           >幸福巴士身份</el-button
         >
       </div>
@@ -390,9 +422,10 @@
       <el-checkbox-group v-model="checkedUnitBs" :min="0" :max="3">
         <el-checkbox
           v-for="unitB in unitBs"
-          :label="unitB.name"
+          :label="unitB.id"
           :key="unitB.id"
-        ></el-checkbox>
+          >{{ unitB.name }}</el-checkbox
+        >
       </el-checkbox-group>
       <span slot="footer" class="dialog-footer">
         <el-button @click="unitBDialog = false">取 消</el-button>
@@ -663,7 +696,6 @@ export default {
         });
 
         vm.list = users;
-        console.log(vm.list.userType);
         vm.total = res.count;
         vm.listLoading = false;
       });
@@ -679,7 +711,6 @@ export default {
     getUnitBs() {
       const vm = this;
       orgs.getOrgB().then((res) => {
-        console.log(res);
         vm.unitBs = res.result;
       });
     },
@@ -844,9 +875,7 @@ export default {
           console.log("2222");
           break;
         case "3":
-          this.$router.push(
-            `/alluser/addCaseUser/${this.multipleSelection[0].id}`
-          );
+          this.$router.push(`/alluser/addBus/${this.multipleSelection[0].id}`);
           break;
         default:
           break;

@@ -19,7 +19,16 @@
           <SubTitle title="基本資料編輯"></SubTitle>
           <el-row :gutter="16">
             <el-col :sm="12" :md="6">
-              <div class="uploadPic"></div>
+              <el-upload
+                class="avatar-uploader"
+                :action="baseUploadUrl"
+                :before-upload="beforeAvatarUpload"
+                :show-file-list="false"
+                :headers="uploadHeader"
+              >
+                <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar"> -->
+                <i class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
             </el-col>
             <el-col :sm="12" :md="18">
               <el-row :gutter="16">
@@ -36,7 +45,7 @@
                     <el-select
                       v-model="temp.Id"
                       placeholder="請選擇車輛類別"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="1" :label="'可派發'">可派發</el-option>
                       <el-option :value="2" :label="'不可派發'"
@@ -66,7 +75,7 @@
                     <el-select
                       v-model="temp.Id"
                       placeholder="請選擇車輛來源"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="1" :label="'可派發'">可派發</el-option>
                       <el-option :value="2" :label="'不可派發'"
@@ -126,7 +135,7 @@
                 <el-select
                   v-model="temp.Id"
                   placeholder="請選擇可否派發"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="1" :label="'可派發'">可派發</el-option>
                   <el-option :value="2" :label="'不可派發'">不可派發</el-option>
@@ -139,7 +148,7 @@
                   v-model="temp.Id"
                   type="date"
                   placeholder="請選擇出廠年月"
-                  style="width:100%"
+                  style="width: 100%"
                 ></el-date-picker>
               </el-form-item>
             </el-col>
@@ -149,7 +158,7 @@
                   v-model="temp.Id"
                   type="date"
                   placeholder="請選擇最後驗車日"
-                  style="width:100%"
+                  style="width: 100%"
                 ></el-date-picker>
               </el-form-item>
             </el-col>
@@ -180,16 +189,16 @@
               <div
                 v-for="item in 2"
                 :key="item"
-                style="border-bottom:1px solid #ddd;display:flex"
+                style="border-bottom: 1px solid #ddd; display: flex"
               >
                 <el-checkbox
                   label="乘客險"
                   name="type"
-                  style="width:50%;text-align:center;padding:1rem"
+                  style="width: 50%; text-align: center; padding: 1rem"
                 ></el-checkbox>
                 <div class="expireDateBox">
                   <el-date-picker
-                    style="width:70%"
+                    style="width: 70%"
                     v-model="temp.Id"
                     type="date"
                     size="mini"
@@ -226,6 +235,11 @@ export default {
   },
   data() {
     return {
+      imageUrl: "",
+      baseUploadUrl: `${process.env.VUE_APP_BASE_API}Files/Upload`,
+      uploadHeader: {
+        XToken: "fea97614",
+      },
       labelPosition: "top",
       temp: {
         Id: "",
@@ -249,6 +263,23 @@ export default {
       },
     };
   },
+  methods: {
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("限定jpeg jpg ");
+      }
+      if (!isLt2M) {
+        this.$message.error("上玩圖像不能大於 2MB!");
+      }
+      return isJPG && isLt2M;
+    },
+  },
 };
 </script>
 
@@ -262,6 +293,11 @@ export default {
   background: #ffe6d1;
   margin: auto;
   margin-top: 1.5rem;
+}
+.avatar-uploader-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .tableContainer {
   width: 100%;
