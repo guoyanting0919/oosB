@@ -159,7 +159,7 @@
             <el-input v-model="temp.id" :disabled="true" placeholder="系統自動處理"></el-input>
           </el-form-item>
 
-          <el-form-item size="small" :label="'分類標識'" prop="dtCode">
+          <el-form-item size="small" :label="'代碼'" prop="dtCode">
             <el-input v-model="temp.dtCode"></el-input>
           </el-form-item>
 
@@ -241,8 +241,8 @@ export default {
         TypeId: undefined,
       },
       statusOptions: [
-        { key: true, display_name: "停用" },
-        { key: false, display_name: "正常" },
+        { key: true, display_name: "正常" },
+        { key: false, display_name: "停用" },
       ],
       temp: {
         id: "", // 分類表ID（可作為分類的標識）

@@ -92,7 +92,7 @@
             <el-col :sm="24" :md="24">
               <div class="detailLabel">管理單位</div>
               <div class="detailValue">
-                {{ temp.orgAId }}
+                {{ temp.orgAId | orgAIdFilter(unitAs) }}
               </div>
             </el-col>
             <el-col :sm="12" :md="6">
@@ -493,9 +493,9 @@ export default {
       });
     },
     // 獲取A單位資料
-    getUnitAs() {
+    async getUnitAs() {
       const vm = this;
-      orgs.getSubOrgs({ orgId: vm.unitAId }).then((res) => {
+      await orgs.getSubOrgs({ orgId: vm.unitAId }).then((res) => {
         vm.unitAs = res.data.filter((org) => {
           return org.id !== vm.unitAId;
         });
@@ -560,6 +560,20 @@ export default {
       let index = Number(levelId);
       return arr[index];
     },
+    orgAIdFilter(orgAid,unitAs){
+     if(unitAs!=''){
+        let res = unitAs?.filter(unit=>{
+        return unit.id ===orgAid
+      })
+      // console.log(res)
+      if(res.length > 0){
+        return res[0].name
+      }else{
+        return false
+      }
+      }
+     
+    },
     caseUserStatusFilter(status) {
       if (Number(status)) {
         return "可派發";
@@ -568,12 +582,12 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.getUserBasic();
-    this.getCaseUser();
-    this.getUnitAs();
     this.taiwanCity = taiwan.cityAndCountiesLite;
     this.getButtons();
+    await this.getUnitAs();
+    this.getCaseUser();
   },
 };
 </script>

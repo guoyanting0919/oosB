@@ -16,112 +16,94 @@
           :rules="rules"
           ref="form"
         >
-          <SubTitle title="基本資料編輯"></SubTitle>
+          <SubTitle title="車輛基本資料編輯"></SubTitle>
           <el-row :gutter="16">
             <el-col :sm="12" :md="6">
-              <el-upload
-                class="avatar-uploader"
-                :action="baseUploadUrl"
-                :before-upload="beforeAvatarUpload"
-                :show-file-list="false"
-                :headers="uploadHeader"
-              >
-                <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar"> -->
-                <i class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
+              <el-form-item label="車牌號碼" prop="Id">
+                <el-input
+                  v-model="temp.Id"
+                  placeholder="請輸入車牌號碼"
+                ></el-input>
+              </el-form-item>
             </el-col>
-            <el-col :sm="12" :md="18">
-              <el-row :gutter="16">
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="車牌號碼" prop="Id">
-                    <el-input
-                      v-model="temp.Id"
-                      placeholder="請輸入車牌號碼"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="車輛類別" prop="Id">
-                    <el-select
-                      v-model="temp.Id"
-                      placeholder="請選擇車輛類別"
-                      style="width: 100%"
-                    >
-                      <el-option :value="1" :label="'可派發'">可派發</el-option>
-                      <el-option :value="2" :label="'不可派發'"
-                        >不可派發</el-option
-                      >
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="車輛顏色" prop="Id">
-                    <el-input
-                      v-model="temp.Id"
-                      placeholder="請輸入車輛顏色"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="廠牌型號" prop="Id">
-                    <el-input
-                      v-model="temp.Id"
-                      placeholder="請輸入廠牌型號"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="車輛來源" prop="Id">
-                    <el-select
-                      v-model="temp.Id"
-                      placeholder="請選擇車輛來源"
-                      style="width: 100%"
-                    >
-                      <el-option :value="1" :label="'可派發'">可派發</el-option>
-                      <el-option :value="2" :label="'不可派發'"
-                        >不可派發</el-option
-                      >
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="捐贈單位" prop="Id">
-                    <el-input
-                      v-model="temp.Id"
-                      placeholder="請輸入捐贈單位"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="座椅數量" prop="Id">
-                    <el-input-number
-                      v-model="temp.Id"
-                      :min="0"
-                      :max="10"
-                    ></el-input-number>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="輪椅數量" prop="Id">
-                    <el-input-number
-                      v-model="temp.Id"
-                      :min="0"
-                      :max="10"
-                    ></el-input-number>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="車身高度" prop="Id">
-                    <el-input
-                      v-model="temp.Id"
-                      placeholder="請輸入捐贈單位"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="車輛類別" prop="Id">
+                <el-select
+                  v-model="temp.Id"
+                  placeholder="請選擇車輛類別"
+                  style="width: 100%"
+                >
+                  <el-option :value="1" :label="'可派發'">可派發</el-option>
+                  <el-option :value="2" :label="'不可派發'"
+                    >不可派發</el-option
+                  >
+                </el-select>
+              </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="16">
+            <el-col :sm="12" :md="6">
+              <el-form-item label="車輛顏色" prop="Id">
+                <el-input
+                  v-model="temp.Id"
+                  placeholder="請輸入車輛顏色"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="廠牌型號" prop="Id">
+                <el-input
+                  v-model="temp.Id"
+                  placeholder="請輸入廠牌型號"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="車輛來源" prop="Id">
+                <el-select
+                  v-model="temp.Id"
+                  placeholder="請選擇車輛來源"
+                  style="width: 100%"
+                >
+                  <el-option :value="1" :label="'可派發'">可派發</el-option>
+                  <el-option :value="2" :label="'不可派發'"
+                    >不可派發</el-option
+                  >
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="捐贈單位" prop="Id">
+                <el-input
+                  v-model="temp.Id"
+                  placeholder="請輸入捐贈單位"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="座椅數量" prop="Id">
+                <el-input-number
+                  v-model="temp.Id"
+                  :min="0"
+                  :max="10"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="輪椅數量" prop="Id">
+                <el-input-number
+                  v-model="temp.Id"
+                  :min="0"
+                  :max="10"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="車身高度" prop="Id">
+                <el-input
+                  v-model="temp.Id"
+                  placeholder="請輸入捐贈單位"
+                ></el-input>
+              </el-form-item>
+            </el-col>
             <el-col :sm="12" :md="6">
               <el-form-item label="司機姓名" prop="Id">
                 <el-input

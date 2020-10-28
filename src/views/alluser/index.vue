@@ -824,6 +824,7 @@ export default {
     confirmUnitB() {
       const vm = this;
       vm.caseUserTemp.orgBIds = vm.checkedUnitBs.join(",");
+      // vm.caseUserTemp.orgBIds = '6717445508868644864,6717449485546987520';
       console.log(vm.caseUserTemp.orgBIds);
       caseUsers.updateUnitB(vm.caseUserTemp).then((res) => {
         vm.$alertT.fire({
@@ -1001,6 +1002,7 @@ export default {
   },
   async mounted() {
     const vm = this;
+    // console.log(vm.$route)
     vm.getButtons();
     vm.getUnitBs();
     await vm.getList();
