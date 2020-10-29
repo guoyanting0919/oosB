@@ -10,7 +10,7 @@
     </sticky>
 
     <div class="app-container flex-item">
-      <Title title="編輯長照個案基本資料"></Title>
+      <Title title="編輯白牌個案基本資料"></Title>
       <div class="formContainer bg-white customScrollBar">
         <el-form
           :label-position="labelPosition"
@@ -37,7 +37,7 @@
                   clearable
                   v-model="basicTemp.sex"
                   placeholder="請選擇性別"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="1" :label="'男'">男</el-option>
                   <el-option :value="0" :label="'女'">女</el-option>
@@ -60,7 +60,7 @@
                   v-model="basicTemp.birthday"
                   type="date"
                   placeholder="請選擇生日"
-                  style="width:100%"
+                  style="width: 100%"
                 ></el-date-picker>
               </el-form-item>
             </el-col>
@@ -102,7 +102,7 @@
                   disabled
                   v-model="temp.wealTypeId"
                   placeholder="社會福利身份"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="'1'" :label="'低收入戶'"
                     >低收入戶</el-option
@@ -120,7 +120,7 @@
                 <el-date-picker
                   v-model="temp.reviewDate"
                   type="month"
-                  style="width:100%"
+                  style="width: 100%"
                   value-format="yyyy-MM"
                   placeholder="請選擇額度控管留用首月"
                 ></el-date-picker>
@@ -131,7 +131,7 @@
                 <el-select
                   v-model="temp.disabilityLevel"
                   placeholder="請選擇失能等級"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="'0'" :label="'1級(無失能)'"
                     >1級(無失能)</el-option
@@ -149,13 +149,13 @@
             <el-col :sm="24" :md="24">
               <el-form-item label="居住地">
                 <el-row :gutter="16">
-                  <el-col :sm="12" :md="3" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="3" style="margin-bottom: 1rem">
                     <el-form-item prop="county">
                       <el-select
                         v-model="temp.county"
                         clearable
                         placeholder="請選擇居住縣市"
-                        style="width:100%"
+                        style="width: 100%"
                       >
                         <el-option
                           v-for="(conty, key, index) in taiwanCity"
@@ -169,14 +169,14 @@
                   <el-col
                     :sm="12"
                     :md="3"
-                    style="margin-bottom:1rem"
+                    style="margin-bottom: 1rem"
                     v-if="temp.county"
                   >
                     <el-form-item prop="district">
                       <el-select
                         v-model="temp.district"
                         placeholder="請選擇居住區域"
-                        style="width:100%"
+                        style="width: 100%"
                       >
                         <el-option
                           v-for="(district, key, index) in taiwanCity[
@@ -200,7 +200,7 @@
                   <el-col
                     :sm="12"
                     :md="3"
-                    style="margin-bottom:1rem"
+                    style="margin-bottom: 1rem"
                     v-if="temp.addr && temp.district && temp.county"
                   >
                     <el-form-item prop="county">
@@ -213,7 +213,7 @@
                   <el-col
                     :sm="12"
                     :md="3"
-                    style="margin-bottom:1rem"
+                    style="margin-bottom: 1rem"
                     v-if="temp.addr && temp.district && temp.county"
                   >
                     <el-form-item prop="county">
@@ -231,7 +231,7 @@
                 <el-select
                   v-model="temp.orgAId"
                   placeholder="請選擇管理單位"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option
                     v-for="org in unitAs"
@@ -249,7 +249,7 @@
                     <el-select
                       v-model="temp.caseUserStatus"
                       placeholder="請選擇派發狀態"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="'1'" :label="'可派發'"
                         >可派發</el-option
@@ -320,7 +320,7 @@
       <el-select
         v-model="temp.wealTypeId"
         placeholder="社會福利身份"
-        style="width:100%"
+        style="width: 100%"
       >
         <el-option :value="'1'" :label="'低收入戶'">低收入戶</el-option>
         <el-option :value="'2'" :label="'中低收入戶'">中低收入戶</el-option>
@@ -336,7 +336,7 @@
   </div>
 </template>
 
-<script> 
+<script>
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
 import SubTitle from "@/components/SubTitle";

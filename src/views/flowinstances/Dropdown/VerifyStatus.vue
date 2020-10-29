@@ -1,12 +1,12 @@
 <template>
   <el-dropdown trigger="click" :show-timeout="100">
     <el-button plain>
-      {{getTxt()}}
+      {{ getTxt() }}
       <i class="el-icon-caret-bottom el-icon--right"></i>
     </el-button>
     <el-dropdown-menu class="no-padding" slot="dropdown">
       <el-dropdown-item>
-        <el-radio-group style="padding: 10px;" v-model="comment_disabled">
+        <el-radio-group style="padding: 10px" v-model="comment_disabled">
           <el-radio :label="1">同意</el-radio>
           <el-radio :label="2">不同意</el-radio>
           <el-radio :label="3">駁回</el-radio>

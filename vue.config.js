@@ -18,6 +18,7 @@ module.exports = {
   },
   // svg配置
   chainWebpack(config) {
+    
     config.module
       .rule("svg")
       .exclude.add(resolve("src/icons"))

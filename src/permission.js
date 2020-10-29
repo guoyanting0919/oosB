@@ -21,6 +21,18 @@ let routerMappingList = [
     title: "個案資料 / 全部個案",
   },
   {
+    path: "/caseuser/index",
+    title: "個案資料 / 長照個案",
+  },
+  {
+    path: "/selfpayuser/index",
+    title: "個案資料 / 自費個案",
+  },
+  {
+    path: "/bususer/index",
+    title: "個案資料 / 巴士個案",
+  },
+  {
     path: "/driver/index",
     title: "司機車輛管理 / 司機資料",
   },
@@ -33,13 +45,19 @@ let elementMappingList = [
   "add",
   "edit",
   "detail",
-  "dispatch",
+  'check',
+  'dispatch',
   "addCaseUser",
   "editCaseUser",
   "checkCaseUser",
+  "dispatchCaseUser",
   "addBus",
   "editBus",
   "checkBus",
+  "addSelfPay",
+  "editSelfPay",
+  "checkSelfPay",
+  'dispatchSelfPay'
 ];
 
 const whiteList = [

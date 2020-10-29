@@ -141,16 +141,29 @@
             property="setting"
             label="操作"
             :fixed="isMobile()"
-            width="400"
+            width="600"
           >
             <template slot-scope="scope">
               <div class="buttonFlexBox">
+                <!-- 長照派車 -->
                 <el-button
                   size="mini"
-                  @click="handleDispatch(scope.row)"
+                  @click="dispatchCaseUser(scope.row)"
                   type="info"
-                  v-if="hasButton('dispatch')"
-                  >派車</el-button
+                  v-if="
+                    hasButton('dispatchCaseUser') &&
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'caseuser'
+                  "
+                  >長照派車</el-button
+                >
+                <!-- 白牌派車 -->
+                <el-button
+                  size="mini"
+                  @click="dispatchSelfPay(scope.row)"
+                  type="danger"
+                  v-if="hasButton('dispatchSelfPay')"
+                  >白牌派車</el-button
                 >
                 <!-- 基本編輯 -->
                 <el-button
@@ -178,7 +191,8 @@
                   @click="handleAddOrEdit('edit', scope.row)"
                   type="warning"
                   v-if="
-                    hasButton('editSelfPay') && roles[scope.row.id] == 'selfpay'
+                    hasButton('editSelfPay') &&
+                    roles[scope.row.id] == 'selfpayuser'
                   "
                   >白牌編輯</el-button
                 >
@@ -187,7 +201,9 @@
                   size="mini"
                   @click="handleAddOrEdit('edit', scope.row)"
                   type="warning"
-                  v-if="hasButton('editBus') && roles[scope.row.id] == 'bus'"
+                  v-if="
+                    hasButton('editBus') && roles[scope.row.id] == 'bususer'
+                  "
                   >巴士編輯</el-button
                 >
                 <!-- <el-button
@@ -217,7 +233,7 @@
                   v-if="
                     hasButton('checkSelfPay') &&
                     roles[scope.row.id] &&
-                    roles[scope.row.id].split('-')[0] == 'selfpay'
+                    roles[scope.row.id].split('-')[0] == 'selfpayuser'
                   "
                   >檢視白牌</el-button
                 >
@@ -229,7 +245,7 @@
                   v-if="
                     hasButton('checkBus') &&
                     roles[scope.row.id] &&
-                    roles[scope.row.id].split('-')[0] == 'bus'
+                    roles[scope.row.id].split('-')[0] == 'bususer'
                   "
                   >檢視巴士</el-button
                 >
@@ -587,7 +603,9 @@ export default {
         id: "", //身份id
         caseUserNo: "", //個案編號
         orgAId: "", //Ａ單位(管理單位)
-        orgBIds: "", //B單位
+        orgBId1: null, //B單位1
+        orgBId2: null, //B單位2
+        orgBId3: null, //B單位3
         disabilityLevel: "", //失能等級
         county: "", //居住縣市
         district: "", //居住區域
@@ -649,8 +667,8 @@ export default {
 
       userRoleMap: {
         caseuser: "長照",
-        selfpay: "白牌",
-        bus: "幸福巴士",
+        selfpayuser: "白牌",
+        bususer: "幸福巴士",
       },
     };
   },
@@ -783,15 +801,25 @@ export default {
         });
       }
     },
-    // 編輯長照資料
-    handleEditCaseUser(user) {
-      let caseId = this.roles[user.id].split("-")[1];
-      this.$router.push(`/alluser/editCaseUser/${user.id}-${caseId}`);
-    },
-    // 檢視長照資料
-    handleCheckCaseUser(user) {
-      let caseId = this.roles[user.id].split("-")[1];
-      this.$router.push(`/alluser/checkCaseUser/${user.id}-${caseId}`);
+    // 替用戶添加身份
+    handleRole(role) {
+      console.log(role);
+      switch (role) {
+        case "1":
+          this.rolesDialog = false;
+          this.$router.push(
+            `/alluser/addCaseUser/${this.multipleSelection[0].id}`
+          );
+          break;
+        case "2":
+          console.log("2222");
+          break;
+        case "3":
+          this.$router.push(`/alluser/addBus/${this.multipleSelection[0].id}`);
+          break;
+        default:
+          break;
+      }
     },
     // 帳號解鎖
     handleUnlock(user) {
@@ -806,6 +834,20 @@ export default {
         vm.getList();
       });
     },
+    // 編輯長照資料
+    handleEditCaseUser(user) {
+      let caseId = this.roles[user.id].split("-")[1];
+      this.$router.push(`/alluser/editCaseUser/${user.id}-${caseId}`);
+    },
+    // 檢視長照資料
+    handleCheckCaseUser(user) {
+      let caseId = this.roles[user.id].split("-")[1];
+      this.$router.push(`/alluser/checkCaseUser/${user.id}-${caseId}`);
+    },
+    // 長照派車
+    dispatchCaseUser(user) {
+      this.$router.push(`/alluser/dispatchCaseUser/${user.uid}`);
+    },
     // 獲取長照B單位
     handleUnitB(user) {
       const vm = this;
@@ -813,19 +855,24 @@ export default {
       vm.rowClick(user);
       let id = vm.roles[user.id].split("-")[1];
       caseUsers.get({ id }).then((res) => {
+        // console.log(res);
         vm.caseUserTemp = Object.assign({}, res.result); // copy obj
-        vm.caseUserTemp.orgBIds
-          ? (vm.checkedUnitBs = vm.caseUserTemp.orgBIds.split(","))
-          : (vm.checkedUnitBs = []);
+        let str = `${vm.caseUserTemp.orgBId1},${vm.caseUserTemp.orgBId2},${vm.caseUserTemp.orgBId3}`;
+        let arr = str.split(",");
+        vm.checkedUnitBs = arr.filter((id) => {
+          return id !== "null";
+        });
+
         vm.unitBDialog = true;
       });
     },
     // 確認修改B單位
     confirmUnitB() {
       const vm = this;
-      vm.caseUserTemp.orgBIds = vm.checkedUnitBs.join(",");
-      // vm.caseUserTemp.orgBIds = '6717445508868644864,6717449485546987520';
-      console.log(vm.caseUserTemp.orgBIds);
+      vm.caseUserTemp.orgBId1 = vm.checkedUnitBs[0] || null;
+      vm.caseUserTemp.orgBId2 = vm.checkedUnitBs[1] || null;
+      vm.caseUserTemp.orgBId3 = vm.checkedUnitBs[2] || null;
+      console.log(vm.caseUserTemp);
       caseUsers.updateUnitB(vm.caseUserTemp).then((res) => {
         vm.$alertT.fire({
           icon: "success",
@@ -862,28 +909,19 @@ export default {
       });
     },
 
-    // 替用戶添加身份
-    handleRole(role) {
-      console.log(role);
-      switch (role) {
-        case "1":
-          this.rolesDialog = false;
-          this.$router.push(
-            `/alluser/addCaseUser/${this.multipleSelection[0].id}`
-          );
-          break;
-        case "2":
-          console.log("2222");
-          break;
-        case "3":
-          this.$router.push(`/alluser/addBus/${this.multipleSelection[0].id}`);
-          break;
-        default:
-          break;
-      }
+    // 編輯白牌資料
+    handleEditSelfPay(user) {
+      let caseId = this.roles[user.id].split("-")[1];
+      this.$router.push(`/alluser/editSelfPay/${user.id}-${caseId}`);
     },
-    handleDispatch(user) {
-      this.$router.push(`/alluser/dispatch/${user.uid}`);
+    // 檢視白牌資料
+    handleCheckSelfPay(user) {
+      let caseId = this.roles[user.id].split("-")[1];
+      this.$router.push(`/alluser/checkSelfPay/${user.id}-${caseId}`);
+    },
+    // 白牌派車
+    dispatchSelfPay(user) {
+      this.$router.push(`/alluser/dispatchSelfPay/${user.uid}`);
     },
     handleResetUserTemp() {
       // this.$refs.userForm.resetFields();
@@ -972,7 +1010,7 @@ export default {
       }
     },
 
-    // 功能內是否包含caseuser selfpay bus
+    // 功能內是否包含caseuser selfpayuser bususer
     canISelect(str) {
       let ex = this.buttons.join("").toLowerCase();
       return !ex.includes(str);
