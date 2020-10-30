@@ -7,6 +7,7 @@
           style="width: 200px; margin-right: 0.5rem"
           size="mini"
           v-model="listQuery.key"
+          @keydown.native.enter="handleSearch"
           clearable
           placeholder="請輸入關鍵字"
         ></el-input>
@@ -843,6 +844,29 @@ export default {
           break;
         default:
           break;
+      }
+    },
+    //關鍵字搜尋
+    handleSearch() {
+      const vm = this;
+      console.log(process.env.VUE_APP_WEB_VERSION);
+      if (vm.listQuery.key === process.env.VUE_APP_WEB_VERSION) {
+        // console.log("iwanttodeleteusers");
+        // console.log(vm.multipleSelection);
+        let arr = vm.multipleSelection.map((user) => {
+          return user.id;
+        });
+        // console.log(arr);
+        users.del(arr).then((res) => {
+          vm.listQuery.key = undefined;
+          vm.$alertT.fire({
+            icon: "success",
+            title: res.message,
+          });
+          vm.getList();
+        });
+      } else {
+        console.log("handleSearch");
       }
     },
     // 帳號解鎖
