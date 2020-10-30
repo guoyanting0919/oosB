@@ -20,8 +20,8 @@
     </sticky>
 
     <div class="app-container flex-item">
-      <!-- 公費個案 -->
-      <Title title="自費個案"></Title>
+      <!-- 白牌個案 -->
+      <Title title="白牌個案"></Title>
       <div class="bg-white" style="height: 94%">
         <el-table
           ref="mainTable"
@@ -29,6 +29,7 @@
           :data="gridData"
           border
           fit
+          v-loading="listLoading"
           highlight-current-row
           style="width: 100%"
           @selection-change="handleSelectionChange"
@@ -68,6 +69,7 @@ import Title from "@/components/ConsoleTableTitle";
 import permissionBtn from "@/components/PermissionBtn";
 import elDragDialog from "@/directive/el-dragDialog";
 import Pagination from "@/components/Pagination";
+import * as selfPayUsers from "@/api/selfPayUsers";
 export default {
   name: "publicExpense",
   components: {
@@ -81,10 +83,14 @@ export default {
   },
   data() {
     return {
+      // 表格相關
+      list: [],
+      listLoading: false,
       total: 200,
       listQuery: {
-        page: 20,
+        page: 1,
         limit: 20,
+        key: undefined,
       },
 
       multipleSelection: [], // 列表checkbox選中的值
@@ -138,6 +144,16 @@ export default {
     };
   },
   methods: {
+    // 獲取白牌用戶資料
+    getList() {
+      const vm = this;
+      vm.listLoading = true;
+      selfPayUsers.load(vm.listQuery).then((res) => {
+        console.log(res.data);
+
+        vm.listLoading = false;
+      });
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -146,7 +162,6 @@ export default {
       this.$refs.mainTable.toggleRowSelection(row);
     },
     onBtnClicked(domId) {
-      //   console.log(domId);
       switch (domId) {
         case "violationBtn":
           this.violationDialog = true;
@@ -155,6 +170,9 @@ export default {
           break;
       }
     },
+  },
+  mounted() {
+    this.getList();
   },
 };
 </script>

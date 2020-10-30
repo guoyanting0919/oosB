@@ -10,7 +10,7 @@
     </sticky>
 
     <div class="app-container flex-item">
-      <Title title="編輯長照個案基本資料"></Title>
+      <Title title="編輯巴士個案資料"></Title>
       <div class="formContainer bg-white customScrollBar">
         <el-form
           :label-position="labelPosition"

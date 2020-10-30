@@ -86,9 +86,9 @@
                   :key="item.caseId"
                   :label="userRoleMap[item.userType]"
                   :value="`${item.userType}-${item.caseId}`"
-                  :disabled="canISelect(item.userType)"
                 >
-                  {{ userRoleMap[item.userType] }} ({{ item.caseUserNo || "" }})
+                  {{ userRoleMap[item.userType] }}
+                  <span v-if="item.caseUserNo">({{ item.caseUserNo }})</span>
                 </el-option>
               </el-select>
             </template>
@@ -160,10 +160,26 @@
                 <!-- 白牌派車 -->
                 <el-button
                   size="mini"
-                  @click="dispatchSelfPay(scope.row)"
-                  type="danger"
-                  v-if="hasButton('dispatchSelfPay')"
+                  @click="dispatchSelfPayUser(scope.row)"
+                  type="info"
+                  v-if="
+                    hasButton('dispatchSelfPayUser') &&
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'selfpayuser'
+                  "
                   >白牌派車</el-button
+                >
+                <!-- 巴士派車 -->
+                <el-button
+                  size="mini"
+                  @click="dispatchSelfPayUser(scope.row)"
+                  type="info"
+                  v-if="
+                    hasButton('dispatchSelfPayUser') &&
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'bususer'
+                  "
+                  >巴士派車</el-button
                 >
                 <!-- 基本編輯 -->
                 <el-button
@@ -188,21 +204,24 @@
                 <!-- 編輯白牌 -->
                 <el-button
                   size="mini"
-                  @click="handleAddOrEdit('edit', scope.row)"
+                  @click="handleEditSelfPayUser(scope.row)"
                   type="warning"
                   v-if="
-                    hasButton('editSelfPay') &&
-                    roles[scope.row.id] == 'selfpayuser'
+                    hasButton('editSelfPayUser') &&
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'selfpayuser'
                   "
                   >白牌編輯</el-button
                 >
-                <!-- 編輯幸福巴士 -->
+                <!-- 編輯巴士 -->
                 <el-button
                   size="mini"
                   @click="handleAddOrEdit('edit', scope.row)"
                   type="warning"
                   v-if="
-                    hasButton('editBus') && roles[scope.row.id] == 'bususer'
+                    hasButton('editBusUser') &&
+                    roles[scope.row.id] &&
+                    roles[scope.row.id].split('-')[0] == 'bususer'
                   "
                   >巴士編輯</el-button
                 >
@@ -228,10 +247,10 @@
                 <!-- 檢視白牌個案 -->
                 <el-button
                   size="mini"
-                  @click="handleCheckCaseUser(scope.row)"
+                  @click="handleCheckSelfPayUser(scope.row)"
                   type="success"
                   v-if="
-                    hasButton('checkSelfPay') &&
+                    hasButton('checkSelfPayUser') &&
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'selfpayuser'
                   "
@@ -243,7 +262,7 @@
                   @click="handleCheckCaseUser(scope.row)"
                   type="success"
                   v-if="
-                    hasButton('checkBus') &&
+                    hasButton('checkBusUser') &&
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'bususer'
                   "
@@ -374,14 +393,14 @@
           >長照身份</el-button
         >
         <el-button
-          v-if="hasButton('addSelfPay')"
+          v-if="hasButton('addSelfPayUser')"
           type="primary"
           plain
           @click="handleRole('2')"
           >白牌身份</el-button
         >
         <el-button
-          v-if="hasButton('addBus')"
+          v-if="hasButton('addBusUser')"
           type="primary"
           plain
           @click="handleRole('3')"
@@ -714,6 +733,7 @@ export default {
         });
 
         vm.list = users;
+        vm.setDefaultRole();
         vm.total = res.count;
         vm.listLoading = false;
       });
@@ -812,10 +832,14 @@ export default {
           );
           break;
         case "2":
-          console.log("2222");
+          this.$router.push(
+            `/alluser/addSelfPayUser/${this.multipleSelection[0].id}`
+          );
           break;
         case "3":
-          this.$router.push(`/alluser/addBus/${this.multipleSelection[0].id}`);
+          this.$router.push(
+            `/alluser/addBusUser/${this.multipleSelection[0].id}`
+          );
           break;
         default:
           break;
@@ -910,18 +934,18 @@ export default {
     },
 
     // 編輯白牌資料
-    handleEditSelfPay(user) {
+    handleEditSelfPayUser(user) {
       let caseId = this.roles[user.id].split("-")[1];
-      this.$router.push(`/alluser/editSelfPay/${user.id}-${caseId}`);
+      this.$router.push(`/alluser/editSelfPayUser/${user.id}-${caseId}`);
     },
     // 檢視白牌資料
-    handleCheckSelfPay(user) {
+    handleCheckSelfPayUser(user) {
       let caseId = this.roles[user.id].split("-")[1];
-      this.$router.push(`/alluser/checkSelfPay/${user.id}-${caseId}`);
+      this.$router.push(`/alluser/checkSelfPayUser/${user.id}-${caseId}`);
     },
     // 白牌派車
-    dispatchSelfPay(user) {
-      this.$router.push(`/alluser/dispatchSelfPay/${user.uid}`);
+    dispatchSelfPayUser(user) {
+      this.$router.push(`/alluser/dispatchSelfPayUser/${user.uid}`);
     },
     handleResetUserTemp() {
       // this.$refs.userForm.resetFields();
@@ -1015,6 +1039,19 @@ export default {
       let ex = this.buttons.join("").toLowerCase();
       return !ex.includes(str);
     },
+    // 身份預設
+    setDefaultRole() {
+      const vm = this;
+      vm.list.forEach((user) => {
+        let defaultVal;
+        if (user.userTypeOption.length > 0) {
+          defaultVal = `${user.userTypeOption[0].userType}-${user.userTypeOption[0].caseId}`;
+        } else {
+          defaultVal = null;
+        }
+        vm.$set(vm.roles, `${user.id}`, defaultVal);
+      });
+    },
     // 鎖定狀態
     isLock(date) {
       if (date != null) {
@@ -1044,16 +1081,6 @@ export default {
     vm.getButtons();
     vm.getUnitBs();
     await vm.getList();
-    // 將身份預設
-    vm.list.forEach((user) => {
-      let defaultVal;
-      if (user.userTypeOption.length > 0) {
-        defaultVal = `${user.userTypeOption[0].userType}-${user.userTypeOption[0].caseId}`;
-      } else {
-        defaultVal = null;
-      }
-      vm.$set(vm.roles, `${user.id}`, defaultVal);
-    });
   },
 };
 </script>

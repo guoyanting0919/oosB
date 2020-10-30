@@ -2,14 +2,15 @@ import request from "@/utils/request";
 
 export function load(params) {
   return request({
-    url: "/caseusers/load",
+    url: "/selfpayusers/load",
     method: "get",
     params,
   });
 }
+
 export function get(params) {
   return request({
-    url: "/caseusers/get",
+    url: "/selfpayusers/get",
     method: "get",
     params,
   });
@@ -17,16 +18,16 @@ export function get(params) {
 
 export function add(data) {
   return request({
-    url: "/caseusers/addorupdate",
+    url: "/selfpayusers/add",
     method: "post",
     data,
   });
 }
 
-// 修改B單位
-export function updateUnitB(data) {
+
+export function update(data) {
   return request({
-    url: "/caseusers/updateorgb",
+    url: "/selfpayusers/update",
     method: "post",
     data,
   });

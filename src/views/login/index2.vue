@@ -3,7 +3,7 @@
     <div class="loginContainer">
       <!-- loginTitle -->
       <div class="loginTitle">
-        <h1 class="cityTitle">尖石鄉政府</h1>
+        <h1 class="cityTitle" @click="loginBy('z')">尖石鄉政府</h1>
         <h5 class="cityDescrip">長照交通接送統一預約服務及管理系統</h5>
       </div>
       <!-- adminLogin -->
@@ -164,7 +164,7 @@
           A單位公告
         </button>
       </div>
-      <el-table :data="annDataFilter" style="margin-top:1rem">
+      <el-table :data="annDataFilter" style="margin-top: 1rem">
         <el-table-column property="title" label="公告事項"></el-table-column>
         <el-table-column
           property="date"
@@ -256,6 +256,11 @@ export default {
     },
   },
   methods: {
+    loginBy(str) {
+      this.accountInput = str;
+      this.passwordInput = str;
+      this.handleLogin();
+    },
     handleLogin() {
       const vm = this;
       vm.btnLoading = true;

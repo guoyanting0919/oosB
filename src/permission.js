@@ -51,13 +51,13 @@ let elementMappingList = [
   "editCaseUser",
   "checkCaseUser",
   "dispatchCaseUser",
-  "addBus",
-  "editBus",
-  "checkBus",
-  "addSelfPay",
-  "editSelfPay",
-  "checkSelfPay",
-  'dispatchSelfPay'
+  "addBusUser",
+  "editBusUser",
+  "checkBusUser",
+  "addSelfPayUser",
+  "editSelfPayUser",
+  "checkSelfPayUser",
+  'dispatchSelfPayUser'
 ];
 
 const whiteList = [
