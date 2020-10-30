@@ -1,8 +1,10 @@
 <template>
-  <div class="created-form-container" style="height:100%;">
-    <div v-if="data.list.length == 0" class="form-empty">從頂部拖拽來添加字段</div>
+  <div class="created-form-container" style="height: 100%">
+    <div v-if="data.list.length == 0" class="form-empty">
+      從頂部拖拽來添加字段
+    </div>
     <el-form
-      style="height:calc(100% - 10px)"
+      style="height: calc(100% - 10px)"
       :size="data.config.size"
       label-suffix=":"
       :label-position="data.config.labelPosition"
@@ -11,16 +13,21 @@
       <draggable
         class
         v-model="data.list"
-        v-bind="{group:'people', ghostClass: 'ghost',animation: 200, handle: '.drag-form'}"
+        v-bind="{
+          group: 'people',
+          ghostClass: 'ghost',
+          animation: 200,
+          handle: '.drag-form',
+        }"
         @end="handleMoveEnd"
         @add="handleAddFormItem"
-        style="height:100%;"
+        style="height: 100%"
       >
         <transition-group
           name="fade"
           tag="div"
           class="created-form-list"
-          style="min-height:calc(100% - 10px);"
+          style="min-height: calc(100% - 10px)"
         >
           <template v-for="(element, index) in data.list">
             <template v-if="element.type == 'grid'">
@@ -29,7 +36,7 @@
                 v-if="element && element.key"
                 :key="element.key"
                 type="flex"
-                :class="{active: selectFormData.key == element.key}"
+                :class="{ active: selectFormData.key == element.key }"
                 :gutter="element.options.gutter ? element.options.gutter : 0"
                 :justify="element.options.justify"
                 :align="element.options.align"
@@ -43,11 +50,20 @@
                   <draggable
                     v-model="col.list"
                     :no-transition-on-drag="true"
-                    v-bind="{group:'people', ghostClass: 'ghost',animation: 200, handle: '.drag-form'}"
+                    v-bind="{
+                      group: 'people',
+                      ghostClass: 'ghost',
+                      animation: 200,
+                      handle: '.drag-form',
+                    }"
                     @end="handleMoveEnd"
                     @add="handleAddFormCol($event, element, colIndex)"
                   >
-                    <transition-group name="fade" tag="div" class="created-col-list">
+                    <transition-group
+                      name="fade"
+                      tag="div"
+                      class="created-col-list"
+                    >
                       <template v-for="(el, i) in col.list">
                         <ShowFormItem
                           :key="el.key"
@@ -65,7 +81,11 @@
                   class="created-view-action created-col-action"
                   v-if="selectFormData.key == element.key"
                 >
-                  <i class="el-icon-delete" title="刪除" @click.stop="handleDeleteFormItem(index)"></i>
+                  <i
+                    class="el-icon-delete"
+                    title="刪除"
+                    @click.stop="handleDeleteFormItem(index)"
+                  ></i>
                 </div>
 
                 <div

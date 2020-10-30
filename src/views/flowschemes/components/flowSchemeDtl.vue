@@ -1,6 +1,11 @@
 <template>
   <div class="createPost-container">
-    <el-form class="form-container" :model="postObj" :rules="rules" ref="postObj">
+    <el-form
+      class="form-container"
+      :model="postObj"
+      :rules="rules"
+      ref="postObj"
+    >
       <el-steps class="steps" :active="active" finish-status="success">
         <el-step title="基礎信息"></el-step>
         <el-step title="選擇表單"></el-step>
@@ -8,25 +13,37 @@
       </el-steps>
       <div class="createdPost-content">
         <!--基礎信息-->
-        <div class="createPost-main-container basic" v-show="active==0">
+        <div class="createPost-main-container basic" v-show="active == 0">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="標題" label-width="100px" prop="schemeNameRule">
+              <el-form-item
+                label="標題"
+                label-width="100px"
+                prop="schemeNameRule"
+              >
                 <el-input
                   name="name"
                   v-model="postObj.schemeName"
                   required
-                  style="max-width: 200px;"
+                  style="max-width: 200px"
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label-width="100px" label="模板編號:">
-                <el-input type="text" v-model="postObj.schemeCode" style="max-width: 200px;"></el-input>
+                <el-input
+                  type="text"
+                  v-model="postObj.schemeCode"
+                  style="max-width: 200px"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label-width="100px" label="發布時間:" class="postInfo-container-item">
+              <el-form-item
+                label-width="100px"
+                label="發布時間:"
+                class="postInfo-container-item"
+              >
                 <el-date-picker
                   v-model="postObj.createDate"
                   type="datetime"
@@ -36,9 +53,13 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label-width="100px" label="重要性(占位):" class="postInfo-container-item">
+              <el-form-item
+                label-width="100px"
+                label="重要性(占位):"
+                class="postInfo-container-item"
+              >
                 <el-rate
-                  style="margin-top:8px;"
+                  style="margin-top: 8px"
                   :max="3"
                   :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
                   :low-threshold="1"
@@ -54,27 +75,43 @@
                   placeholder="請輸入內容"
                   v-model="postObj.description"
                 ></el-input>
-                <span class="word-counter" v-if="contentShortLength">{{contentShortLength}}字</span>
+                <span class="word-counter" v-if="contentShortLength"
+                  >{{ contentShortLength }}字</span
+                >
               </el-form-item>
             </el-col>
           </el-row>
         </div>
 
-        <div class="createPost-main-container" v-show="active==1">
-          <el-tabs type="border-card" v-model="postObj.frmId" @tab-click="handleTabClick">
+        <div class="createPost-main-container" v-show="active == 1">
+          <el-tabs
+            type="border-card"
+            v-model="postObj.frmId"
+            @tab-click="handleTabClick"
+          >
             <div class="createPost-main-model"></div>
             <template v-for="item in forms">
-              <el-tab-pane :label="item.name" :name="item.id" :id="item.id" :key="item.id">
+              <el-tab-pane
+                :label="item.name"
+                :name="item.id"
+                :id="item.id"
+                :key="item.id"
+              >
                 <!-- 自定義表單 -->
                 <el-card class="box-card" v-if="item.frmType == 1">
-                  <component ref="frmData" v-bind:is="item.webId +'Add'"></component>
+                  <component
+                    ref="frmData"
+                    v-bind:is="item.webId + 'Add'"
+                  ></component>
                 </el-card>
                 <el-card v-else-if="item.frmType === 2">
                   <CreatedForm
                     insite="true"
                     :isDisabled="true"
                     ref="createdForm"
-                    v-if="createdFormData.list && createdFormData.list.length > 0"
+                    v-if="
+                      createdFormData.list && createdFormData.list.length > 0
+                    "
                     :data="createdFormData"
                     :value="defaultValue"
                   ></CreatedForm>
@@ -85,7 +122,7 @@
           </el-tabs>
         </div>
         <!--流程設計-->
-        <div class="editor-container" style="height: 100%;" v-if="active==2">
+        <div class="editor-container" style="height: 100%" v-if="active == 2">
           <CreatedFlow
             ref="createdFlow"
             :form-template="currentForm"
@@ -97,31 +134,34 @@
       <div class="edit-btns text-center">
         <el-button
           size="small"
-          v-if="active>0"
-          style="margin-left: 10px;"
+          v-if="active > 0"
+          style="margin-left: 10px"
           type="primary"
           @click="pre"
-        >上一步</el-button>
+          >上一步</el-button
+        >
         <el-button
           size="small"
-          v-if="active<2"
-          style="margin-left: 10px;"
+          v-if="active < 2"
+          style="margin-left: 10px"
           type="primary"
           @click="next"
-        >下一步</el-button>
+          >下一步</el-button
+        >
         <el-button
           size="small"
           v-if="active === 2"
           v-loading="loading"
-          style="margin-left: 10px;"
+          style="margin-left: 10px"
           type="success"
           @click="submitForm"
-        >保存</el-button>
+          >保存</el-button
+        >
       </div>
     </el-form>
   </div>
 </template>
-
+  
 <script>
 import MDinput from "@/components/MDinput";
 import CreatedFlow from "@/components/CreatedFlow";

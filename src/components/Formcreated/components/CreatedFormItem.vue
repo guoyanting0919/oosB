@@ -2,11 +2,15 @@
   <el-form-item :label="formData.name" :prop="formData.model">
     <template v-if="formData.type == 'input'">
       <el-input
-        v-if="formData.options.dataType == 'number' || formData.options.dataType == 'integer' || formData.options.dataType == 'float'"
+        v-if="
+          formData.options.dataType == 'number' ||
+          formData.options.dataType == 'integer' ||
+          formData.options.dataType == 'float'
+        "
         :type="formData.options.dataType"
         v-model.number="dataModel"
         :placeholder="formData.options.placeholder"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
         :disabled="formData.options.disabled"
       ></el-input>
       <el-input
@@ -15,7 +19,7 @@
         v-model="dataModel"
         :disabled="formData.options.disabled"
         :placeholder="formData.options.placeholder"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
       ></el-input>
     </template>
 
@@ -26,14 +30,14 @@
         v-model="dataModel"
         :disabled="formData.options.disabled"
         :placeholder="formData.options.placeholder"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
       ></el-input>
     </template>
 
     <template v-if="formData.type == 'number'">
       <el-input-number
         v-model="dataModel"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
         :step="formData.options.step"
         :min="formData.options.min > 0 ? formData.options.min : -Infinity"
         :max="formData.options.max > 0 ? formData.options.max : Infinity"
@@ -45,17 +49,23 @@
     <template v-if="formData.type == 'radio'">
       <el-radio-group
         v-model="dataModel"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
         :disabled="formData.options.disabled"
       >
         <el-radio
-          :style="{display: formData.options.inline ? 'inline-block' : 'block'}"
+          :style="{
+            display: formData.options.inline ? 'inline-block' : 'block',
+          }"
           :label="item.value"
-          v-for="(item, index) in (formData.options.remote ? formData.options.remoteOptions : formData.options.options)"
+          v-for="(item, index) in formData.options.remote
+            ? formData.options.remoteOptions
+            : formData.options.options"
           :key="index"
         >
-          <template v-if="formData.options.remote">{{item.label}}</template>
-          <template v-else>{{formData.options.showLabel ? item.label : item.value}}</template>
+          <template v-if="formData.options.remote">{{ item.label }}</template>
+          <template v-else>{{
+            formData.options.showLabel ? item.label : item.value
+          }}</template>
         </el-radio>
       </el-radio-group>
     </template>
@@ -63,17 +73,23 @@
     <template v-if="formData.type == 'checkbox'">
       <el-checkbox-group
         v-model="dataModel"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
         :disabled="formData.options.disabled"
       >
         <el-checkbox
-          :style="{display: formData.options.inline ? 'inline-block' : 'block'}"
+          :style="{
+            display: formData.options.inline ? 'inline-block' : 'block',
+          }"
           :label="item.value"
-          v-for="(item, index) in (formData.options.remote ? formData.options.remoteOptions : formData.options.options)"
+          v-for="(item, index) in formData.options.remote
+            ? formData.options.remoteOptions
+            : formData.options.options"
           :key="index"
         >
-          <template v-if="formData.options.remote">{{item.label}}</template>
-          <template v-else>{{formData.options.showLabel ? item.label : item.value}}</template>
+          <template v-if="formData.options.remote">{{ item.label }}</template>
+          <template v-else>{{
+            formData.options.showLabel ? item.label : item.value
+          }}</template>
         </el-checkbox>
       </el-checkbox-group>
     </template>
@@ -91,11 +107,11 @@
         :clearable="formData.options.clearable"
         :arrowControl="formData.options.arrowControl"
         :value-format="formData.options.format"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
       ></el-time-picker>
     </template>
 
-    <template v-if="formData.type=='date'">
+    <template v-if="formData.type == 'date'">
       <el-date-picker
         v-model="dataModel"
         :type="formData.options.type"
@@ -106,13 +122,15 @@
         :disabled="formData.options.disabled"
         :editable="formData.options.editable"
         :clearable="formData.options.clearable"
-        :value-format="formData.options.timestamp ? 'timestamp' : formData.options.format"
+        :value-format="
+          formData.options.timestamp ? 'timestamp' : formData.options.format
+        "
         :format="formData.options.format"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
       ></el-date-picker>
     </template>
 
-    <template v-if="formData.type =='rate'">
+    <template v-if="formData.type == 'rate'">
       <el-rate
         v-model="dataModel"
         :max="formData.options.max"
@@ -136,23 +154,32 @@
         :multiple="formData.options.multiple"
         :clearable="formData.options.clearable"
         :placeholder="formData.options.placeholder"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
         :filterable="formData.options.filterable"
       >
         <el-option
-          v-for="item in (formData.options.remote ? formData.options.remoteOptions : formData.options.options)"
+          v-for="item in formData.options.remote
+            ? formData.options.remoteOptions
+            : formData.options.options"
           :key="item.value"
           :value="item.value"
-          :label="formData.options.showLabel || formData.options.remote?item.label:item.value"
+          :label="
+            formData.options.showLabel || formData.options.remote
+              ? item.label
+              : item.value
+          "
         ></el-option>
       </el-select>
     </template>
 
-    <template v-if="formData.type=='switch'">
-      <el-switch v-model="dataModel" :disabled="formData.options.disabled"></el-switch>
+    <template v-if="formData.type == 'switch'">
+      <el-switch
+        v-model="dataModel"
+        :disabled="formData.options.disabled"
+      ></el-switch>
     </template>
 
-    <template v-if="formData.type=='slider'">
+    <template v-if="formData.type == 'slider'">
       <el-slider
         v-model="dataModel"
         :min="formData.options.min"
@@ -161,7 +188,7 @@
         :step="formData.options.step"
         :show-input="formData.options.showInput"
         :range="formData.options.range"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
       ></el-slider>
     </template>
 
@@ -169,7 +196,7 @@
       <Upload
         v-model="dataModel"
         :disabled="formData.options.disabled"
-        :style="{'width': formData.options.width}"
+        :style="{ width: formData.options.width }"
         :width="formData.options.size.width"
         :height="formData.options.size.height"
         :token="formData.options.token"
@@ -185,7 +212,10 @@
     </template>
 
     <template v-if="formData.type == 'editor'">
-      <vue-editor v-model="dataModel" :style="{width: formData.options.width}"></vue-editor>
+      <vue-editor
+        v-model="dataModel"
+        :style="{ width: formData.options.width }"
+      ></vue-editor>
     </template>
 
     <template v-if="formData.type == 'cascader'">
@@ -194,13 +224,13 @@
         :disabled="formData.options.disabled"
         :clearable="formData.options.clearable"
         :placeholder="formData.options.placeholder"
-        :style="{width: formData.options.width}"
+        :style="{ width: formData.options.width }"
         :options="formData.options.remoteOptions"
       ></el-cascader>
     </template>
 
     <template v-if="formData.type == 'text'">
-      <span>{{dataModel}}</span>
+      <span>{{ dataModel }}</span>
     </template>
   </el-form-item>
 </template>

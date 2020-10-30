@@ -1,31 +1,41 @@
 <template>
   <div v-if="show">
     <el-form label-position="top">
-      <el-form-item :label="'字段標識'" v-if="data.type!='grid'">
+      <el-form-item :label="'字段標識'" v-if="data.type != 'grid'">
         <el-input v-model="data.model" size="small"></el-input>
       </el-form-item>
-      <el-form-item :label="'標題'" v-if="data.type!='grid'">
+      <el-form-item :label="'標題'" v-if="data.type != 'grid'">
         <el-input v-model="data.name" size="small"></el-input>
       </el-form-item>
-      <el-form-item :label="'寬度'" v-if="Object.keys(data.options).indexOf('width')>=0">
+      <el-form-item
+        :label="'寬度'"
+        v-if="Object.keys(data.options).indexOf('width') >= 0"
+      >
         <el-input v-model="data.options.width" size="small"></el-input>
       </el-form-item>
 
-      <el-form-item :label="'高度'" v-if="Object.keys(data.options).indexOf('height')>=0">
+      <el-form-item
+        :label="'高度'"
+        v-if="Object.keys(data.options).indexOf('height') >= 0"
+      >
         <el-input v-model="data.options.height" size="small"></el-input>
       </el-form-item>
 
-      <el-form-item :label="'大小'" v-if="Object.keys(data.options).indexOf('size')>=0">
+      <el-form-item
+        :label="'大小'"
+        v-if="Object.keys(data.options).indexOf('size') >= 0"
+      >
         寬度
         <el-input
           size="small"
-          style="width: 90px;"
+          style="width: 90px"
           type="number"
           v-model.number="data.options.size.width"
-        ></el-input>高度
+        ></el-input
+        >高度
         <el-input
           size="small"
-          style="width: 90px;"
+          style="width: 90px"
           type="number"
           v-model.number="data.options.size.height"
         ></el-input>
@@ -33,72 +43,141 @@
 
       <el-form-item
         :label="'占位'"
-        v-if="Object.keys(data.options).indexOf('placeholder')>=0 && (data.type!='time' || data.type!='date')"
+        v-if="
+          Object.keys(data.options).indexOf('placeholder') >= 0 &&
+          (data.type != 'time' || data.type != 'date')
+        "
       >
         <el-input size="small" v-model="data.options.placeholder"></el-input>
       </el-form-item>
-      <el-form-item :label="'布劇'" v-if="Object.keys(data.options).indexOf('inline')>=0">
+      <el-form-item
+        :label="'布劇'"
+        v-if="Object.keys(data.options).indexOf('inline') >= 0"
+      >
         <el-radio-group v-model="data.options.inline" size="small">
           <el-radio-button :label="false">塊級</el-radio-button>
           <el-radio-button :label="true">行內</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item :label="'顯示輸入框'" v-if="Object.keys(data.options).indexOf('showInput')>=0">
+      <el-form-item
+        :label="'顯示輸入框'"
+        v-if="Object.keys(data.options).indexOf('showInput') >= 0"
+      >
         <el-switch v-model="data.options.showInput"></el-switch>
       </el-form-item>
-      <el-form-item :label="'最小值'" v-if="Object.keys(data.options).indexOf('min')>=0">
-        <el-input-number size="small" v-model="data.options.min" :min="0" :max="100" :step="1"></el-input-number>
+      <el-form-item
+        :label="'最小值'"
+        v-if="Object.keys(data.options).indexOf('min') >= 0"
+      >
+        <el-input-number
+          size="small"
+          v-model="data.options.min"
+          :min="0"
+          :max="100"
+          :step="1"
+        ></el-input-number>
       </el-form-item>
-      <el-form-item :label="'最大值'" v-if="Object.keys(data.options).indexOf('max')>=0">
-        <el-input-number size="small" v-model="data.options.max" :min="0" :max="100" :step="1"></el-input-number>
+      <el-form-item
+        :label="'最大值'"
+        v-if="Object.keys(data.options).indexOf('max') >= 0"
+      >
+        <el-input-number
+          size="small"
+          v-model="data.options.max"
+          :min="0"
+          :max="100"
+          :step="1"
+        ></el-input-number>
       </el-form-item>
-      <el-form-item :label="'步長'" v-if="Object.keys(data.options).indexOf('step')>=0">
-        <el-input-number size="small" v-model="data.options.step" :min="0" :max="100" :step="1"></el-input-number>
+      <el-form-item
+        :label="'步長'"
+        v-if="Object.keys(data.options).indexOf('step') >= 0"
+      >
+        <el-input-number
+          size="small"
+          v-model="data.options.step"
+          :min="0"
+          :max="100"
+          :step="1"
+        ></el-input-number>
       </el-form-item>
-      <el-form-item :label="'多選'" v-if="data.type=='select' || data.type=='imgupload'">
-        <el-switch size="small" v-model="data.options.multiple" @change="handleSelectMuliple"></el-switch>
+      <el-form-item
+        :label="'多選'"
+        v-if="data.type == 'select' || data.type == 'imgupload'"
+      >
+        <el-switch
+          size="small"
+          v-model="data.options.multiple"
+          @change="handleSelectMuliple"
+        ></el-switch>
       </el-form-item>
-      <el-form-item :label="'可搜索'" v-if="data.type=='select'">
+      <el-form-item :label="'可搜索'" v-if="data.type == 'select'">
         <el-switch v-model="data.options.filterable"></el-switch>
       </el-form-item>
-      <el-form-item label="'允許半邊'" v-if="Object.keys(data.options).indexOf('allowHalf')>=0">
+      <el-form-item
+        label="'允許半邊'"
+        v-if="Object.keys(data.options).indexOf('allowHalf') >= 0"
+      >
         <el-switch v-model="data.options.allowHalf" size="small"></el-switch>
       </el-form-item>
-      <el-form-item :label="'支持透明度選擇'" v-if="Object.keys(data.options).indexOf('showAlpha')>=0">
+      <el-form-item
+        :label="'支持透明度選擇'"
+        v-if="Object.keys(data.options).indexOf('showAlpha') >= 0"
+      >
         <el-switch v-model="data.options.showAlpha" size="small"></el-switch>
       </el-form-item>
-      <el-form-item :label="'是否顯示標籤'" v-if="Object.keys(data.options).indexOf('showLabel')>=0">
+      <el-form-item
+        :label="'是否顯示標籤'"
+        v-if="Object.keys(data.options).indexOf('showLabel') >= 0"
+      >
         <el-switch v-model="data.options.showLabel" size="small"></el-switch>
       </el-form-item>
-      <el-form-item :label="'選項'" v-if="Object.keys(data.options).indexOf('options')>=0">
+      <el-form-item
+        :label="'選項'"
+        v-if="Object.keys(data.options).indexOf('options') >= 0"
+      >
         <template>
-          <template v-if="data.type=='radio' || (data.type=='select'&&!data.options.multiple)">
+          <template
+            v-if="
+              data.type == 'radio' ||
+              (data.type == 'select' && !data.options.multiple)
+            "
+          >
             <el-radio-group
               v-model="data.options.defaultValue"
-              style="line-height: 40px;"
+              style="line-height: 40px"
               size="small"
             >
               <draggable
                 tag="ul"
                 :list="data.options.options"
-                v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
+                v-bind="{
+                  group: { name: 'options' },
+                  ghostClass: 'ghost',
+                  handle: '.drag-item',
+                }"
                 handle=".drag-item"
               >
                 <li v-for="(item, index) in data.options.options" :key="index">
-                  <el-radio :label="item.value" style="margin-right: 5px;">
+                  <el-radio :label="item.value" style="margin-right: 5px">
                     <el-input
-                      :style="{'width': data.options.showLabel? '80px': '180px' }"
+                      :style="{
+                        width: data.options.showLabel ? '80px' : '180px',
+                      }"
                       size="mini"
                       v-model="item.value"
                     ></el-input>
                     <el-input
-                      style="width:80px;"
+                      style="width: 80px"
                       size="mini"
                       v-if="data.options.showLabel"
                       v-model="item.label"
                     ></el-input>
                   </el-radio>
-                  <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;">
+                  <i
+                    class="drag-item"
+                    style="font-size: 16px; margin: 0 5px; cursor: move"
+                  >
                     <i class="el-icon-rank" title="拖動"></i>
                   </i>
                   <el-button
@@ -109,36 +188,50 @@
                     size="mini"
                     title="刪除"
                     icon="el-icon-delete"
-                    style="padding: 4px;margin-left: 5px;"
+                    style="padding: 4px; margin-left: 5px"
                   ></el-button>
                 </li>
               </draggable>
             </el-radio-group>
           </template>
 
-          <template v-if="data.type=='checkbox' || (data.type=='select' && data.options.multiple)">
+          <template
+            v-if="
+              data.type == 'checkbox' ||
+              (data.type == 'select' && data.options.multiple)
+            "
+          >
             <el-checkbox-group v-model="data.options.defaultValue" size="small">
               <draggable
                 tag="ul"
                 :list="data.options.options"
-                v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
+                v-bind="{
+                  group: { name: 'options' },
+                  ghostClass: 'ghost',
+                  handle: '.drag-item',
+                }"
                 handle=".drag-item"
               >
                 <li v-for="(item, index) in data.options.options" :key="index">
-                  <el-checkbox :label="item.value" style="margin-right: 5px;">
+                  <el-checkbox :label="item.value" style="margin-right: 5px">
                     <el-input
-                      :style="{'width': data.options.showLabel? '90px': '180px' }"
+                      :style="{
+                        width: data.options.showLabel ? '90px' : '180px',
+                      }"
                       size="mini"
                       v-model="item.value"
                     ></el-input>
                     <el-input
-                      style="width:90px;"
+                      style="width: 90px"
                       size="mini"
                       v-if="data.options.showLabel"
                       v-model="item.label"
                     ></el-input>
                   </el-checkbox>
-                  <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;">
+                  <i
+                    class="drag-item"
+                    style="font-size: 16px; margin: 0 5px; cursor: move"
+                  >
                     <i class="el-icon-rank" title="拖動"></i>
                   </i>
                   <el-button
@@ -149,13 +242,13 @@
                     title="刪除"
                     size="mini"
                     icon="el-icon-delete"
-                    style="padding: 4px;margin-left: 5px;"
+                    style="padding: 4px; margin-left: 5px"
                   ></el-button>
                 </li>
               </draggable>
             </el-checkbox-group>
           </template>
-          <div style="margin-left: 22px;">
+          <div style="margin-left: 22px">
             <el-button type="text" @click="handleAddOption">添加選項</el-button>
           </div>
         </template>
@@ -163,21 +256,37 @@
 
       <el-form-item
         :label="'默認值'"
-        v-if="Object.keys(data.options).indexOf('defaultValue')>=0 && (data.type == 'textarea' || data.type == 'input' ||  data.type == 'text' || data.type=='rate' || data.type=='color' || data.type=='switch')"
+        v-if="
+          Object.keys(data.options).indexOf('defaultValue') >= 0 &&
+          (data.type == 'textarea' ||
+            data.type == 'input' ||
+            data.type == 'text' ||
+            data.type == 'rate' ||
+            data.type == 'color' ||
+            data.type == 'switch')
+        "
       >
         <el-input
           size="small"
-          v-if="data.type=='textarea'"
+          v-if="data.type == 'textarea'"
           type="textarea"
           :rows="5"
           v-model="data.options.defaultValue"
         ></el-input>
-        <el-input size="small" v-if="data.type=='input'" v-model="data.options.defaultValue"></el-input>
-        <el-input size="small" v-if="data.type=='text'" v-model="data.options.defaultValue"></el-input>
+        <el-input
+          size="small"
+          v-if="data.type == 'input'"
+          v-model="data.options.defaultValue"
+        ></el-input>
+        <el-input
+          size="small"
+          v-if="data.type == 'text'"
+          v-model="data.options.defaultValue"
+        ></el-input>
         <el-rate
           size="small"
           v-if="data.type == 'rate'"
-          style="display:inline-block;vertical-align: middle;"
+          style="display: inline-block; vertical-align: middle"
           :max="data.options.max"
           :allow-half="data.options.allowHalf"
           v-model="data.options.defaultValue"
@@ -186,16 +295,24 @@
           size="small"
           type="text"
           v-if="data.type == 'rate'"
-          style="display:inline-block;vertical-align: middle;margin-left: 10px;"
-          @click="data.options.defaultValue=0"
-        >清空</el-button>
+          style="
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+          "
+          @click="data.options.defaultValue = 0"
+          >清空</el-button
+        >
         <el-color-picker
           v-if="data.type == 'color'"
           v-model="data.options.defaultValue"
           :show-alpha="data.options.showAlpha"
           size="small"
         ></el-color-picker>
-        <el-switch v-if="data.type=='switch'" v-model="data.options.defaultValue"></el-switch>
+        <el-switch
+          v-if="data.type == 'switch'"
+          v-model="data.options.defaultValue"
+        ></el-switch>
       </el-form-item>
 
       <template v-if="data.type == 'time' || data.type == 'date'">
@@ -219,32 +336,54 @@
         </el-form-item>
         <el-form-item
           :label="'占位'"
-          v-if="(!data.options.isRange && data.type == 'time') || (data.type != 'time' && data.options.type != 'datetimerange' && data.options.type != 'daterange')"
+          v-if="
+            (!data.options.isRange && data.type == 'time') ||
+            (data.type != 'time' &&
+              data.options.type != 'datetimerange' &&
+              data.options.type != 'daterange')
+          "
         >
           <el-input size="small" v-model="data.options.placeholder"></el-input>
         </el-form-item>
         <el-form-item
           :label="'開始時間'"
-          v-if="(data.options.isRange) || data.options.type=='datetimerange' || data.options.type=='daterange'"
+          v-if="
+            data.options.isRange ||
+            data.options.type == 'datetimerange' ||
+            data.options.type == 'daterange'
+          "
         >
-          <el-input size="small" v-model="data.options.startPlaceholder"></el-input>
+          <el-input
+            size="small"
+            v-model="data.options.startPlaceholder"
+          ></el-input>
         </el-form-item>
         <el-form-item
           :label="'結束時間'"
-          v-if="data.options.isRange || data.options.type=='datetimerange' || data.options.type=='daterange'"
+          v-if="
+            data.options.isRange ||
+            data.options.type == 'datetimerange' ||
+            data.options.type == 'daterange'
+          "
         >
-          <el-input size="small" v-model="data.options.endPlaceholder"></el-input>
+          <el-input
+            size="small"
+            v-model="data.options.endPlaceholder"
+          ></el-input>
         </el-form-item>
         <el-form-item :label="'格式'">
           <el-input size="small" v-model="data.options.format"></el-input>
         </el-form-item>
         <el-form-item
           :label="'默認值'"
-          v-if="data.type=='time' && Object.keys(data.options).indexOf('isRange')>=0"
+          v-if="
+            data.type == 'time' &&
+            Object.keys(data.options).indexOf('isRange') >= 0
+          "
         >
           <el-time-picker
             key="1"
-            style="width: 100%;"
+            style="width: 100%"
             v-if="!data.options.isRange"
             v-model="data.options.defaultValue"
             :arrowControl="data.options.arrowControl"
@@ -254,7 +393,7 @@
           <el-time-picker
             key="2"
             v-if="data.options.isRange"
-            style="width: 100%;"
+            style="width: 100%"
             v-model="data.options.defaultValue"
             is-range
             :arrowControl="data.options.arrowControl"
@@ -264,9 +403,13 @@
         </el-form-item>
       </template>
 
-      <template v-if="data.type=='imgupload'">
+      <template v-if="data.type == 'imgupload'">
         <el-form-item :label="'最大上傳數'">
-          <el-input size="small" type="number" v-model.number="data.options.length"></el-input>
+          <el-input
+            size="small"
+            type="number"
+            v-model.number="data.options.length"
+          ></el-input>
         </el-form-item>
         <template>
           <el-form-item :label="'圖片上傳地址'" :required="true">
@@ -275,7 +418,7 @@
         </template>
       </template>
 
-      <template v-if="data.type=='blank'">
+      <template v-if="data.type == 'blank'">
         <el-form-item :label="'綁定數據類型'">
           <el-select size="small" v-model="data.options.defaultType">
             <el-option value="String" :label="'字符串'"></el-option>
@@ -287,23 +430,34 @@
 
       <template v-if="data.type == 'grid'">
         <el-form-item :label="'柵格間隔'">
-          <el-input size="small" type="number" v-model.number="data.options.gutter"></el-input>
+          <el-input
+            size="small"
+            type="number"
+            v-model.number="data.options.gutter"
+          ></el-input>
         </el-form-item>
         <el-form-item :label="'列配置項'">
           <draggable
             tag="ul"
             :list="data.columns"
-            v-bind="{group:{ name:'options'}, ghostClass: 'ghost',handle: '.drag-item'}"
+            v-bind="{
+              group: { name: 'options' },
+              ghostClass: 'ghost',
+              handle: '.drag-item',
+            }"
             handle=".drag-item"
           >
             <li v-for="(item, index) in data.columns" :key="index">
-              <i class="drag-item" style="font-size: 16px;margin: 0 5px;cursor: move;">
+              <i
+                class="drag-item"
+                style="font-size: 16px; margin: 0 5px; cursor: move"
+              >
                 <i class="el-icon-rank" title="拖動"></i>
               </i>
               <el-input
                 :placeholder="'柵格值'"
                 size="mini"
-                style="width: 100px;"
+                style="width: 100px"
                 type="number"
                 v-model.number="item.span"
               ></el-input>
@@ -316,12 +470,14 @@
                 size="mini"
                 icon="el-icon-delete"
                 title="刪除"
-                style="padding: 4px;margin-left: 5px;"
+                style="padding: 4px; margin-left: 5px"
               ></el-button>
             </li>
           </draggable>
-          <div style="margin-left: 22px;">
-            <el-button size="small" type="text" @click="handleAddColumn">添加列</el-button>
+          <div style="margin-left: 22px">
+            <el-button size="small" type="text" @click="handleAddColumn"
+              >添加列</el-button
+            >
           </div>
         </el-form-item>
         <el-form-item :label="'水平排列方式'">
@@ -347,45 +503,54 @@
           <el-checkbox
             size="small"
             v-model="data.options.readonly"
-            v-if="Object.keys(data.options).indexOf('readonly')>=0"
-          >只讀</el-checkbox>
+            v-if="Object.keys(data.options).indexOf('readonly') >= 0"
+            >只讀</el-checkbox
+          >
           <el-checkbox
             size="small"
             v-model="data.options.disabled"
-            v-if="Object.keys(data.options).indexOf('disabled')>=0"
-          >禁用</el-checkbox>
+            v-if="Object.keys(data.options).indexOf('disabled') >= 0"
+            >禁用</el-checkbox
+          >
           <el-checkbox
             size="small"
             v-model="data.options.editable"
-            v-if="Object.keys(data.options).indexOf('editable')>=0"
-          >文本框可輸</el-checkbox>
+            v-if="Object.keys(data.options).indexOf('editable') >= 0"
+            >文本框可輸</el-checkbox
+          >
           <el-checkbox
             size="small"
             v-model="data.options.clearable"
-            v-if="Object.keys(data.options).indexOf('clearable')>=0"
-          >顯示清除按鈕</el-checkbox>
+            v-if="Object.keys(data.options).indexOf('clearable') >= 0"
+            >顯示清除按鈕</el-checkbox
+          >
           <el-checkbox
             size="small"
             v-model="data.options.arrowControl"
-            v-if="Object.keys(data.options).indexOf('arrowControl')>=0"
-          >使用箭頭進行時間選擇</el-checkbox>
+            v-if="Object.keys(data.options).indexOf('arrowControl') >= 0"
+            >使用箭頭進行時間選擇</el-checkbox
+          >
           <el-checkbox
             size="small"
             v-model="data.options.isDelete"
-            v-if="Object.keys(data.options).indexOf('isDelete')>=0"
-          >刪除</el-checkbox>
+            v-if="Object.keys(data.options).indexOf('isDelete') >= 0"
+            >刪除</el-checkbox
+          >
           <el-checkbox
             size="small"
             v-model="data.options.isEdit"
-            v-if="Object.keys(data.options).indexOf('isEdit')>=0"
-          >編輯</el-checkbox>
+            v-if="Object.keys(data.options).indexOf('isEdit') >= 0"
+            >編輯</el-checkbox
+          >
         </el-form-item>
         <el-form-item :label="'校驗'">
-          <div v-if="Object.keys(data.options).indexOf('required')>=0">
-            <el-checkbox size="small" v-model="data.options.required">必填</el-checkbox>
+          <div v-if="Object.keys(data.options).indexOf('required') >= 0">
+            <el-checkbox size="small" v-model="data.options.required"
+              >必填</el-checkbox
+            >
           </div>
           <el-select
-            v-if="Object.keys(data.options).indexOf('dataType')>=0"
+            v-if="Object.keys(data.options).indexOf('dataType') >= 0"
             v-model="data.options.dataType"
             size="mini"
           >
@@ -399,11 +564,11 @@
             <!-- <el-option value="hex" :label="'十六進制'"></el-option> -->
           </el-select>
 
-          <div v-if="Object.keys(data.options).indexOf('pattern')>=0">
+          <div v-if="Object.keys(data.options).indexOf('pattern') >= 0">
             <el-input
               size="mini"
               v-model.lazy="data.options.pattern"
-              style=" width: 240px;"
+              style="width: 240px"
               :placeholder="'填寫正則表達式'"
             ></el-input>
           </div>

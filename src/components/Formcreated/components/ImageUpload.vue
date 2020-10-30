@@ -3,52 +3,61 @@
     <draggable
       class="drag-img-list"
       v-model="fileList"
-      v-bind="{group: uploadId, ghostClass: 'ghost', animation: 200}"
+      v-bind="{ group: uploadId, ghostClass: 'ghost', animation: 200 }"
       :no-transition-on-drag="true"
     >
       <div
         :id="item.key"
-        :style="{width: width+'px', height: height+'px'}"
-        :class="{uploading: item.status=='uploading', 'is-success': item.status=='success', 'is-diabled': disabled}"
+        :style="{ width: width + 'px', height: height + 'px' }"
+        :class="{
+          uploading: item.status == 'uploading',
+          'is-success': item.status == 'success',
+          'is-diabled': disabled,
+        }"
         class="upload-file"
-        v-for="(item) in fileList"
+        v-for="item in fileList"
         :key="item.key"
       >
         <img v-if="item.isImg" :src="item.url" />
-        <i v-else class="el-icon-files" style="font-size: 40px;color: #4ca1ff;" title="文件"></i>
+        <i
+          v-else
+          class="el-icon-files"
+          style="font-size: 40px; color: #4ca1ff"
+          title="文件"
+        ></i>
 
         <el-progress
-          v-if="item.status=='uploading'"
-          :width="miniWidth*0.9"
+          v-if="item.status == 'uploading'"
+          :width="miniWidth * 0.9"
           class="upload-progress"
           type="circle"
           :percentage="item.percent"
         ></el-progress>
 
-        <label class="item-status" v-if="item.status=='success'">
+        <label class="item-status" v-if="item.status == 'success'">
           <i class="el-icon-upload-success el-icon-check"></i>
         </label>
 
-        <div class="uplaod-action" :style="{height: miniWidth / 4 + 'px'}">
+        <div class="uplaod-action" :style="{ height: miniWidth / 4 + 'px' }">
           <i
             :class="item.isImg ? 'el-icon-view' : 'el-icon-download'"
             :title="item.isImg ? '預覽' : '下載'"
             @click="handlePreviewFile(item)"
-            :style="{'font-size': miniWidth/8+'px'}"
+            :style="{ 'font-size': miniWidth / 8 + 'px' }"
           ></i>
           <i
             v-if="isEdit && !disabled"
             class="el-icon-refresh"
             :title="'替換'"
             @click="handleEdit(item.key)"
-            :style="{'font-size': miniWidth/8+'px'}"
+            :style="{ 'font-size': miniWidth / 8 + 'px' }"
           ></i>
           <i
             v-if="isDelete && fileList.length > min && !disabled"
             class="el-icon-delete"
             :title="'刪除'"
             @click="handleRemove(item.key)"
-            :style="{'font-size': miniWidth/8+'px'}"
+            :style="{ 'font-size': miniWidth / 8 + 'px' }"
           ></i>
         </div>
       </div>
@@ -56,15 +65,19 @@
 
     <div
       class="el-upload el-upload--picture-card"
-      :class="{'is-disabled': disabled}"
+      :class="{ 'is-disabled': disabled }"
       v-show="(!isQiniu || (isQiniu && token)) && fileList.length < length"
-      :style="{width: width+'px', height: height+'px'}"
+      :style="{ width: width + 'px', height: height + 'px' }"
       @click.self="handleAdd"
     >
       <i
         class="el-icon-plus"
         @click.self="handleAdd"
-        :style="{fontSize:miniWidth/4+'px',marginTop: (-miniWidth/8)+'px', marginLeft: (-miniWidth/8)+'px'}"
+        :style="{
+          fontSize: miniWidth / 4 + 'px',
+          marginTop: -miniWidth / 8 + 'px',
+          marginLeft: -miniWidth / 8 + 'px',
+        }"
       ></i>
       <!-- <input accept="image/*" v-if="multiple"  multiple ref="uploadInput" @change="handleChange" type="file" :style="{width: 0, height: 0}" name="files" class="el-upload__input upload-input">
       <input accept="image/*" v-else ref="uploadInput" @change="handleChange" type="file" :style="{width:0, height: 0}" name="files" class="el-upload__input upload-input">-->
@@ -74,7 +87,7 @@
         ref="uploadInput"
         @change="handleChange"
         type="file"
-        :style="{width: 0, height: 0}"
+        :style="{ width: 0, height: 0 }"
         name="files"
         class="el-upload__input upload-input"
       />
@@ -83,7 +96,7 @@
         ref="uploadInput"
         @change="handleChange"
         type="file"
-        :style="{width:0, height: 0}"
+        :style="{ width: 0, height: 0 }"
         name="files"
         class="el-upload__input upload-input"
       />
@@ -95,7 +108,11 @@
       width="600px"
       form
     >
-      <img :src="previewUrl" alt style="display: block;width: 80%;margin: 0 auto;" />
+      <img
+        :src="previewUrl"
+        alt
+        style="display: block; width: 80%; margin: 0 auto"
+      />
       <template slot="action">
         <el-button size="mini" @click="previewVisible = false">關閉</el-button>
       </template>

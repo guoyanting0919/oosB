@@ -1,69 +1,69 @@
 export const flowConfig = {
   jsPlumbInsConfig: {
     Connector: [
-      'Flowchart',
+      "Flowchart",
       {
         gap: 5,
         cornerRadius: 8,
-        alwaysRespectStubs: true
-      }
+        alwaysRespectStubs: true,
+      },
     ],
     ConnectionOverlays: [
       [
-        'Arrow',
+        "Arrow",
         {
           width: 10,
           length: 10,
-          location: 1
-        }
-      ]
+          location: 1,
+        },
+      ],
     ],
     PaintStyle: {
-      stroke: '#2a2929',
-      strokeWidth: 2
+      stroke: "#2a2929",
+      strokeWidth: 2,
     },
     HoverPaintStyle: {
-      stroke: '#409EFF',
-      strokeWidth: 3
+      stroke: "#409EFF",
+      strokeWidth: 3,
     },
     EndpointStyle: {
-      fill: '#456',
-      stroke: '#2a2929',
+      fill: "#456",
+      stroke: "#2a2929",
       strokeWidth: 1,
-      radius: 3
+      radius: 3,
     },
     EndpointHoverStyle: {
-      fill: 'pink'
-    }
+      fill: "pink",
+    },
   },
   jsPlumbConfig: {
     anchor: {
-      default: ['Bottom', 'Right', 'Top', 'Left']
+      default: ["Bottom", "Right", "Top", "Left"],
     },
     conn: {
-      isDetachable: false
+      isDetachable: false,
     },
     makeSourceConfig: {
-      filter: 'a',
+      filter: "a",
       filterExclude: true,
       maxConnections: -1,
-      endpoint: ['Dot', { radius: 7 }],
-      anchor: ['Bottom', 'Right', 'Top', 'Left']
+      endpoint: ["Dot", { radius: 7 }],
+      anchor: ["Bottom", "Right", "Top", "Left"],
     },
     makeTargetConfig: {
-      filter: 'a',
+      filter: "a",
       filterExclude: true,
       maxConnections: -1,
-      endpoint: ['Dot', { radius: 7 }],
-      anchor: ['Bottom', 'Right', 'Top', 'Left']
-    }
+      endpoint: ["Dot", { radius: 7 }],
+      anchor: ["Bottom", "Right", "Top", "Left"],
+    },
   },
   defaultStyle: {
     dragOpacity: 0.7,
     alignGridPX: [5, 5],
     alignSpacing: {
       level: 100,
-      vertical: 100
+      vertical: 100,
     },
     alignDuration: 300,
     containerScale: {
@@ -71,110 +71,110 @@ export const flowConfig = {
       min: 0.5,
       max: 3,
       onceNarrow: 0.1,
-      onceEnlarge: 0.1
+      onceEnlarge: 0.1,
     },
     isOpenAuxiliaryLine: true,
     showAuxiliaryLineDistance: 20,
     movePx: 5,
-    photoBlankDistance: 200
+    photoBlankDistance: 200,
   },
-  // ID的生成类型。1.uuid uuid 2.time_stamp 时间戳 3.sequence 序列 4.time_stamp_and_sequence 时间戳加序列 5.custom 自定义
-  idType: 'uuid',
+  // ID的生成類型。1.uuid uuid 2.time_stamp 時間戳 3.sequence 序列 4.time_stamp_and_sequence 時間戳加序列 5.custom 自定義
+  idType: "uuid",
   flowStatus: {
-    CREATE: '0',
-    SAVE: '1',
-    MODIFY: '2',
-    LOADING: '3'
+    CREATE: "0",
+    SAVE: "1",
+    MODIFY: "2",
+    LOADING: "3",
   },
   shortcut: {
     multiple: {
       code: 17,
-      codeName: 'CTRL',
-      shortcutName: '多选'
+      codeName: "CTRL",
+      shortcutName: "多選",
     },
     dragContainer: {
       code: 32,
-      codeName: 'SPACE',
-      shortcutName: '画布拖拽'
+      codeName: "SPACE",
+      shortcutName: "畫布拖拽",
     },
     scaleContainer: {
       code: 18,
-      codeName: 'ALT(firefox下为SHIFT)',
-      shortcutName: '画布缩放'
+      codeName: "ALT(firefox下為SHIFT)",
+      shortcutName: "畫布縮放",
     },
     dragTool: {
       code: 68,
-      codeName: 'D',
-      shortcutName: '拖拽工具'
+      codeName: "D",
+      shortcutName: "拖拽工具",
     },
     connTool: {
       code: 76,
-      codeName: 'L',
-      shortcutName: '连线工具'
+      codeName: "L",
+      shortcutName: "連線工具",
     },
     zoomInTool: {
       code: 190,
-      codeName: '<',
-      shortcutName: '放大工具'
+      codeName: "<",
+      shortcutName: "放大工具",
     },
     zoomOutTool: {
       code: 188,
-      codeName: '>',
-      shortcutName: '缩小工具'
+      codeName: ">",
+      shortcutName: "縮小工具",
     },
     leftMove: {
       code: 37,
-      codeName: '←',
-      shortcutName: '左移'
+      codeName: "←",
+      shortcutName: "左移",
     },
     upMove: {
       code: 38,
-      codeName: '↑',
-      shortcutName: '上移'
+      codeName: "↑",
+      shortcutName: "上移",
     },
     rightMove: {
       code: 39,
-      codeName: '→',
-      shortcutName: '右移'
+      codeName: "→",
+      shortcutName: "右移",
     },
     downMove: {
       code: 40,
-      codeName: '↓',
-      shortcutName: '下移'
+      codeName: "↓",
+      shortcutName: "下移",
     },
     settingModal: {
       code: 83,
-      codeName: 'CTRL+ALT+S',
-      shortcutName: '打开设置页面'
+      codeName: "CTRL+ALT+S",
+      shortcutName: "打開設置頁面",
     },
     testModal: {
       code: 84,
-      codeName: 'CTRL+ALT+T',
-      shortcutName: '打开测试页面'
-    }
+      codeName: "CTRL+ALT+T",
+      shortcutName: "打開測試頁面",
+    },
   },
   contextMenu: {
     container: {
-      menuName: 'flow-menu',
+      menuName: "flow-menu",
       axis: {
         left: null,
-        top: null
+        top: null,
       },
       menulists: [
         // {
         // 	fnHandler: 'flowInfo',
         // 	icoName: 'edit',
-        // 	btnName: '流程图信息'
+        // 	btnName: '流程圖信息'
         // },
         {
-          fnHandler: 'paste',
-          icoName: 'edit',
-          btnName: '粘贴'
+          fnHandler: "paste",
+          icoName: "edit",
+          btnName: "粘貼",
         },
         {
-          fnHandler: 'selectAll',
-          icoName: 'edit',
-          btnName: '全选'
+          fnHandler: "selectAll",
+          icoName: "edit",
+          btnName: "全選",
         },
         // {
         //   fnHandler: 'saveFlow',
@@ -184,78 +184,78 @@ export const flowConfig = {
         // {
         // 	iconName: 'edit',
         // 	fnHandler: 'addRemark',
-        // 	btnName: '添加备注'
+        // 	btnName: '添加備註'
         // },
         {
-          icoName: 'edit',
-          btnName: '对齐方式',
+          icoName: "edit",
+          btnName: "對齊方式",
           children: [
             {
-              icoName: 'edit',
-              fnHandler: 'verticaLeft',
-              btnName: '垂直左对齐'
+              icoName: "edit",
+              fnHandler: "verticaLeft",
+              btnName: "垂直左對齊",
             },
             {
-              icoName: 'edit',
-              fnHandler: 'verticalCenter',
-              btnName: '垂直居中'
+              icoName: "edit",
+              fnHandler: "verticalCenter",
+              btnName: "垂直居中",
             },
             {
-              icoName: 'edit',
-              fnHandler: 'verticalRight',
-              btnName: '垂直右对齐'
+              icoName: "edit",
+              fnHandler: "verticalRight",
+              btnName: "垂直右對齊",
             },
             {
-              icoName: 'edit',
-              fnHandler: 'levelUp',
-              btnName: '水平上对齐'
+              icoName: "edit",
+              fnHandler: "levelUp",
+              btnName: "水平上對齊",
             },
             {
-              icoName: 'edit',
-              fnHandler: 'levelCenter',
-              btnName: '水平居中'
+              icoName: "edit",
+              fnHandler: "levelCenter",
+              btnName: "水平居中",
             },
             {
-              icoName: 'edit',
-              fnHandler: 'levelDown',
-              btnName: '水平下对齐'
-            }
-          ]
-        }
-      ]
+              icoName: "edit",
+              fnHandler: "levelDown",
+              btnName: "水平下對齊",
+            },
+          ],
+        },
+      ],
     },
     node: {
-      menuName: 'node-menu',
+      menuName: "node-menu",
       axis: {
         left: null,
-        top: null
+        top: null,
       },
       menulists: [
         {
-          fnHandler: 'copyNode',
-          icoName: 'edit',
-          btnName: '复制节点'
+          fnHandler: "copyNode",
+          icoName: "edit",
+          btnName: "複製節點",
         },
         {
-          fnHandler: 'deleteNode',
-          icoName: 'edit',
-          btnName: '删除节点'
-        }
-      ]
+          fnHandler: "deleteNode",
+          icoName: "edit",
+          btnName: "刪除節點",
+        },
+      ],
     },
     sl: {
-      menuName: 'link-menu',
+      menuName: "link-menu",
       axis: {
         left: null,
-        top: null
+        top: null,
       },
       menulists: [
         {
-          fnHandler: 'deleteLink',
-          icoName: 'edit',
-          btnName: '删除连线'
-        }
-      ]
-    }
-  }
-}
+          fnHandler: "deleteLink",
+          icoName: "edit",
+          btnName: "刪除連線",
+        },
+      ],
+    },
+  },
+};
