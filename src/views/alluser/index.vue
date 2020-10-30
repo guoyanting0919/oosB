@@ -141,7 +141,7 @@
             property="setting"
             label="操作"
             :fixed="isMobile()"
-            width="600"
+            width="350"
           >
             <template slot-scope="scope">
               <div class="buttonFlexBox">
@@ -155,7 +155,7 @@
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'caseuser'
                   "
-                  >長照派車</el-button
+                  >預約</el-button
                 >
                 <!-- 白牌派車 -->
                 <el-button
@@ -167,7 +167,7 @@
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'selfpayuser'
                   "
-                  >白牌派車</el-button
+                  >預約</el-button
                 >
                 <!-- 巴士派車 -->
                 <el-button
@@ -179,7 +179,7 @@
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'bususer'
                   "
-                  >巴士派車</el-button
+                  >預約</el-button
                 >
                 <!-- 基本編輯 -->
                 <el-button
@@ -187,7 +187,7 @@
                   @click="handleAddOrEdit('edit', scope.row)"
                   type="warning"
                   v-if="hasButton('editBasic') && !roles[scope.row.id]"
-                  >基本編輯</el-button
+                  >編輯</el-button
                 >
                 <!-- 編輯長照 -->
                 <el-button
@@ -199,7 +199,7 @@
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'caseuser'
                   "
-                  >長照編輯</el-button
+                  >編輯</el-button
                 >
                 <!-- 編輯白牌 -->
                 <el-button
@@ -211,7 +211,7 @@
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'selfpayuser'
                   "
-                  >白牌編輯</el-button
+                  >編輯</el-button
                 >
                 <!-- 編輯巴士 -->
                 <el-button
@@ -223,7 +223,7 @@
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'bususer'
                   "
-                  >巴士編輯</el-button
+                  >編輯</el-button
                 >
                 <!-- <el-button
                   size="mini"
@@ -242,7 +242,7 @@
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'caseuser'
                   "
-                  >檢視長照</el-button
+                  >檢視</el-button
                 >
                 <!-- 檢視白牌個案 -->
                 <el-button
@@ -254,7 +254,7 @@
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'selfpayuser'
                   "
-                  >檢視白牌</el-button
+                  >檢視</el-button
                 >
                 <!-- 檢視巴士個案 -->
                 <el-button
@@ -266,7 +266,7 @@
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'bususer'
                   "
-                  >檢視巴士</el-button
+                  >檢視</el-button
                 >
                 <el-button
                   size="mini"
@@ -1086,12 +1086,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.buttonFlexBox {
-  display: flex;
-  justify-content: flex-start;
-  transition: 0.3s;
-}
-
 .allUser {
   .el-checkbox {
     width: 50%;

@@ -26,7 +26,7 @@
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"
-          :data="gridData"
+          :data="list"
           border
           fit
           v-loading="listLoading"
@@ -40,23 +40,80 @@
             width="55"
             align="center"
           ></el-table-column>
-          <el-table-column
-            property="date"
-            label="日期"
-            width="150"
-          ></el-table-column>
+
           <el-table-column
             property="name"
             label="姓名"
             width="200"
+            align="center"
           ></el-table-column>
-          <el-table-column property="address" label="地址"></el-table-column>
+          <el-table-column
+            property="sex"
+            label="性別"
+            width="150"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <div>
+                <i
+                  style="color: #d63737"
+                  v-if="!scope.row.sex"
+                  class="iconfont icon-Vector5"
+                ></i>
+                <i
+                  style="color: #227294"
+                  v-else
+                  class="iconfont icon-Vector6"
+                ></i>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column property="addr" label="地址" align="center">
+            <template slot-scope="scope">
+              <span>{{
+                scope.row.county + scope.row.district + scope.row.addr
+              }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            property="setting"
+            label="操作"
+            fixed="right"
+            width="250"
+          >
+            <template slot-scope="scope">
+              <div class="buttonFlexBox">
+                <el-button
+                  size="mini"
+                  @click="handleDispatch(scope.row)"
+                  type="info"
+                  v-if="hasButton('dispatch')"
+                  >預約</el-button
+                >
+                <el-button
+                  size="mini"
+                  @click="handleEdit(scope.row)"
+                  type="success"
+                  v-if="hasButton('edit')"
+                  >編輯</el-button
+                >
+                <el-button
+                  size="mini"
+                  @click="handleCheck(scope.row)"
+                  type="warning"
+                  v-if="hasButton('check')"
+                  >檢視</el-button
+                >
+              </div>
+            </template>
+          </el-table-column>
         </el-table>
         <pagination
           v-show="total > 0"
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
+          @pagination="handleCurrentChange"
         />
       </div>
     </div>
@@ -67,7 +124,6 @@
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
 import permissionBtn from "@/components/PermissionBtn";
-import elDragDialog from "@/directive/el-dragDialog";
 import Pagination from "@/components/Pagination";
 import * as selfPayUsers from "@/api/selfPayUsers";
 export default {
@@ -78,15 +134,14 @@ export default {
     permissionBtn,
     Pagination,
   },
-  directives: {
-    elDragDialog,
-  },
   data() {
     return {
+      value: "",
+      buttons: [],
       // 表格相關
       list: [],
       listLoading: false,
-      total: 200,
+      total: 0,
       listQuery: {
         page: 1,
         limit: 20,
@@ -94,65 +149,52 @@ export default {
       },
 
       multipleSelection: [], // 列表checkbox選中的值
-      value: "",
-      value1: "",
-      gridData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-      ],
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
-      ],
+
       violationDialog: false,
     };
   },
   methods: {
-    // 獲取白牌用戶資料
+    // 獲取本路由下所有功能按鈕
+    getButtons() {
+      this.$route.meta.elements.forEach((el) => {
+        this.buttons.push(el.domId);
+      });
+    },
+    // 是否擁有按鈕功能權限
+    hasButton(domId) {
+      return this.buttons.includes(domId);
+    },
+    // 獲取用戶資料
     getList() {
       const vm = this;
       vm.listLoading = true;
       selfPayUsers.load(vm.listQuery).then((res) => {
-        console.log(res.data);
-
+        console.log(res);
+        vm.list = res.data;
+        vm.total = res.count;
         vm.listLoading = false;
       });
+    },
+    //預約
+    handleDispatch(user) {
+      let id = `${user.userId}-${user.selfUserId}`;
+      this.$router.push(`/selfpayuser/dispatch/${id}`);
+    },
+    // 編輯
+    handleEdit(user) {
+      let id = `${user.userId}-${user.selfUserId}`;
+      this.$router.push(`/selfpayuser/edit/${id}`);
+    },
+    // 檢視
+    handleCheck(user) {
+      let id = `${user.userId}-${user.selfUserId}`;
+      this.$router.push(`/selfpayuser/check/${id}`);
+    },
+    // 換頁
+    handleCurrentChange(val) {
+      this.listQuery.page = val.page;
+      this.listQuery.limit = val.limit;
+      this.getList();
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -172,6 +214,7 @@ export default {
     },
   },
   mounted() {
+    this.getButtons();
     this.getList();
   },
 };

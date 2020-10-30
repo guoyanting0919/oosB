@@ -442,7 +442,7 @@ table thead th {
   #app {
     .sidebar-container .nest-menu .el-submenu > .el-submenu__title,
     .sidebar-container .el-submenu .el-menu-item {
-      background-color: $subMenuBg !important;
+      background-color: #fef8f0 !important;
       &:hover {
         background-color: $menuHover !important;
       }
