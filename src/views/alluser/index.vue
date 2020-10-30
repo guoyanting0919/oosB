@@ -849,14 +849,10 @@ export default {
     //關鍵字搜尋
     handleSearch() {
       const vm = this;
-      console.log(process.env.VUE_APP_WEB_VERSION);
       if (vm.listQuery.key === process.env.VUE_APP_WEB_VERSION) {
-        // console.log("iwanttodeleteusers");
-        // console.log(vm.multipleSelection);
         let arr = vm.multipleSelection.map((user) => {
           return user.id;
         });
-        // console.log(arr);
         users.del(arr).then((res) => {
           vm.listQuery.key = undefined;
           vm.$alertT.fire({
