@@ -4,7 +4,7 @@
       <div class="filter-container">
         <!-- 關鍵字搜尋 -->
         <el-input
-          style="width:200px;margin-right:0.5rem"
+          style="width: 200px; margin-right: 0.5rem"
           size="mini"
           v-model="value"
           clearable
@@ -16,7 +16,7 @@
           v-model="value"
           clearable
           placeholder="可否派發"
-          style="margin-right:0.5rem"
+          style="margin-right: 0.5rem"
         >
           <el-option
             v-for="item in options"
@@ -50,16 +50,17 @@
     </sticky>
     <div class="app-container flex-item">
       <Title title="司機資料"></Title>
-      <div class="bg-white" style="height: 93%;">
+      <div class="bg-white" style="height: 93%">
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"
-          :data="gridData"
-          v-if="gridData"
+          :data="list"
+          v-loading="listLoading"
+          v-if="list"
           border
           fit
           highlight-current-row
-          style="width: 100%;"
+          style="width: 100%"
           @selection-change="handleSelectionChange"
           @row-click="rowClick"
         >
@@ -69,13 +70,7 @@
             align="center"
           ></el-table-column>
           <el-table-column
-            property="pic"
-            label="照片"
-            width="80"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            property="name"
+            property="userName"
             label="姓名"
             width="120"
             align="center"
@@ -89,13 +84,7 @@
           <el-table-column
             property="phone"
             label="手機"
-            width="170"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            property="tel"
-            label="駕照"
-            min-width="170"
+            width="250"
             align="center"
           ></el-table-column>
           <el-table-column
@@ -130,13 +119,13 @@
                   size="mini"
                   type="success"
                   @click="handleDetail(scope.row)"
-                  v-if="hasButton('detail')"
+                  v-if="hasButton('check')"
                   >檢視</el-button
                 >
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="getButtons(scope)"
+                  @click="handleDelete(scope.row)"
                   v-if="hasButton('delete')"
                   >刪除</el-button
                 >
@@ -149,6 +138,7 @@
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
+          @pagination="handleCurrentChange"
         />
       </div>
     </div>
@@ -160,6 +150,7 @@ import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
 import permissionBtn from "@/components/PermissionBtn";
 import Pagination from "@/components/Pagination";
+import * as drivers from "@/api/drivers";
 export default {
   name: "driver",
   components: {
@@ -195,53 +186,14 @@ export default {
         },
       ],
       // main data
+      list: [],
+      listLoading: false,
       total: 200,
       listQuery: {
-        page: 20,
+        page: 1,
         limit: 20,
       },
       multipleSelection: [], // 列表checkbox選中的值
-      gridData: [
-        {
-          lock: 1,
-          pic: "Ｏ",
-          name: "王小虎",
-          code: "109X20404",
-          uid: "A203******",
-          birth: "1954-07-18",
-          sex: 0,
-          phone: "0921079303",
-          tel: "職業小客車",
-          status: 1,
-          setting: "功能按鈕",
-        },
-        {
-          lock: 1,
-          pic: "Ｏ",
-          name: "王小虎",
-          code: "109X20404",
-          uid: "A203******",
-          birth: "1954-07-18",
-          sex: 0,
-          phone: "0921079303",
-          tel: "職業小客車",
-          status: 0,
-          setting: "功能按鈕",
-        },
-        {
-          lock: 0,
-          pic: "Ｏ",
-          name: "王小虎",
-          code: "109X20404",
-          uid: "A203******",
-          birth: "1954-07-18",
-          sex: 1,
-          phone: "0921079303",
-          tel: "職業小客車",
-          status: 1,
-          setting: "功能按鈕",
-        },
-      ],
     };
   },
   methods: {
@@ -265,6 +217,17 @@ export default {
     hasButton(domId) {
       return this.buttons.includes(domId);
     },
+    // 獲取所有司機
+    getList() {
+      const vm = this;
+      vm.listLoading = true;
+      drivers.load(vm.listQuery).then((res) => {
+        console.log(res);
+        vm.list = res.data;
+        vm.total = res.count;
+        vm.listLoading = false;
+      });
+    },
 
     // table 功能
     handleSelectionChange(val) {
@@ -274,20 +237,21 @@ export default {
       this.$refs.mainTable.clearSelection();
       this.$refs.mainTable.toggleRowSelection(row);
     },
+    // 換頁
+    handleCurrentChange(val) {
+      this.listQuery.page = val.page;
+      this.listQuery.limit = val.limit;
+      this.getList();
+    },
 
     // 主要功能按鈕
     onBtnClicked(domId) {
       console.log(domId);
       switch (domId) {
-        case "unitB":
-          if (this.multipleSelection.length !== 1) {
-            this.$message({
-              message: "只能選中一個進行編輯",
-              type: "error",
-            });
-            return;
+        case "delete":
+          if (this.multipleSelection.length !== 0) {
+            this.handleDeleteDrivers(this.multipleSelection);
           }
-          this.handleUnitB(this.multipleSelection[0]);
           break;
         case "add":
           this.$router.push("/driver/add/1");
@@ -297,14 +261,76 @@ export default {
       }
     },
     handleDetail(driver) {
-      this.$router.push(`/driver/detail/${driver.uid}`);
+      this.$router.push(`/driver/check/${driver.id}`);
     },
     handleEdit(driver) {
-      this.$router.push(`/driver/edit/${driver.uid}`);
+      console.log(driver);
+      this.$router.push(`/driver/edit/${driver.id}`);
+    },
+    handleDeleteDrivers(driver) {
+      const vm = this;
+      vm.$swal({
+        title: "刪除提示",
+        text: `確認刪除已選取司機?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#227294",
+        cancelButtonColor: "#d63737",
+        confirmButtonText: "確定",
+        cancelButtonText: "取消",
+      }).then((result) => {
+        if (result.value) {
+          let ids = driver.map((c) => c.id);
+          drivers.deleteDriver(ids).then((res) => {
+            vm.$alertT.fire({
+              icon: "success",
+              title: res.message,
+            });
+            vm.getList();
+          });
+        } else {
+          vm.$alertT.fire({
+            icon: "info",
+            title: `已取消刪除`,
+          });
+        }
+      });
+    },
+    handleDelete(driver) {
+      console.log(driver);
+      const vm = this;
+      vm.$swal({
+        title: "刪除提示",
+        text: `確認刪除司機 ${driver.userName} ?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#227294",
+        cancelButtonColor: "#d63737",
+        confirmButtonText: "確定",
+        cancelButtonText: "取消",
+      }).then((result) => {
+        if (result.value) {
+          let ids = [driver.id];
+          console.log(ids);
+          drivers.deleteDriver(ids).then((res) => {
+            vm.$alertT.fire({
+              icon: "success",
+              title: res.message,
+            });
+            vm.getList();
+          });
+        } else {
+          vm.$alertT.fire({
+            icon: "info",
+            title: `已取消刪除`,
+          });
+        }
+      });
     },
   },
   mounted() {
     this.getButtons();
+    this.getList();
   },
 };
 </script>

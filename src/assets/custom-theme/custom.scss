@@ -12,6 +12,21 @@ $dangerHover: #de5f5f;
 $info: #227294;
 $infoHover: #3b91b6;
 $disableGray: #949494;
+// custom
+.is-checked.is-disabled {
+  .el-checkbox__label {
+    color: $primary !important;
+  }
+  .el-checkbox__inner {
+    border-color: $primary !important;
+    background: #fff !important;
+
+    &::after {
+      border-color: $primary !important;
+    }
+  }
+}
+// default
 .custom-theme {
   .fade-in-linear-enter-active,
   .fade-in-linear-leave-active {

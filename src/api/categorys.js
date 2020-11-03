@@ -7,7 +7,7 @@ export function getList(params) {
     params
   })
 }
-
+ 
 export function loadForRole(roleId) {
   return request({
     url: '/categorys/loadForRole',

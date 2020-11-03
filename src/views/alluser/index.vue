@@ -72,7 +72,12 @@
             width="120"
             align="center"
           ></el-table-column>
-          <el-table-column property="setting" label="身份" width="200">
+          <el-table-column
+            property="setting"
+            align="center"
+            label="身份"
+            width="250"
+          >
             <template slot-scope="scope">
               <el-select
                 style="margin-right: 0.5rem"
@@ -97,13 +102,13 @@
           <el-table-column
             property="uid"
             label="身分證字號"
-            width="140"
+            width="160"
             align="center"
           ></el-table-column>
           <el-table-column
             property="birthday"
             label="生日"
-            width="140"
+            width="160"
             align="center"
           >
             <template slot-scope="scope">
@@ -113,7 +118,7 @@
           <el-table-column
             property="sex"
             label="性別"
-            width="70"
+            width="100"
             align="center"
           >
             <template slot-scope="scope">
@@ -965,7 +970,8 @@ export default {
     },
     // 白牌派車
     dispatchSelfPayUser(user) {
-      this.$router.push(`/alluser/dispatchSelfPayUser/${user.uid}`);
+      let caseId = this.roles[user.id].split("-")[1];
+      this.$router.push(`/alluser/dispatchSelfPayUser/${user.id}-${caseId}`);
     },
     handleResetUserTemp() {
       // this.$refs.userForm.resetFields();

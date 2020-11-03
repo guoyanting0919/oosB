@@ -3,12 +3,8 @@
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
         <!-- 權限按鈕 -->
-        <el-button
-          size="mini"
-          @click="$router.push('/selfpayuser/index')"
-          type="success"
-          plain
-          >回上頁</el-button
+        <el-button size="mini" @click="handleSave" type="success" plain
+          >回列表</el-button
         >
       </div>
     </sticky>
@@ -20,43 +16,127 @@
           :label-position="labelPosition"
           label-width="200px"
           :model="temp"
+          :rules="rules"
           ref="form"
         >
           <SubTitle title="基本資料"></SubTitle>
           <el-row :gutter="16">
             <el-col :sm="12" :md="3">
-              <div class="detailLabel">姓名</div>
-              <div class="detailValue">{{ basicTemp.name }}</div>
+              <el-form-item label="姓名">
+                <el-input
+                  disabled
+                  placeholder="請輸入個案姓名"
+                  v-model="basicTemp.name"
+                ></el-input>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="3">
-              <div class="detailLabel">性別</div>
-              <div class="detailValue">{{ basicTemp.sex | sexFilter }}</div>
+              <el-form-item label="性別">
+                <el-select
+                  disabled
+                  clearable
+                  v-model="basicTemp.sex"
+                  placeholder="請選擇性別"
+                  style="width: 100%"
+                >
+                  <el-option :value="1" :label="'男'">男</el-option>
+                  <el-option :value="0" :label="'女'">女</el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">身分證字號</div>
-              <div class="detailValue">{{ basicTemp.uid }}</div>
+              <el-form-item label="身份證字號">
+                <el-input
+                  disabled
+                  v-model="basicTemp.uid"
+                  placeholder="請輸入個案身分證字號"
+                ></el-input>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">生日</div>
-              <div class="detailValue">
-                {{ basicTemp.birthday | dateFilter }}
-              </div>
+              <el-form-item label="生日">
+                <el-date-picker
+                  disabled
+                  v-model="basicTemp.birthday"
+                  type="date"
+                  value-format="yyyy-MM-dd"
+                  placeholder="請選擇生日"
+                  style="width: 100%"
+                ></el-date-picker>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">手機</div>
-              <div class="detailValue">
-                {{ basicTemp.phone }}
-              </div>
+              <el-form-item label="手機">
+                <el-input
+                  disabled
+                  v-model="basicTemp.phone"
+                  placeholder="請輸入手機"
+                ></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
 
           <SubTitle title="白牌資料"></SubTitle>
           <el-row :gutter="16">
             <el-col :sm="24" :md="24">
-              <div class="detailLabel">居住地</div>
-              <div class="detailValue">
-                {{ temp.county }}{{ temp.district }}{{ temp.addr }}
-              </div>
+              <el-form-item label="居住地">
+                <el-row :gutter="16">
+                  <el-col :sm="12" :md="6" style="margin-bottom: 1rem">
+                    <el-form-item prop="county">
+                      <el-select
+                        disabled
+                        @clear="handleClear"
+                        @change="handleClear"
+                        v-model="temp.county"
+                        clearable
+                        placeholder="請選擇居住縣市"
+                        style="width: 100%"
+                      >
+                        <el-option
+                          v-for="(conty, key, index) in taiwanCity"
+                          :key="index"
+                          :value="key"
+                          :label="key"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    :sm="12"
+                    :md="6"
+                    style="margin-bottom: 1rem"
+                    v-if="temp.county"
+                  >
+                    <el-form-item prop="district">
+                      <el-select
+                        @clear="handleClear"
+                        disabled
+                        v-model="temp.district"
+                        placeholder="請選擇居住區域"
+                        style="width: 100%"
+                      >
+                        <el-option
+                          v-for="(district, key, index) in taiwanCity[
+                            temp.county
+                          ]"
+                          :key="index"
+                          :value="district.value"
+                          :label="district.label"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :sm="24" :md="12" v-if="temp.district">
+                    <el-form-item prop="addr">
+                      <el-input
+                        disabled
+                        placeholder="請輸入居住地址"
+                        v-model="temp.addr"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -69,7 +149,6 @@
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
 import SubTitle from "@/components/SubTitle";
-import moment from "moment";
 import * as taiwan from "@/assets/taiwan.js";
 import * as users from "@/api/users";
 import * as selfPayUsers from "@/api/selfPayUsers";
@@ -83,6 +162,7 @@ export default {
   data() {
     return {
       taiwanCity: "",
+
       // 表單相關
       labelPosition: "top",
       basicTemp: {
@@ -97,6 +177,12 @@ export default {
         county: "", //居住縣市
         district: "", //居住區域
         addr: "", //居住地址
+      },
+      rules: {
+        // Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
+        county: [{ required: true, message: "必填欄位", tigger: "change" }],
+        district: [{ required: true, message: "必填欄位", tigger: "change" }],
+        addr: [{ required: true, message: "必填欄位", tigger: "blur" }],
       },
     };
   },
@@ -120,28 +206,40 @@ export default {
         .get({ id: vm.$route.params.id.split("-")[1] })
         .then((res) => {
           vm.temp = Object.assign({}, res.result); // copy obj
+
+          console.log(res);
         });
     },
-  },
 
-  filters: {
-    sexFilter(sex) {
-      if (sex) {
-        return "男";
-      } else {
-        return "女";
-      }
+    handleSave() {
+      const vm = this;
+      vm.$refs.form.validate((valid) => {
+        if (valid) {
+          console.log(vm.temp);
+          selfPayUsers.update(vm.temp).then((res) => {
+            console.log(res);
+            vm.$alertT.fire({
+              icon: "success",
+              title: `用戶${vm.basicTemp.name} 白牌身份編輯成功`,
+            });
+            vm.$router.push("/alluser/index");
+            // vm.getSelfPayUser();
+          });
+        } else {
+          console.log("submit error");
+        }
+      });
     },
-    dateFilter(date) {
-      let res = moment(date).format("YYYY-MM-DD");
-      return res;
+
+    handleClear() {
+      this.temp.district = "";
+      this.temp.addr = "";
     },
   },
-
-  async mounted() {
+  mounted() {
     this.getUserBasic();
-    this.taiwanCity = taiwan.cityAndCountiesLite;
     this.getSelfPayUser();
+    this.taiwanCity = taiwan.cityAndCountiesLite;
   },
 };
 </script>
@@ -149,43 +247,5 @@ export default {
 <style lang="scss" scoped>
 .wealBtn {
   padding: 4px 8px;
-}
-.formTitle {
-  font-size: 18px;
-  color: #fd8115;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-  // transform: translateX(-8px);
-  padding-bottom: 0.5rem;
-  // border-bottom: 1px solid #fd8115;
-  display: flex;
-
-  .timeSelect {
-    margin-right: 1rem;
-    font-size: 16px;
-    padding: 0px 16px;
-    border: 1px solid #fd8115;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-.detailLabel {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  color: #606266;
-  font-weight: 700;
-}
-.detailValue {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  color: #606266;
-  border-bottom: 1px dashed #fd8115;
-  margin-bottom: 1rem;
 }
 </style>

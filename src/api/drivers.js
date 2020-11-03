@@ -2,14 +2,14 @@ import request from "@/utils/request";
 
 export function load(params) {
   return request({
-    url: "/caseusers/load",
+    url: "/driverInfos/load",
     method: "get",
     params,
   });
 }
 export function get(params) {
   return request({
-    url: "/caseusers/get",
+    url: "/driverInfos/get",
     method: "get",
     params,
   });
@@ -17,17 +17,25 @@ export function get(params) {
  
 export function add(data) {
   return request({
-    url: "/caseusers/addorupdate",
+    url: "/driverInfos/add",
+    method: "post",
+    data,
+  });
+}
+export function update(data) {
+  return request({
+    url: "/driverInfos/update",
     method: "post",
     data,
   });
 }
 
-// 修改B單位
-export function updateUnitB(data) {
+export function deleteDriver(data) {
   return request({
-    url: "/caseusers/updateorgb",
+    url: "/driverInfos/delete",
     method: "post",
     data,
   });
 }
+
+

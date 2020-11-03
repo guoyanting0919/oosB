@@ -1,9 +1,17 @@
 <template>
-  <div class="flex-column driverEdit">
+  <div class="flex-column driverAdd">
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
-        <el-button type="info" plain size="mini">回列表</el-button>
-        <el-button type="success" size="mini">儲存</el-button>
+        <el-button
+          type="info"
+          plain
+          size="mini"
+          @click="$router.push('/driver/index')"
+          >回列表</el-button
+        >
+        <el-button @click="handleSave" type="success" size="mini"
+          >儲存</el-button
+        >
       </div>
     </sticky>
     <div class="app-container flex-item">
@@ -19,83 +27,80 @@
           <SubTitle title="基本資料編輯"></SubTitle>
           <el-row :gutter="16">
             <el-col :sm="12" :md="6">
-              <div class="uploadPic"></div>
+              <el-form-item label="姓名" prop="name">
+                <el-input
+                  v-model="temp.name"
+                  placeholder="請輸入姓名"
+                ></el-input>
+              </el-form-item>
             </el-col>
-            <el-col :sm="12" :md="18">
-              <el-row :gutter="16">
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="姓名" prop="Id">
-                    <el-input
-                      v-model="temp.Id"
-                      placeholder="請輸入姓名"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="身分證字號" prop="Id">
-                    <el-input
-                      disabled
-                      v-model="temp.Id"
-                      placeholder="請輸入身分證字號"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="手機" prop="Id">
-                    <el-input
-                      disabled
-                      v-model="temp.Id"
-                      placeholder="請輸入手機"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="8">
-                  <el-form-item label="可否派發" prop="Id">
-                    <el-select
-                      v-model="temp.Id"
-                      placeholder="請選擇可否派發"
-                      style="width:100%"
-                    >
-                      <el-option :value="1" :label="'可派發'">可派發</el-option>
-                      <el-option :value="2" :label="'不可派發'"
-                        >不可派發</el-option
-                      >
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :sm="12" :md="16">
-                  <el-form-item label="車行" prop="Id">
-                    <el-input
-                      disabled
-                      v-model="temp.Id"
-                      placeholder="請輸入身分證字號"
-                    ></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="身分證字號" prop="uid">
+                <el-input
+                  v-model="temp.uid"
+                  placeholder="請輸入身分證字號"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="手機" prop="phone">
+                <el-input
+                  v-model="temp.phone"
+                  placeholder="請輸入手機"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="性別" prop="sex">
+                <el-select
+                  v-model="temp.sex"
+                  placeholder="請選擇性別"
+                  style="width: 100%"
+                >
+                  <el-option :value="1" :label="'男'">男</el-option>
+                  <el-option :value="0" :label="'女'">女</el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="6">
+              <el-form-item label="可否派發" prop="status">
+                <el-select
+                  v-model="temp.status"
+                  placeholder="請選擇可否派發"
+                  style="width: 100%"
+                >
+                  <el-option :value="1" :label="'可派發'">可派發</el-option>
+                  <el-option :value="0" :label="'不可派發'">不可派發</el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
           </el-row>
-          <SubTitle title="駕照"></SubTitle>
+
+          <SubTitle title="司機證照"></SubTitle>
           <div class="tableContainer">
             <div class="tableHeader">
-              <div class="headerCheckBox">駕駛類型</div>
-              <div class="expireDate">駕照到期日</div>
+              <div class="headerCheckBox">證照類型</div>
+              <div class="expireDate">證照到期日</div>
             </div>
-            <el-checkbox-group v-model="temp.Type">
+            <el-checkbox-group v-model="temp.driverLicenses">
               <div
-                v-for="item in 2"
-                :key="item"
-                style="border-bottom:1px solid #ddd;display:flex"
+                v-for="license in driverLicensesList"
+                :key="license.categoryId"
+                style="border-bottom: 1px solid #ddd; display: flex"
               >
                 <el-checkbox
-                  label="職業小客車"
+                  :label="license.categoryId"
                   name="type"
-                  style="width:50%;text-align:center;padding:1rem"
-                ></el-checkbox>
+                  style="width: 50%; text-align: center; padding: 1rem"
+                >
+                  {{ license.categoryName }}
+                </el-checkbox>
                 <div class="expireDateBox">
                   <el-date-picker
-                    style="width:70%"
-                    v-model="temp.Id"
+                    style="width: 70%"
+                    :disabled="hasChecked(license.categoryId)"
+                    v-model="license.expireDate"
+                    value-format="yyyy-MM-dd"
                     type="date"
                     size="mini"
                     placeholder="選擇日期"
@@ -111,21 +116,24 @@
               <div class="headerCheckBox">保險類型</div>
               <div class="expireDate">保險到期日</div>
             </div>
-            <el-checkbox-group v-model="temp.Type">
+            <el-checkbox-group v-model="temp.driverInsurance">
               <div
-                v-for="item in 2"
-                :key="item"
-                style="border-bottom:1px solid #ddd;display:flex"
+                v-for="insurance in driverInsurancesList"
+                :key="insurance.categoryId"
+                style="border-bottom: 1px solid #ddd; display: flex"
               >
                 <el-checkbox
-                  label="勞保"
-                  name="type"
-                  style="width:50%;text-align:center;padding:1rem"
-                ></el-checkbox>
+                  :label="insurance.categoryId"
+                  style="width: 50%; text-align: center; padding: 1rem"
+                >
+                  {{ insurance.categoryName }}
+                </el-checkbox>
                 <div class="expireDateBox">
                   <el-date-picker
-                    style="width:70%"
-                    v-model="temp.Id"
+                    :disabled="hasCheckedI(insurance.categoryId)"
+                    style="width: 70%"
+                    value-format="yyyy-MM-dd"
+                    v-model="insurance.expireDate"
                     type="date"
                     size="mini"
                     placeholder="選擇日期"
@@ -135,7 +143,7 @@
             </el-checkbox-group>
           </div>
 
-          <SubTitle title="證照"></SubTitle>
+          <!-- <SubTitle title="證照"></SubTitle>
           <div class="tableContainer">
             <div class="tableHeader">
               <div class="headerCheckBox">持有證照</div>
@@ -145,16 +153,16 @@
               <div
                 v-for="item in 2"
                 :key="item"
-                style="border-bottom:1px solid #ddd;display:flex"
+                style="border-bottom: 1px solid #ddd; display: flex"
               >
                 <el-checkbox
                   label="計程車執業登記證"
                   name="type"
-                  style="width:50%;text-align:center;padding:1rem"
+                  style="width: 50%; text-align: center; padding: 1rem"
                 ></el-checkbox>
                 <div class="expireDateBox">
                   <el-date-picker
-                    style="width:70%"
+                    style="width: 70%"
                     v-model="temp.Id"
                     type="date"
                     size="mini"
@@ -163,14 +171,14 @@
                 </div>
               </div>
             </el-checkbox-group>
-          </div>
+          </div> -->
 
           <SubTitle title="備註"></SubTitle>
           <el-input
             type="textarea"
             :rows="2"
-            placeholder="请输入内容"
-            v-model="temp.Id"
+            placeholder="請输入内容"
+            v-model="temp.remark"
           ></el-input>
         </el-form>
       </div>
@@ -182,8 +190,11 @@
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
 import SubTitle from "@/components/SubTitle";
+import { mapGetters } from "vuex";
+import * as categorys from "@/api/categorys";
+import * as drivers from "@/api/drivers";
 export default {
-  name: "driverEdit",
+  name: "driverAdd",
   components: {
     Sticky,
     Title,
@@ -192,19 +203,26 @@ export default {
   data() {
     return {
       labelPosition: "top",
+      // 司機證照
+      driverLicensesList: [],
+      // 司機保險
+      driverInsurancesList: [],
+      assignObj: "",
       temp: {
-        Id: "",
-        cuty: "",
-        Type: [],
-        lun: [
-          {
-            value1: "",
-            value2: "",
-            value3: "",
-            value4: "",
-            value5: "",
-          },
-        ],
+        id: "",
+        userId: "",
+        account: "",
+        password: "",
+        uid: "",
+        name: "",
+        pic: "",
+        orgId: "",
+        sex: null,
+        status: 1,
+        phone: "",
+        remark: "",
+        driverLicenses: [],
+        driverInsurance: [],
       },
       rules: {
         Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
@@ -213,6 +231,126 @@ export default {
         ],
       },
     };
+  },
+  computed: {
+    ...mapGetters(["defaultorgid"]),
+    driverInsurancesChecked() {
+      return this.driverInsurancesList.filter((option) =>
+        this.temp.driverInsurance.some(
+          (checked) => checked === option.categoryId
+        )
+      );
+    },
+    driverLicensesChecked() {
+      return this.driverLicensesList.filter((option) =>
+        this.temp.driverLicenses.some(
+          (checked) => checked === option.categoryId
+        )
+      );
+    },
+  },
+  methods: {
+    // 獲取司機
+    async getList() {
+      const vm = this;
+      await drivers.get({ id: vm.$route.params.id }).then((res) => {
+        console.log(res.result);
+        vm.assignObj = JSON.parse(JSON.stringify(res.result));
+
+        let resClone = JSON.parse(JSON.stringify(res.result));
+        let replaceKey = ["driverLicenses", "driverInsurance"];
+
+        replaceKey.forEach((item, index, arr) => {
+          resClone[arr[index]] = resClone[arr[index]].map(
+            (item1) => item1?.categoryId
+          );
+        });
+        vm.temp = resClone;
+        // console.log(vm.temp);
+      });
+    },
+    // 獲取司機證照
+    getDriverLicenses() {
+      const vm = this;
+      let query = {
+        page: 1,
+        limit: 20,
+        TypeId: "SYS_DRIVER_LICENSE",
+      };
+      categorys.getList(query).then((res) => {
+        res.data.forEach((license) => {
+          let obj = {};
+          obj.categoryId = license.id;
+          obj.categoryName = license.name;
+          obj.expireDate = "";
+          vm.driverLicensesList.push(obj);
+        });
+        vm.driverLicensesList.forEach((i) => {
+          let arr = vm.assignObj.driverLicenses.filter((d) => {
+            return d.categoryId === i.categoryId;
+          });
+          i.expireDate = arr[0]?.expireDate;
+        });
+      });
+    },
+    //獲取所有保險項目
+    getDriverInsurances() {
+      const vm = this;
+      let query = {
+        page: 1,
+        limit: 20,
+        TypeId: "SYS_DRIVER_INSURANCE",
+      };
+      categorys.getList(query).then((res) => {
+        res.data.forEach((insurances) => {
+          let obj = {};
+          obj.categoryId = insurances.id;
+          obj.categoryName = insurances.name;
+          obj.expireDate = "";
+          vm.driverInsurancesList.push(obj);
+        });
+        vm.driverInsurancesList.forEach((i) => {
+          console.log("aaaa");
+          let arr = vm.assignObj.driverInsurance.filter((d) => {
+            return d.categoryId === i.categoryId;
+          });
+          i.expireDate = arr[0]?.expireDate;
+        });
+      });
+    },
+
+    // 確認編輯司機
+    handleSave() {
+      const vm = this;
+      vm.temp.account = vm.temp.uid;
+      vm.temp.password = vm.temp.phone;
+      console.log(vm.temp);
+      let obj = JSON.parse(JSON.stringify(vm.temp));
+      obj.driverLicenses = vm.driverLicensesChecked;
+      obj.driverInsurance = vm.driverInsurancesChecked;
+      console.log(obj);
+      drivers.update(obj).then(() => {
+        // console.log(res);
+        vm.$router.push("/driver/index");
+        vm.$alertT.fire({
+          icon: "success",
+          title: `司機 ${obj.name} 修改成功`,
+        });
+      });
+    },
+
+    // 檢查是否勾選
+    hasChecked(id) {
+      return !this.temp.driverLicenses.includes(id);
+    },
+    hasCheckedI(id) {
+      return !this.temp.driverInsurance.includes(id);
+    },
+  },
+  async mounted() {
+    await this.getList();
+    this.getDriverLicenses();
+    this.getDriverInsurances();
   },
 };
 </script>

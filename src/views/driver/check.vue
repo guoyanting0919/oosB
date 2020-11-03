@@ -2,14 +2,17 @@
   <div class="flex-column driverAdd">
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
-        <el-button type="info" plain size="mini">回列表</el-button>
-        <el-button @click="handleSave" type="success" size="mini"
-          >儲存</el-button
+        <el-button
+          type="info"
+          plain
+          size="mini"
+          @click="$router.push('/driver/index')"
+          >回列表</el-button
         >
       </div>
     </sticky>
     <div class="app-container flex-item">
-      <Title title="新增司機"></Title>
+      <Title title="編輯司機"></Title>
       <div class="bg-white formContainer customScrollBar">
         <el-form
           :label-position="labelPosition"
@@ -23,6 +26,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="姓名" prop="name">
                 <el-input
+                  disabled
                   v-model="temp.name"
                   placeholder="請輸入姓名"
                 ></el-input>
@@ -31,6 +35,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="身分證字號" prop="uid">
                 <el-input
+                  disabled
                   v-model="temp.uid"
                   placeholder="請輸入身分證字號"
                 ></el-input>
@@ -39,6 +44,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="手機" prop="phone">
                 <el-input
+                  disabled
                   v-model="temp.phone"
                   placeholder="請輸入手機"
                 ></el-input>
@@ -47,6 +53,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="性別" prop="sex">
                 <el-select
+                  disabled
                   v-model="temp.sex"
                   placeholder="請選擇性別"
                   style="width: 100%"
@@ -59,6 +66,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="可否派發" prop="status">
                 <el-select
+                  disabled
                   v-model="temp.status"
                   placeholder="請選擇可否派發"
                   style="width: 100%"
@@ -83,6 +91,7 @@
                 style="border-bottom: 1px solid #ddd; display: flex"
               >
                 <el-checkbox
+                  disabled
                   :label="license.categoryId"
                   name="type"
                   style="width: 50%; text-align: center; padding: 1rem"
@@ -91,8 +100,8 @@
                 </el-checkbox>
                 <div class="expireDateBox">
                   <el-date-picker
+                    disabled
                     style="width: 70%"
-                    :disabled="hasChecked(license.categoryId)"
                     v-model="license.expireDate"
                     value-format="yyyy-MM-dd"
                     type="date"
@@ -117,6 +126,7 @@
                 style="border-bottom: 1px solid #ddd; display: flex"
               >
                 <el-checkbox
+                  disabled
                   :label="insurance.categoryId"
                   style="width: 50%; text-align: center; padding: 1rem"
                 >
@@ -124,7 +134,7 @@
                 </el-checkbox>
                 <div class="expireDateBox">
                   <el-date-picker
-                    :disabled="hasCheckedI(insurance.categoryId)"
+                    disabled
                     style="width: 70%"
                     value-format="yyyy-MM-dd"
                     v-model="insurance.expireDate"
@@ -171,6 +181,7 @@
           <el-input
             type="textarea"
             :rows="2"
+            disabled
             placeholder="請输入内容"
             v-model="temp.remark"
           ></el-input>
@@ -201,6 +212,7 @@ export default {
       driverLicensesList: [],
       // 司機保險
       driverInsurancesList: [],
+      assignObj: "",
       temp: {
         id: "",
         userId: "",
@@ -243,6 +255,25 @@ export default {
     },
   },
   methods: {
+    // 獲取司機
+    async getList() {
+      const vm = this;
+      await drivers.get({ id: vm.$route.params.id }).then((res) => {
+        console.log(res.result);
+        vm.assignObj = JSON.parse(JSON.stringify(res.result));
+
+        let resClone = JSON.parse(JSON.stringify(res.result));
+        let replaceKey = ["driverLicenses", "driverInsurance"];
+
+        replaceKey.forEach((item, index, arr) => {
+          resClone[arr[index]] = resClone[arr[index]].map(
+            (item1) => item1?.categoryId
+          );
+        });
+        vm.temp = resClone;
+        // console.log(vm.temp);
+      });
+    },
     // 獲取司機證照
     getDriverLicenses() {
       const vm = this;
@@ -256,7 +287,14 @@ export default {
           let obj = {};
           obj.categoryId = license.id;
           obj.categoryName = license.name;
+          obj.expireDate = "";
           vm.driverLicensesList.push(obj);
+        });
+        vm.driverLicensesList.forEach((i) => {
+          let arr = vm.assignObj.driverLicenses.filter((d) => {
+            return d.categoryId === i.categoryId;
+          });
+          i.expireDate = arr[0]?.expireDate;
         });
       });
     },
@@ -276,13 +314,19 @@ export default {
           obj.expireDate = "";
           vm.driverInsurancesList.push(obj);
         });
+        vm.driverInsurancesList.forEach((i) => {
+          console.log("aaaa");
+          let arr = vm.assignObj.driverInsurance.filter((d) => {
+            return d.categoryId === i.categoryId;
+          });
+          i.expireDate = arr[0]?.expireDate;
+        });
       });
     },
 
-    // 確認新增司機
+    // 確認編輯司機
     handleSave() {
       const vm = this;
-      vm.temp.orgId = vm.defaultorgid;
       vm.temp.account = vm.temp.uid;
       vm.temp.password = vm.temp.phone;
       console.log(vm.temp);
@@ -290,13 +334,9 @@ export default {
       obj.driverLicenses = vm.driverLicensesChecked;
       obj.driverInsurance = vm.driverInsurancesChecked;
       console.log(obj);
-      drivers.add(obj).then(() => {
-        // console.log(res);
-        vm.$alertT.fire({
-          icon: "success",
-          title: `司機 ${obj.name} 新增成功`,
-        });
-        vm.$router.push("/driver/index");
+      drivers.update(obj).then((res) => {
+        console.log(res);
+        // vm.$router.push("/car/index");
       });
     },
 
@@ -308,7 +348,8 @@ export default {
       return !this.temp.driverInsurance.includes(id);
     },
   },
-  mounted() {
+  async mounted() {
+    await this.getList();
     this.getDriverLicenses();
     this.getDriverInsurances();
   },

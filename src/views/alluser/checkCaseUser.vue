@@ -560,19 +560,18 @@ export default {
       let index = Number(levelId);
       return arr[index];
     },
-    orgAIdFilter(orgAid,unitAs){
-     if(unitAs!=''){
-        let res = unitAs?.filter(unit=>{
-        return unit.id ===orgAid
-      })
-      // console.log(res)
-      if(res.length > 0){
-        return res[0].name
-      }else{
-        return false
+    orgAIdFilter(orgAid, unitAs) {
+      if (unitAs != "") {
+        let res = unitAs?.filter((unit) => {
+          return unit.id === orgAid;
+        });
+        // console.log(res)
+        if (res.length > 0) {
+          return res[0].name;
+        } else {
+          return false;
+        }
       }
-      }
-     
     },
     caseUserStatusFilter(status) {
       if (Number(status)) {

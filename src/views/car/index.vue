@@ -4,7 +4,7 @@
       <div class="filter-container">
         <!-- 關鍵字搜尋 -->
         <el-input
-          style="width:200px;margin-right:0.5rem"
+          style="width: 200px; margin-right: 0.5rem"
           size="mini"
           v-model="value"
           clearable
@@ -35,16 +35,17 @@
     </sticky>
     <div class="app-container flex-item">
       <Title title="車輛資料"></Title>
-      <div class="bg-white" style="height: 93%;">
+      <div class="bg-white" style="height: 93%">
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"
-          :data="gridData"
-          v-if="gridData"
+          :data="list"
+          v-if="list"
+          v-loading="listLoading"
           border
           fit
           highlight-current-row
-          style="width: 100%;"
+          style="width: 100%"
           @selection-change="handleSelectionChange"
           @row-click="rowClick"
         >
@@ -53,48 +54,66 @@
             width="55"
             align="center"
           ></el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             property="pic"
             label="照片"
             width="80"
             align="center"
-          ></el-table-column>
+          ></el-table-column> -->
           <el-table-column
-            property="name"
+            property="carNo"
             label="車牌號碼"
             width="120"
             align="center"
           ></el-table-column>
           <el-table-column
-            property="uid"
+            property="carCategoryId"
             label="車輛類別"
             min-width="140"
             align="center"
+          >
+            <template slot-scope="scope">
+              <span>{{
+                scope.row.carCategoryId | carCategoryFilter(carCategorysList)
+              }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            property="carTop"
+            label="車頂高度"
+            width="120"
+            align="center"
           ></el-table-column>
           <el-table-column
-            property="phone"
+            property="factoryType"
             label="廠牌型號"
             width="170"
             align="center"
           ></el-table-column>
           <el-table-column
-            property="tel"
+            property="wheelchairNum"
             label="輪椅數量"
             min-width="170"
             align="center"
           ></el-table-column>
           <el-table-column
-            property="tel"
+            property="seatNum"
             label="座椅數量"
             min-width="170"
             align="center"
           ></el-table-column>
           <el-table-column
-            property="tel"
+            property="driverInfoId"
             label="司機姓名"
             min-width="170"
             align="center"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              <span>{{
+                scope.row.driverInfoId | driverFilter(driverList)
+              }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             property="status"
             label="狀態"
@@ -127,13 +146,13 @@
                   size="mini"
                   type="success"
                   @click="handleDetail(scope.row)"
-                  v-if="hasButton('detail')"
+                  v-if="hasButton('check')"
                   >檢視</el-button
                 >
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="getButtons(scope)"
+                  @click="handleDelete(scope.row)"
                   v-if="hasButton('delete')"
                   >刪除</el-button
                 >
@@ -146,6 +165,7 @@
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
+          @pagination="handleCurrentChange"
         />
       </div>
     </div>
@@ -157,6 +177,9 @@ import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
 import permissionBtn from "@/components/PermissionBtn";
 import Pagination from "@/components/Pagination";
+import * as cars from "@/api/cars";
+import * as categorys from "@/api/categorys";
+import * as drivers from "@/api/drivers";
 export default {
   name: "car",
   components: {
@@ -191,55 +214,38 @@ export default {
           label: "北京烤鸭",
         },
       ],
+      // 司機列表
+      driverList: [],
+      //車輛類型列表
+      carCategorysList: [],
       // main data
-      total: 200,
+      list: [],
+      listLoading: false,
+      total: 0,
       listQuery: {
-        page: 20,
+        page: 1,
         limit: 20,
+        key: undefined,
+        OrgId: "",
       },
       multipleSelection: [], // 列表checkbox選中的值
-      gridData: [
-        {
-          lock: 1,
-          pic: "Ｏ",
-          name: "NKNFF",
-          code: "109X20404",
-          uid: "A203******",
-          birth: "1954-07-18",
-          sex: 0,
-          phone: "0921079303",
-          tel: "職業小客車",
-          status: 1,
-          setting: "功能按鈕",
-        },
-        {
-          lock: 1,
-          pic: "Ｏ",
-          name: "F23GS",
-          code: "109X20404",
-          uid: "A203******",
-          birth: "1954-07-18",
-          sex: 0,
-          phone: "0921079303",
-          tel: "職業小客車",
-          status: 0,
-          setting: "功能按鈕",
-        },
-        {
-          lock: 0,
-          pic: "Ｏ",
-          name: "KK39J",
-          code: "109X20404",
-          uid: "A203******",
-          birth: "1954-07-18",
-          sex: 1,
-          phone: "0921079303",
-          tel: "職業小客車",
-          status: 1,
-          setting: "功能按鈕",
-        },
-      ],
     };
+  },
+  filters: {
+    carCategoryFilter(id, carCategorysList) {
+      // const vm = this;
+      let arr = carCategorysList?.filter((category) => {
+        return category.id === id;
+      });
+      return arr[0]?.name;
+    },
+    driverFilter(id, driverList) {
+      // const vm = this;
+      let arr = driverList?.filter((category) => {
+        return category.id === id;
+      });
+      return arr[0]?.userName;
+    },
   },
   methods: {
     // 是否為移動端
@@ -262,7 +268,40 @@ export default {
     hasButton(domId) {
       return this.buttons.includes(domId);
     },
-
+    // 獲取所有車輛
+    getList() {
+      const vm = this;
+      vm.listLoading = true;
+      cars.load(vm.listQuery).then((res) => {
+        vm.list = res.data;
+        vm.total = res.count;
+        vm.listLoading = false;
+      });
+    },
+    //獲取所有司機
+    getDrivers() {
+      const vm = this;
+      let query = {
+        page: 1,
+        limit: 999,
+      };
+      drivers.load(query).then((res) => {
+        console.log(res);
+        vm.driverList = res.data;
+      });
+    },
+    //獲取所有車輛類別
+    getCarCategorys() {
+      const vm = this;
+      let query = {
+        page: 1,
+        limit: 20,
+        TypeId: "SYS_CAR",
+      };
+      categorys.getList(query).then((res) => {
+        vm.carCategorysList = res.data;
+      });
+    },
     // table 功能
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -271,37 +310,101 @@ export default {
       this.$refs.mainTable.clearSelection();
       this.$refs.mainTable.toggleRowSelection(row);
     },
+    // 換頁
+    handleCurrentChange(val) {
+      this.listQuery.page = val.page;
+      this.listQuery.limit = val.limit;
+      this.getList();
+    },
 
     // 主要功能按鈕
     onBtnClicked(domId) {
       console.log(domId);
       switch (domId) {
-        case "unitB":
-          if (this.multipleSelection.length !== 1) {
-            this.$message({
-              message: "只能選中一個進行編輯",
-              type: "error",
-            });
-            return;
-          }
-          this.handleUnitB(this.multipleSelection[0]);
-          break;
         case "add":
           this.$router.push("/car/add/1");
+          break;
+        case "delete":
+          if (this.multipleSelection.length !== 0) {
+            this.handleDeleteCars(this.multipleSelection);
+          }
           break;
         default:
           break;
       }
     },
-    handleDetail(driver) {
-      this.$router.push(`/car/detail/${driver.uid}`);
+    handleDetail(car) {
+      this.$router.push(`/car/check/${car.id}`);
     },
-    handleEdit(driver) {
-      this.$router.push(`/car/edit/${driver.uid}`);
+    handleEdit(car) {
+      console.log(car);
+      this.$router.push(`/car/edit/${car.id}`);
+    },
+    handleDeleteCars(car) {
+      const vm = this;
+      vm.$swal({
+        title: "刪除提示",
+        text: `確認刪除已選取車輛?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#227294",
+        cancelButtonColor: "#d63737",
+        confirmButtonText: "確定",
+        cancelButtonText: "取消",
+      }).then((result) => {
+        if (result.value) {
+          let ids = car.map((c) => c.id);
+          cars.deleteCar(ids).then((res) => {
+            vm.$alertT.fire({
+              icon: "success",
+              title: res.message,
+            });
+            vm.getList();
+          });
+        } else {
+          vm.$alertT.fire({
+            icon: "info",
+            title: `已取消刪除`,
+          });
+        }
+      });
+    },
+    handleDelete(car) {
+      const vm = this;
+      vm.$swal({
+        title: "刪除提示",
+        text: `確認刪除車輛 車牌號碼：${car.carNo} ?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#227294",
+        cancelButtonColor: "#d63737",
+        confirmButtonText: "確定",
+        cancelButtonText: "取消",
+      }).then((result) => {
+        if (result.value) {
+          let ids = [car.id];
+          console.log(ids);
+          cars.deleteCar(ids).then((res) => {
+            vm.$alertT.fire({
+              icon: "success",
+              title: res.message,
+            });
+            vm.getList();
+          });
+        } else {
+          vm.$alertT.fire({
+            icon: "info",
+            title: `已取消刪除`,
+          });
+        }
+      });
     },
   },
   mounted() {
     this.getButtons();
+    this.getList();
+    this.getCarCategorys();
+    this.getDrivers();
   },
 };
 </script>

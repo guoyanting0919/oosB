@@ -2,16 +2,13 @@
   <div class="flex-column carAdd">
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
-        <el-button type="info" plain size="mini" @click="handleBack"
+        <el-button type="info" @click="handleBack" plain size="mini"
           >回列表</el-button
-        >
-        <el-button @click="handleSave" type="success" size="mini"
-          >儲存</el-button
         >
       </div>
     </sticky>
     <div class="app-container flex-item">
-      <Title title="新增車輛"></Title>
+      <Title title="檢視車輛"></Title>
       <div class="bg-white formContainer customScrollBar">
         <el-form
           :label-position="labelPosition"
@@ -25,6 +22,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="車牌號碼" prop="carNo">
                 <el-input
+                  disabled
                   v-model="temp.carNo"
                   placeholder="請輸入車牌號碼"
                 ></el-input>
@@ -33,6 +31,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="車輛類別" prop="carCategoryId">
                 <el-select
+                  disabled
                   v-model="temp.carCategoryId"
                   placeholder="請選擇車輛類別"
                   style="width: 100%"
@@ -50,6 +49,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="車輛顏色" prop="carColor">
                 <el-input
+                  disabled
                   v-model="temp.carColor"
                   placeholder="請輸入車輛顏色"
                 ></el-input>
@@ -58,6 +58,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="廠牌型號" prop="factoryType">
                 <el-input
+                  disabled
                   v-model="temp.factoryType"
                   placeholder="請輸入廠牌型號"
                 ></el-input>
@@ -66,19 +67,21 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="車輛來源" prop="carFrom">
                 <el-select
+                  disabled
                   v-model="temp.carFrom"
                   placeholder="請選擇車輛來源"
                   style="width: 100%"
                 >
-                  <el-option :value="'1'" :label="'自助'">自助</el-option>
-                  <el-option :value="'2'" :label="'自購'">自購</el-option>
-                  <el-option :value="'3'" :label="'捐贈'">捐贈</el-option>
+                  <el-option :value="'1'" :label="'自助'"></el-option>
+                  <el-option :value="'2'" :label="'自購'"></el-option>
+                  <el-option :value="'3'" :label="'捐贈'"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
               <el-form-item label="捐贈單位" prop="donationUnit">
                 <el-input
+                  disabled
                   v-model="temp.donationUnit"
                   placeholder="請輸入捐贈單位"
                 ></el-input>
@@ -87,6 +90,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="座椅數量" prop="seatNum">
                 <el-input-number
+                  disabled
                   style="width: 100%"
                   v-model="temp.seatNum"
                   :min="0"
@@ -97,6 +101,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="輪椅數量" prop="wheelchairNum">
                 <el-input-number
+                  disabled
                   style="width: 100%"
                   v-model="temp.wheelchairNum"
                   :min="0"
@@ -107,6 +112,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="車身高度" prop="carTop">
                 <el-input
+                  disabled
                   v-model="temp.carTop"
                   placeholder="請輸入捐贈單位"
                 ></el-input>
@@ -118,6 +124,7 @@
                   v-model="temp.driverInfoId"
                   placeholder="請選擇司機"
                   style="width: 100%"
+                  disabled
                 >
                   <el-option
                     v-for="driver in driverList"
@@ -131,6 +138,7 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="可否派發" prop="status">
                 <el-select
+                  disabled
                   v-model="temp.status"
                   placeholder="請選擇可否派發"
                   style="width: 100%"
@@ -143,21 +151,23 @@
             <el-col :sm="12" :md="6">
               <el-form-item label="出廠年月" prop="makeDate">
                 <el-date-picker
+                  disabled
                   v-model="temp.makeDate"
                   type="date"
+                  value-format="yyyy-MM-dd"
                   placeholder="請選擇出廠年月"
                   style="width: 100%"
-                  value-format="yyyy-MM-dd"
                 ></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
               <el-form-item label="最後驗車日" prop="lastCheckDate">
                 <el-date-picker
+                  disabled
                   v-model="temp.lastCheckDate"
                   type="date"
-                  placeholder="請選擇最後驗車日"
                   value-format="yyyy-MM-dd"
+                  placeholder="請選擇最後驗車日"
                   style="width: 100%"
                 ></el-date-picker>
               </el-form-item>
@@ -176,6 +186,7 @@
           <el-form-item label="" prop="carDevices">
             <el-checkbox-group v-model="temp.carDevices">
               <el-checkbox
+                disabled
                 v-for="device in carDevicesList"
                 :key="device.categoryId"
                 :label="device.categoryId"
@@ -188,6 +199,7 @@
           <el-form-item label="" prop="carLicenses">
             <el-checkbox-group v-model="temp.carLicenses">
               <el-checkbox
+                disabled
                 v-for="license in carLicensesList"
                 :key="license.categoryId"
                 :label="license.categoryId"
@@ -209,6 +221,7 @@
                 style="border-bottom: 1px solid #ddd; display: flex"
               >
                 <el-checkbox
+                  disabled
                   :label="insurance.categoryId"
                   style="width: 50%; text-align: center; padding: 1rem"
                 >
@@ -216,13 +229,13 @@
                 </el-checkbox>
                 <div class="expireDateBox">
                   <el-date-picker
-                    :disabled="hasChecked(insurance.categoryId)"
+                    disabled
                     style="width: 70%"
                     v-model="insurance.expireDate"
                     type="date"
-                    value-format="yyyy-MM-dd"
                     size="mini"
                     placeholder="選擇日期"
+                    value-format="yyyy-MM-dd"
                   ></el-date-picker>
                 </div>
               </div>
@@ -231,6 +244,7 @@
 
           <SubTitle title="備註"></SubTitle>
           <el-input
+            disabled
             type="textarea"
             :rows="2"
             placeholder="请输入内容"
@@ -271,6 +285,7 @@ export default {
       carInsurancesList: [],
 
       labelPosition: "top",
+      assignObj: "",
       temp: {
         id: "",
         orgId: "",
@@ -331,6 +346,25 @@ export default {
       drivers.load(query).then((res) => {
         console.log(res);
         vm.driverList = res.data;
+      });
+    },
+    // 獲取車輛資料
+    async getList() {
+      const vm = this;
+      await cars.get({ id: vm.$route.params.id }).then((res) => {
+        // console.log(res.result);
+        vm.assignObj = JSON.parse(JSON.stringify(res.result));
+
+        let resClone = JSON.parse(JSON.stringify(res.result));
+        let replaceKey = ["carDevices", "carInsurances", "carLicenses"];
+
+        replaceKey.forEach((item, index, arr) => {
+          resClone[arr[index]] = resClone[arr[index]].map(
+            (item1) => item1?.categoryId
+          );
+        });
+        vm.temp = resClone;
+        // console.log(vm.temp);
       });
     },
     //獲取所有車輛類別
@@ -395,27 +429,12 @@ export default {
           obj.expireDate = "";
           vm.carInsurancesList.push(obj);
         });
-      });
-    },
-
-    // 確認新增司機
-    handleSave() {
-      const vm = this;
-      vm.temp.orgId = vm.defaultorgid;
-
-      let obj = JSON.parse(JSON.stringify(vm.temp));
-      console.log(vm.carDevicesChecked);
-      obj.carDevices = vm.carDevicesChecked;
-      obj.carInsurances = vm.carInsurancesChecked;
-      obj.carLicenses = vm.carLicensesChecked;
-
-      console.log(obj);
-      cars.add(obj).then(() => {
-        vm.$alertT.fire({
-          icon: "success",
-          title: `車輛 ${obj.carNo} 已新增`,
+        vm.carInsurancesList.forEach((i) => {
+          let arr = vm.assignObj.carInsurances.filter((d) => {
+            return d.categoryId === i.categoryId;
+          });
+          i.expireDate = arr[0]?.expireDate;
         });
-        vm.$router.push("/car/index");
       });
     },
 
@@ -430,7 +449,8 @@ export default {
       return !this.temp.carInsurances.includes(id);
     },
   },
-  mounted() {
+  async mounted() {
+    await this.getList();
     this.getCarCategorys();
     this.getDrivers();
     this.getCarDevices();
@@ -483,4 +503,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+</style>
+
+<style lang='scss'>
 </style>
