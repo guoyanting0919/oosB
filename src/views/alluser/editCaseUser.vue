@@ -485,22 +485,6 @@ export default {
         }
       });
     },
-    addLun() {
-      this.temp.lun.push({
-        value1: "",
-        value2: "",
-        value3: "",
-        value4: "",
-        value5: "",
-        key: Date.now(),
-      });
-    },
-    delLun(item) {
-      let index = this.temp.lun.indexOf(item);
-      if (index !== -1) {
-        this.temp.lun.splice(index, 1);
-      }
-    },
   },
   mounted() {
     this.getUserBasic();

@@ -72,7 +72,7 @@
                   placeholder="請選擇車輛來源"
                   style="width: 100%"
                 >
-                  <el-option :value="'1'" :label="'自助'"></el-option>
+                  <el-option :value="'1'" :label="'獎助'"></el-option>
                   <el-option :value="'2'" :label="'自購'"></el-option>
                   <el-option :value="'3'" :label="'捐贈'"></el-option>
                 </el-select>
@@ -247,7 +247,7 @@
             disabled
             type="textarea"
             :rows="2"
-            placeholder="请输入内容"
+            placeholder="請輸入內容"
             v-model="temp.remark"
           ></el-input>
         </el-form>

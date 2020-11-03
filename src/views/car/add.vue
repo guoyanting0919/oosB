@@ -70,9 +70,9 @@
                   placeholder="請選擇車輛來源"
                   style="width: 100%"
                 >
-                  <el-option :value="'1'" :label="'自助'">自助</el-option>
-                  <el-option :value="'2'" :label="'自購'">自購</el-option>
-                  <el-option :value="'3'" :label="'捐贈'">捐贈</el-option>
+                  <el-option :value="'1'" :label="'獎助'"></el-option>
+                  <el-option :value="'2'" :label="'自購'"></el-option>
+                  <el-option :value="'3'" :label="'捐贈'"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -233,7 +233,7 @@
           <el-input
             type="textarea"
             :rows="2"
-            placeholder="请输入内容"
+            placeholder="請輸入內容"
             v-model="temp.remark"
           ></el-input>
         </el-form>

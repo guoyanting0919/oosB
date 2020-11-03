@@ -222,7 +222,7 @@
                 <!-- 編輯巴士 -->
                 <el-button
                   size="mini"
-                  @click="handleAddOrEdit('edit', scope.row)"
+                  @click="handleEditBusUser(scope.row)"
                   type="warning"
                   v-if="
                     hasButton('editBusUser') &&
@@ -265,7 +265,7 @@
                 <!-- 檢視巴士個案 -->
                 <el-button
                   size="mini"
-                  @click="handleCheckCaseUser(scope.row)"
+                  @click="handleCheckBusUser(scope.row)"
                   type="success"
                   v-if="
                     hasButton('checkBusUser') &&
@@ -973,6 +973,23 @@ export default {
       let caseId = this.roles[user.id].split("-")[1];
       this.$router.push(`/alluser/dispatchSelfPayUser/${user.id}-${caseId}`);
     },
+
+    // 編輯白牌資料
+    handleEditBusUser(user) {
+      let caseId = this.roles[user.id].split("-")[1];
+      this.$router.push(`/alluser/editBusUser/${user.id}-${caseId}`);
+    },
+    // 檢視白牌資料
+    handleCheckBusUser(user) {
+      let caseId = this.roles[user.id].split("-")[1];
+      this.$router.push(`/alluser/checkBusUser/${user.id}-${caseId}`);
+    },
+    // 白牌派車
+    dispatchBusUser(user) {
+      let caseId = this.roles[user.id].split("-")[1];
+      this.$router.push(`/alluser/dispatchBusUser/${user.id}-${caseId}`);
+    },
+
     handleResetUserTemp() {
       // this.$refs.userForm.resetFields();
       this.userTemp = {

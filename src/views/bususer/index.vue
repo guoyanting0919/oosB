@@ -20,15 +20,16 @@
     </sticky>
 
     <div class="app-container flex-item">
-      <!-- 公費個案 -->
+      <!-- 長照個案 -->
       <Title title="巴士個案"></Title>
       <div class="bg-white" style="height: 94%">
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"
-          :data="gridData"
+          :data="list"
           border
           fit
+          v-loading="listLoading"
           highlight-current-row
           style="width: 100%"
           @selection-change="handleSelectionChange"
@@ -40,22 +41,58 @@
             align="center"
           ></el-table-column>
           <el-table-column
-            property="date"
-            label="日期"
-            width="150"
+            property="name"
+            label="用戶姓名"
+            width="200"
+            align="center"
           ></el-table-column>
           <el-table-column
-            property="name"
-            label="姓名"
-            width="200"
+            property="cardNo"
+            label="卡號"
+            align="center"
           ></el-table-column>
-          <el-table-column property="address" label="地址"></el-table-column>
+
+          <el-table-column
+            property="setting"
+            label="操作"
+            fixed="right"
+            width="250"
+          >
+            <template slot-scope="scope">
+              <div class="buttonFlexBox">
+                <el-button
+                  size="mini"
+                  @click="handleDispatch(scope.row)"
+                  type="info"
+                  v-if="hasButton('dispatch')"
+                  >預約</el-button
+                >
+                <el-button
+                  size="mini"
+                  @click="handleEdit(scope.row)"
+                  type="success"
+                  v-if="hasButton('edit')"
+                  >編輯</el-button
+                >
+                <el-button
+                  size="mini"
+                  @click="handleCheck(scope.row)"
+                  type="warning"
+                  v-if="hasButton('check')"
+                  >檢視</el-button
+                >
+              </div>
+            </template>
+          </el-table-column>
+
+          <!-- <el-table-column property="address" label="地址"></el-table-column> -->
         </el-table>
         <pagination
           v-show="total > 0"
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
+          @pagination="handleCurrentChange"
         />
       </div>
     </div>
@@ -68,6 +105,7 @@ import Title from "@/components/ConsoleTableTitle";
 import permissionBtn from "@/components/PermissionBtn";
 import elDragDialog from "@/directive/el-dragDialog";
 import Pagination from "@/components/Pagination";
+import * as busUsers from "@/api/busUsers";
 export default {
   name: "publicExpense",
   components: {
@@ -81,63 +119,70 @@ export default {
   },
   data() {
     return {
-      total: 200,
+      value: "",
+      buttons: [],
+      // 表格相關
+      list: [],
+      listLoading: false,
+      total: 0,
       listQuery: {
-        page: 20,
+        page: 1,
         limit: 20,
+        key: undefined,
       },
 
       multipleSelection: [], // 列表checkbox選中的值
-      value: "",
-      value1: "",
-      gridData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-      ],
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
-      ],
-      violationDialog: false,
     };
   },
+  filters: {
+    phoneFilter(phone) {
+      return `${phone.slice(0, 4)}****`;
+    },
+  },
   methods: {
+    // 獲取本路由下所有功能按鈕
+    getButtons() {
+      this.$route.meta.elements.forEach((el) => {
+        this.buttons.push(el.domId);
+      });
+    },
+    // 是否擁有按鈕功能權限
+    hasButton(domId) {
+      return this.buttons.includes(domId);
+    },
+    // 獲取巴士用戶資料
+    getList() {
+      const vm = this;
+      vm.listLoading = true;
+      busUsers.load(vm.listQuery).then((res) => {
+        console.log(res.data);
+        vm.list = res.data;
+        vm.total = res.count;
+        vm.listLoading = false;
+      });
+    },
+    //預約
+    handleDispatch(user) {
+      let id = `${user.userId}-${user.id}`;
+      this.$router.push(`/bususer/dispatch/${id}`);
+    },
+    // 編輯
+    handleEdit(user) {
+      console.log(user);
+      let id = `${user.userId}-${user.id}`;
+      this.$router.push(`/bususer/edit/${id}`);
+    },
+    // 檢視
+    handleCheck(user) {
+      let id = `${user.userId}-${user.id}`;
+      this.$router.push(`/bususer/check/${id}`);
+    },
+    // 換頁
+    handleCurrentChange(val) {
+      this.listQuery.page = val.page;
+      this.listQuery.limit = val.limit;
+      this.getList();
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -146,7 +191,6 @@ export default {
       this.$refs.mainTable.toggleRowSelection(row);
     },
     onBtnClicked(domId) {
-      //   console.log(domId);
       switch (domId) {
         case "violationBtn":
           this.violationDialog = true;
@@ -155,6 +199,10 @@ export default {
           break;
       }
     },
+  },
+  mounted() {
+    this.getButtons();
+    this.getList();
   },
 };
 </script>

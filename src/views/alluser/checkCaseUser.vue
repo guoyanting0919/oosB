@@ -16,132 +16,300 @@
           :label-position="labelPosition"
           label-width="200px"
           :model="temp"
-          :rules="rules"
           ref="form"
         >
           <SubTitle title="基本資料"></SubTitle>
           <el-row :gutter="16">
             <el-col :sm="12" :md="3">
-              <div class="detailLabel">姓名</div>
-              <div class="detailValue">{{ basicTemp.name }}</div>
+              <el-form-item label="姓名">
+                <el-input
+                  disabled
+                  placeholder="請輸入個案姓名"
+                  v-model="basicTemp.name"
+                ></el-input>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="3">
-              <div class="detailLabel">性別</div>
-              <div class="detailValue">{{ basicTemp.sex | sexFilter }}</div>
+              <el-form-item label="性別">
+                <el-select
+                  disabled
+                  clearable
+                  v-model="basicTemp.sex"
+                  placeholder="請選擇性別"
+                  style="width: 100%"
+                >
+                  <el-option :value="1" :label="'男'">男</el-option>
+                  <el-option :value="0" :label="'女'">女</el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">身分證字號</div>
-              <div class="detailValue">{{ basicTemp.uid }}</div>
+              <el-form-item label="身份證字號">
+                <el-input
+                  disabled
+                  v-model="basicTemp.uid"
+                  placeholder="請輸入個案身分證字號"
+                ></el-input>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">生日</div>
-              <div class="detailValue">
-                {{ basicTemp.birthday | dateFilter }}
-              </div>
+              <el-form-item label="生日">
+                <el-date-picker
+                  disabled
+                  v-model="basicTemp.birthday"
+                  type="date"
+                  placeholder="請選擇生日"
+                  style="width: 100%"
+                ></el-date-picker>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">手機</div>
-              <div class="detailValue">
-                {{ basicTemp.phone }}
-              </div>
+              <el-form-item label="手機">
+                <el-input
+                  disabled
+                  v-model="basicTemp.phone"
+                  placeholder="請輸入手機"
+                ></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
 
           <SubTitle title="長照資料"></SubTitle>
           <el-row :gutter="16">
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">個案編號</div>
-              <div class="detailValue">{{ temp.caseUserNo }}</div>
+              <el-form-item label="個案編號" prop="caseUserNo">
+                <el-input
+                  disabled
+                  v-model="temp.caseUserNo"
+                  placeholder="請輸入個案編號"
+                ></el-input>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">社會福利身份</div>
-              <div class="detailValue">
-                {{ temp.wealTypeId | wealTypeFilter }}
-              </div>
+              <el-form-item label="社會福利身份" prop="wealTypeId">
+                <span class="wealSpan" slot="label">社會福利身份 </span>
+                <el-select
+                  disabled
+                  v-model="temp.wealTypeId"
+                  placeholder="社會福利身份"
+                  style="width: 100%"
+                >
+                  <el-option :value="'1'" :label="'低收入戶'"
+                    >低收入戶</el-option
+                  >
+                  <el-option :value="'2'" :label="'中低收入戶'"
+                    >中低收入戶</el-option
+                  >
+                  <el-option :value="'3'" :label="'一般戶'">一般戶</el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :sm="12" :md="6">
+              <el-form-item label="額度控管留用首月" prop="reviewDate">
+                <el-date-picker
+                  disabled
+                  v-model="temp.reviewDate"
+                  type="month"
+                  style="width: 100%"
+                  value-format="yyyy-MM"
+                  placeholder="請選擇額度控管留用首月"
+                ></el-date-picker>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">額度控管留用首月</div>
-              <div class="detailValue">
-                {{ temp.reviewDate | reviewDateFilter }}
-              </div>
-            </el-col>
-            <el-col :sm="12" :md="6">
-              <div class="detailLabel">失能等級</div>
-              <div class="detailValue">
-                {{ temp.disabilityLevel | disabilityLevelFilter }}
-              </div>
-            </el-col>
-            <el-col :sm="24" :md="18">
-              <div class="detailLabel">居住地</div>
-              <div class="detailValue">
-                {{ temp.county }}{{ temp.district }}{{ temp.addr }}
-              </div>
-            </el-col>
-            <el-col :sm="12" :md="3">
-              <div class="detailLabel">經度</div>
-              <div class="detailValue">
-                {{ temp.lon }}
-              </div>
-            </el-col>
-            <el-col :sm="12" :md="3">
-              <div class="detailLabel">緯度</div>
-              <div class="detailValue">
-                {{ temp.lat }}
-              </div>
+              <el-form-item label="失能等級" prop="disabilityLevel">
+                <el-select
+                  disabled
+                  v-model="temp.disabilityLevel"
+                  placeholder="請選擇失能等級"
+                  style="width: 100%"
+                >
+                  <el-option :value="'0'" :label="'1級(無失能)'"
+                    >1級(無失能)</el-option
+                  >
+                  <el-option :value="'1'" :label="'2級'">2級</el-option>
+                  <el-option :value="'2'" :label="'3級'">3級</el-option>
+                  <el-option :value="'3'" :label="'4級'">4級</el-option>
+                  <el-option :value="'4'" :label="'5級'">5級</el-option>
+                  <el-option :value="'5'" :label="'6級'">6級</el-option>
+                  <el-option :value="'6'" :label="'7級'">7級</el-option>
+                  <el-option :value="'7'" :label="'8級'">8級</el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
             <el-col :sm="24" :md="24">
-              <div class="detailLabel">管理單位</div>
-              <div class="detailValue">
-                {{ temp.orgAId | orgAIdFilter(unitAs) }}
-              </div>
+              <el-form-item label="居住地">
+                <el-row :gutter="16">
+                  <el-col :sm="12" :md="3" style="margin-bottom: 1rem">
+                    <el-form-item prop="county">
+                      <el-select
+                        disabled
+                        v-model="temp.county"
+                        clearable
+                        placeholder="請選擇居住縣市"
+                        style="width: 100%"
+                      >
+                        <el-option
+                          v-for="(conty, key, index) in taiwanCity"
+                          :key="index"
+                          :value="key"
+                          :label="key"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    :sm="12"
+                    :md="3"
+                    style="margin-bottom: 1rem"
+                    v-if="temp.county"
+                  >
+                    <el-form-item prop="district">
+                      <el-select
+                        disabled
+                        v-model="temp.district"
+                        placeholder="請選擇居住區域"
+                        style="width: 100%"
+                      >
+                        <el-option
+                          v-for="(district, key, index) in taiwanCity[
+                            temp.county
+                          ]"
+                          :key="index"
+                          :value="district.value"
+                          :label="district.label"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :sm="24" :md="12" v-if="temp.district">
+                    <el-form-item prop="addr">
+                      <el-input
+                        disabled
+                        placeholder="請輸入居住地址"
+                        v-model="temp.addr"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    :sm="12"
+                    :md="3"
+                    style="margin-bottom: 1rem"
+                    v-if="temp.addr && temp.district && temp.county"
+                  >
+                    <el-form-item prop="county">
+                      <el-input
+                        disabled
+                        placeholder="經度"
+                        v-model="temp.lon"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    :sm="12"
+                    :md="3"
+                    style="margin-bottom: 1rem"
+                    v-if="temp.addr && temp.district && temp.county"
+                  >
+                    <el-form-item prop="county">
+                      <el-input
+                        disabled
+                        placeholder="緯度"
+                        v-model="temp.lat"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form-item>
             </el-col>
-            <el-col :sm="12" :md="6">
-              <div class="detailLabel">備註</div>
-              <div class="detailValue">
-                {{ temp.remark }}
-              </div>
+            <el-col :sm="24" :md="12">
+              <el-form-item label="管理單位" prop="orgAId">
+                <el-select
+                  disabled
+                  v-model="temp.orgAId"
+                  placeholder="請選擇管理單位"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="org in unitAs"
+                    :key="org.id"
+                    :value="org.id"
+                    :label="org.name"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
-            <el-col :sm="24" :md="6">
-              <div class="detailLabel">可否派發</div>
-              <div class="detailValue">
-                {{ temp.caseUserStatus | caseUserStatusFilter }}
-              </div>
-            </el-col>
-            <el-col :sm="24" :md="12" v-if="!Number(temp.caseUserStatus)">
-              <div class="detailLabel">不可派發原因</div>
-              <div class="detailValue">
-                {{ temp.statusReason }}
-              </div>
+            <el-col :sm="24" :md="24">
+              <el-row :gutter="16">
+                <el-col :sm="12" :md="6">
+                  <el-form-item label="可否派發" prop="caseUserStatus">
+                    <el-select
+                      disabled
+                      v-model="temp.caseUserStatus"
+                      placeholder="請選擇派發狀態"
+                      style="width: 100%"
+                    >
+                      <el-option :value="'1'" :label="'可派發'"
+                        >可派發</el-option
+                      >
+                      <el-option :value="'0'" :label="'不可派發'"
+                        >不可派發</el-option
+                      >
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :sm="12" :md="12" v-if="temp.caseUserStatus == 0">
+                  <el-form-item label="不可派發原因">
+                    <el-input v-model="temp.statusReason" disabled></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </el-col>
           </el-row>
 
           <SubTitle title="緊急聯絡人資訊"></SubTitle>
           <el-row :gutter="24">
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">聯絡人姓名</div>
-              <div class="detailValue">
-                {{ temp.urgentName }}
-              </div>
+              <el-form-item label="聯絡人姓名" prop="urgentName">
+                <el-input
+                  disabled
+                  placeholder="請輸入聯絡人姓名"
+                  v-model="temp.urgentName"
+                ></el-input>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">關係</div>
-              <div class="detailValue">
-                {{ temp.urgentRelationship }}
-              </div>
+              <el-form-item label="關係" prop="urgentRelationship">
+                <el-input
+                  disabled
+                  placeholder="請輸入關係"
+                  v-model="temp.urgentRelationship"
+                ></el-input>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">聯絡人手機</div>
-              <div class="detailValue">
-                {{ temp.urgentPhone }}
-              </div>
+              <el-form-item label="聯絡人手機" prop="urgentPhone">
+                <el-input
+                  disabled
+                  placeholder="請輸入聯絡人手機"
+                  v-model="temp.urgentPhone"
+                ></el-input>
+              </el-form-item>
             </el-col>
             <el-col :sm="12" :md="6">
-              <div class="detailLabel">聯絡人市話</div>
-              <div class="detailValue">
-                {{ temp.urgentTel }}
-              </div>
+              <el-form-item label="聯絡人市話" prop="urgentTel">
+                <el-input
+                  disabled
+                  placeholder="請輸入聯絡人市話"
+                  v-model="temp.urgentTel"
+                ></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
+
+          <SubTitle title="備註"></SubTitle>
+          <el-input disabled type="textarea" v-model="temp.remark"></el-input>
 
           <SubTitle title="個案違規紀錄"></SubTitle>
           <div class="formTitle">
