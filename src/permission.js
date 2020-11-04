@@ -40,6 +40,14 @@ let routerMappingList = [
     path: "/car/index",
     title: "司機車輛管理 / 車輛資料",
   },
+  {
+    path: "/busstop/index",
+    title: "路線及站點管理 / 站點管理",
+  },
+  {
+    path: "/busroute/index",
+    title: "路線及站點管理 / 路線管理",
+  },
 ];
 let elementMappingList = [
   "add",

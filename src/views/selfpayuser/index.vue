@@ -76,6 +76,19 @@
             </template>
           </el-table-column>
           <el-table-column
+            property="status"
+            label="狀態"
+            width="130"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <div>
+                <el-tag v-if="scope.row.status" type="success">可派發</el-tag>
+                <el-tag v-else type="danger">不可派發</el-tag>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
             property="setting"
             label="操作"
             fixed="right"

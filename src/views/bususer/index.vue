@@ -47,11 +47,44 @@
             align="center"
           ></el-table-column>
           <el-table-column
+            property="sex"
+            label="性別"
+            width="100"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <div>
+                <i
+                  style="color: #d63737"
+                  v-if="!scope.row.sex"
+                  class="iconfont icon-Vector5"
+                ></i>
+                <i
+                  style="color: #227294"
+                  v-else
+                  class="iconfont icon-Vector6"
+                ></i>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
             property="cardNo"
             label="卡號"
             align="center"
           ></el-table-column>
-
+          <el-table-column
+            property="status"
+            label="狀態"
+            width="130"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <div>
+                <el-tag v-if="scope.row.status" type="success">可派發</el-tag>
+                <el-tag v-else type="danger">不可派發</el-tag>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column
             property="setting"
             label="操作"

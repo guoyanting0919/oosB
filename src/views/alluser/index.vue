@@ -102,13 +102,13 @@
           <el-table-column
             property="uid"
             label="身分證字號"
-            width="160"
+            min-width="160"
             align="center"
           ></el-table-column>
           <el-table-column
             property="birthday"
             label="生日"
-            width="160"
+            min-width="160"
             align="center"
           >
             <template slot-scope="scope">
@@ -139,7 +139,7 @@
           <el-table-column
             property="phone"
             label="手機"
-            width="170"
+            min-width="170"
             align="center"
           ></el-table-column>
 
