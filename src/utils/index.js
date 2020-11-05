@@ -62,21 +62,21 @@ export function formatTime(format) {
   }
   return format;
 }
-
+ 
 // 将list转成tree，使用前注意把array进行深拷贝
 export function listToTreeSelect(array, parent, tree) {
   tree = typeof tree !== "undefined" ? tree : [];
   parent =
-    typeof parent !== "undefined"
-      ? parent
-      : {
-          id: null,
-        };
-
+  typeof parent !== "undefined"
+  ? parent
+  : {
+    id: null,
+  };
+  
   var children = array.filter((val) => {
     return val.parentId === parent.id;
   });
-
+  
   if (children.length > 0) {
     if (parent.id === null) {
       tree = children;
@@ -87,9 +87,12 @@ export function listToTreeSelect(array, parent, tree) {
     children.forEach((val) => {
       listToTreeSelect(array, val);
     });
+    return tree;
+
+  }else{
+    return array
   }
 
-  return tree;
 }
 
 // 深拷贝

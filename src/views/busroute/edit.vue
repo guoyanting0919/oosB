@@ -210,9 +210,9 @@ export default {
       });
     },
     // 獲取巴士站牌資料
-    getList() {
+    async getList() {
       const vm = this;
-      busStations.load(vm.listQuery).then((res) => {
+      await busStations.load(vm.listQuery).then((res) => {
         res.data.forEach((s) => {
           vm.list.push({
             key: s.id,
@@ -238,12 +238,12 @@ export default {
           icon: "success",
           title: `路線${vm.temp.name} 修改成功`,
         });
-        //   vm.$router.push("/busstop/index");
+        vm.$router.push("/busroute/index");
       });
     },
   },
-  mounted() {
-    this.getList();
+  async mounted() {
+    await this.getList();
     this.getRoutesList();
   },
 };
@@ -283,7 +283,9 @@ export default {
   font-weight: 700;
   padding: 0.5rem;
   margin: 0.5rem;
-
+  width: 50px;
+  justify-content: center;
+  align-items: center;
   position: relative;
 
   &:first-child::before {
@@ -325,5 +327,8 @@ export default {
 .stopName {
   -webkit-writing-mode: vertical-lr;
   writing-mode: vertical-lr;
+  display: block;
+  justify-content: flex-start;
+  align-items: center;
 }
 </style>

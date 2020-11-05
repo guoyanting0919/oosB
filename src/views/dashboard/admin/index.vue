@@ -1,25 +1,25 @@
 <template>
   <div class="dashboard">
-    dashboard
-
-    <el-autocomplete
-      popper-class="my-autocomplete"
-      v-model="state"
-      :fetch-suggestions="querySearch"
-      placeholder="請輸入內容"
-      @select="handleSelect"
-    >
-      <i
-        class="el-icon-edit el-input__icon"
-        slot="suffix"
-        @click="handleIconClick"
-      >
-      </i>
-      <template slot-scope="{ item }">
-        <div class="name">{{ item.value }}</div>
-        <span class="addr">{{ item.address }}</span>
-      </template>
-    </el-autocomplete>
+    <!-- 一般的主頁 -->
+    <div v-if="!state">
+      <el-input
+        style="width: 200px"
+        v-model="input"
+        placeholder="dashBoard"
+        @keydown.native.enter="handleKeydown"
+      ></el-input>
+    </div>
+    <!-- cbsd的主頁 -->
+    <div v-else class="trelloContainer">
+      <el-button>CBSD_ADMIN</el-button>
+      <iframe
+        :src="url"
+        width="100%"
+        height="768px"
+        frameborder="0"
+        scrolling="auto"
+      ></iframe>
+    </div>
   </div>
 </template>
 
@@ -27,8 +27,9 @@
 export default {
   data() {
     return {
-      restaurants: [],
-      state: "",
+      input: "",
+      state: window.localStorage.getItem("CBSD_ADMIN"),
+      url: "https://trello.com/b/mHsiq7jW/%E5%B0%96%E7%9F%B3",
     };
   },
   methods: {
@@ -39,6 +40,13 @@ export default {
         : restaurants;
       // 调用 callback 返回建议列表的数据
       cb(results);
+    },
+    handleKeydown() {
+      if (this.input === "cbsd") {
+        window.localStorage.setItem("CBSD_ADMIN", "true");
+
+        window.location.reload();
+      }
     },
     createFilter(queryString) {
       return (restaurant) => {

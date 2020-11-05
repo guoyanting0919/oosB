@@ -6,7 +6,7 @@
           @keyup.enter.native="handleFilter"
           prefix-icon="el-icon-search"
           size="small"
-          style="width: 200px; margin-bottom: 0;"
+          style="width: 200px; margin-bottom: 0"
           class="filter-item"
           :placeholder="'關鍵字'"
           v-model="listQuery.key"
@@ -20,7 +20,7 @@
 
         <el-checkbox
           size="mini"
-          style="margin-left:15px;"
+          style="margin-left: 15px"
           @change="tableKey = tableKey + 1"
           v-model="showDescription"
           >Id/描述</el-checkbox
@@ -29,7 +29,7 @@
     </sticky>
     <div class="app-container flex-item">
       <Title title="用戶管理"></Title>
-      <el-row :gutter="4" style="height:calc(100% - 50px)">
+      <el-row :gutter="4" style="height: calc(100% - 50px)">
         <el-col :span="6" class="fh ls-border">
           <el-card shadow="never" class="body-small fh" style="overflow: auto">
             <div slot="header" class="clearfix">
@@ -60,7 +60,7 @@
               border
               fit
               highlight-current-row
-              style="width: 100%;"
+              style="width: 100%"
               height="calc(100% - 52px)"
               @row-click="rowClick"
               @selection-change="handleSelectionChange"
@@ -106,7 +106,7 @@
                 :label="'描述'"
               >
                 <template slot-scope="scope">
-                  <span style="color:red;">{{ scope.row.description }}</span>
+                  <span style="color: red">{{ scope.row.description }}</span>
                 </template>
               </el-table-column>
 
@@ -397,7 +397,7 @@ export default {
   },
   computed: {
     selectOrgs: {
-      get: function() {
+      get: function () {
         if (this.dialogStatus === "update") {
           return (
             this.temp.organizationIds && this.temp.organizationIds.split(",")
@@ -406,7 +406,7 @@ export default {
           return [];
         }
       },
-      set: function(v) {
+      set: function (v) {
         // console.log('set org:', v)
         var _this = this;
         _this.temp.organizationIds = (v.length > 0 && v.join(",")) || "";
@@ -438,7 +438,7 @@ export default {
   mounted() {
     var _this = this; // 記錄vuecomponent
     login.getOrgs().then((response) => {
-      _this.orgs = response.result.map(function(item) {
+      _this.orgs = response.result.map(function (item) {
         return {
           id: item.id,
           label: item.name,
@@ -446,6 +446,7 @@ export default {
         };
       });
       var orgstmp = JSON.parse(JSON.stringify(_this.orgs));
+      console.log(orgstmp);
       _this.orgsTree = listToTreeSelect(orgstmp);
     });
   },
@@ -465,7 +466,7 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    onBtnClicked: function(domId) {
+    onBtnClicked: function (domId) {
       console.log("you click:" + domId);
       switch (domId) {
         case "btnAdd":

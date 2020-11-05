@@ -12,6 +12,7 @@
               ref="tree"
               :data="modules"
               :check-strictly="true"
+              @check="handleChange"
               show-checkbox
               node-key="id"
               default-expand-all
@@ -145,7 +146,7 @@ export default {
   mounted() {
     var _this = this;
     login.getModules().then((response) => {
-      var modules = response.result.map(function(item) {
+      var modules = response.result.map(function (item) {
         let lable = item.name;
         if (!item.isSys) {
           lable += "(非系統)";
@@ -169,13 +170,21 @@ export default {
     });
   },
   methods: {
+    handleChange(a) {
+      // console.log(a, b, c);
+      // console.log(a.parentId);
+      if (a.parentId) {
+        this.$refs.tree.setChecked(a.parentId, true, true);
+        console.log(this.$refs.tree.getCheckedNodes(false, false));
+      }
+    },
     init() {
       this.getRoleModuleIds();
       this.getRoleMenuIds();
     },
     filterMenus(moduleId) {
       // 按模塊過濾菜單
-      return this.menus.filter(function(menu) {
+      return this.menus.filter(function (menu) {
         return menu.moduleId === moduleId;
       });
     },
@@ -215,7 +224,7 @@ export default {
       var step = this.step * 1.0;
       switch (step) {
         case 1:
-          var checkNodes = this.$refs.tree.getCheckedNodes(true, false);
+          var checkNodes = this.$refs.tree.getCheckedNodes(false, false);
           if (checkNodes.length < 1) {
             this.$notify({
               title: "提示",
@@ -226,6 +235,7 @@ export default {
             return;
           }
           this.checkModules = checkNodes;
+          // console.log(checkNodes);
           this.step = 2;
           break;
         case 2:
