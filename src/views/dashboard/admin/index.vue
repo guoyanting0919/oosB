@@ -12,13 +12,6 @@
     <!-- cbsd的主頁 -->
     <div v-else class="trelloContainer">
       <el-button>CBSD_ADMIN</el-button>
-      <iframe
-        :src="url"
-        width="100%"
-        height="768px"
-        frameborder="0"
-        scrolling="auto"
-      ></iframe>
     </div>
   </div>
 </template>

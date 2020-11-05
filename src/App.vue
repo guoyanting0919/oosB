@@ -6,12 +6,15 @@
 
 <script>
 import { mapGetters } from "vuex";
-// import * as signalR from "@aspnet/signalr";
+import * as signalR from "@aspnet/signalr";
 export default {
   name: "App",
   data() {
     return {
       connection: null,
+      hubConnection: new signalR.HubConnectionBuilder()
+        .withUrl("http://openauth.1966.org.tw/api/chatHub")
+        .build(),
     };
   },
   computed: {
@@ -37,26 +40,15 @@ export default {
   },
   mounted() {
     window.addEventListener("vuexoidc:userLoaded", this.userLoaded);
-    // 1.
-    // this.connectHub();
-
-    // 2.
+    this.connectHub();
     // //1、首先我们实例化一个连接器
-    // this.connection = new signalR.HubConnectionBuilder()
-    //   //然后配置通道路由
-    //   .withUrl(
-    //     "http://openauth.1966.org.tw/api/chatHub"
-    //   )
-    //   //日志信息
-    //   .configureLogging(signalR.LogLevel.Information)
-    //   //创建
-    //   .build()
-    //   .start()
-    //   .then(() => {
-    //     this.connection.invoke("GetLatestCount", 1).catch(function (err) {
-    //       return console.error(err);
-    //     });
-    //   });
+    //  this.connection = new signalR.HubConnectionBuilder()
+    //      //然后配置通道路由
+    //      .withUrl('/api/chatHub')
+    //      //日志信息
+    //      .configureLogging(signalR.LogLevel.Information)
+    //      //创建
+    //      .build();
   },
   destroyed() {
     window.removeEventListener("vuexoidc:userLoaded", this.userLoaded);
