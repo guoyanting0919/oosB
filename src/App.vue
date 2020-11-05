@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <!-- <button @click="send">send</button> -->
+    <!-- <span v-if="signalRMsg">{{ signalRMsg }}</span> -->
     <router-view></router-view>
   </div>
 </template>
@@ -15,6 +17,7 @@ export default {
       hubConnection: new signalR.HubConnectionBuilder()
         .withUrl("http://openauth.1966.org.tw/api/chatHub")
         .build(),
+      signalRMsg: null,
     };
   },
   computed: {
@@ -28,19 +31,43 @@ export default {
       );
     },
     connectHub() {
-      this.hubConnection
+      const vm = this;
+      vm.hubConnection
         .start()
-        .then((res) => {
-          console.log(res, "success connect");
+        .then(() => {
+          console.log("signalR success connect");
+          vm.get();
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    get() {
+      const vm = this;
+      vm.hubConnection.on("ReceiveMessage", function (user, msg) {
+        console.info("update success!", user, msg);
+        vm.signalRMsg = `${user} : ${msg}`;
+        vm.$alertT.fire({
+          icon: "info",
+          title: vm.signalRMsg,
+        });
+      });
+    },
+    send() {
+      const vm = this;
+      vm.hubConnection
+        .invoke("SendMessage", "ccccc", "bbbbb")
+        .then(() => {
+          console.log("SendMessage success");
+        })
+        .catch(function (err) {
+          return console.error(err);
+        });
+    },
   },
   mounted() {
     window.addEventListener("vuexoidc:userLoaded", this.userLoaded);
-    this.connectHub();
+    // this.connectHub();
     // //1、首先我们实例化一个连接器
     //  this.connection = new signalR.HubConnectionBuilder()
     //      //然后配置通道路由

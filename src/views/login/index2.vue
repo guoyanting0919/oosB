@@ -184,7 +184,7 @@ export default {
   data() {
     return {
       // announcement
-      dialogAnnVisible: true,
+      dialogAnnVisible: false,
       annCategory: "行車公告",
       annData: [
         {
