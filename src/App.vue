@@ -67,7 +67,7 @@ export default {
   },
   mounted() {
     window.addEventListener("vuexoidc:userLoaded", this.userLoaded);
-    // this.connectHub();
+    this.connectHub();
     // //1、首先我们实例化一个连接器
     //  this.connection = new signalR.HubConnectionBuilder()
     //      //然后配置通道路由
