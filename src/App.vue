@@ -31,7 +31,7 @@ export default {
       this.hubConnection
         .start()
         .then((res) => {
-          console.log(res);
+          console.log(res, "success connect");
         })
         .catch((err) => {
           console.log(err);
