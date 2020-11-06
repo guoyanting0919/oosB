@@ -4,7 +4,7 @@
       <div class="filter-container">
         <!-- 關鍵字搜尋 -->
         <el-input
-          style="width:200px;margin-right:0.5rem"
+          style="width: 200px; margin-right: 0.5rem"
           size="mini"
           v-model="value"
           clearable
@@ -35,7 +35,7 @@
     </sticky>
     <div class="app-container flex-item">
       <Title title="醫療院所管理"></Title>
-      <div class="bg-white" style="height: 93%;">
+      <div class="bg-white" style="height: calc(100% - 50px)">
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"
@@ -44,7 +44,7 @@
           border
           fit
           highlight-current-row
-          style="width: 100%;"
+          style="width: 100%"
           @selection-change="handleSelectionChange"
           @row-click="rowClick"
         >

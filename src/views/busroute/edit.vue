@@ -66,6 +66,8 @@
           <el-transfer
             style="width: 100%"
             :target-order="'push'"
+            filter-placeholder="請輸入站牌名"
+            filterable
             v-model="checkesStops"
             :data="list"
             @change="handleChange"

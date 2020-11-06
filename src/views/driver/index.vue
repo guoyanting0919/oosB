@@ -50,7 +50,7 @@
     </sticky>
     <div class="app-container flex-item">
       <Title title="司機資料"></Title>
-      <div class="bg-white" style="height: 93%">
+      <div class="bg-white" style="height: calc(100% - 50px)">
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"

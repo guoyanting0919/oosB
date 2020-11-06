@@ -22,7 +22,7 @@
     <div class="app-container flex-item">
       <!-- 站牌管理 -->
       <Title title="路線管理"></Title>
-      <div class="bg-white" style="height: 94%">
+      <div class="bg-white" style="height: calc(100% - 50px)">
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"

@@ -22,7 +22,7 @@
     <div class="app-container flex-item">
       <!-- 白牌個案 -->
       <Title title="白牌個案"></Title>
-      <div class="bg-white" style="height: 94%">
+      <div class="bg-white" style="height: calc(100% - 50px)">
         <el-table
           ref="mainTable"
           height="calc(100% - 52px)"
