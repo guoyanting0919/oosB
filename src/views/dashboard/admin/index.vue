@@ -12,10 +12,38 @@
     <!-- cbsd的主頁 -->
 
     <div v-else class="trelloContainer bg-white customScrollBar">
-      <div style="display: flex">
-        <el-input style="200px" v-model="userName"></el-input>
-        <el-input style="200px" v-model="message"></el-input>
+      <!-- <div class="settingContainer" style="display: flex">
+        <el-input
+          style="width: 200px"
+          v-model="userName"
+          placeholder="userName"
+        ></el-input>
+        <el-input
+          style="width: 200px"
+          v-model="message"
+          placeholder="message"
+        ></el-input>
+        <el-input
+          style="width: 200px"
+          v-model="groupName"
+          placeholder="groupName"
+        ></el-input>
         <el-button @click="send">send</el-button>
+        <el-button @click="addToGroup">addToGroup</el-button>
+        <el-button @click="sendToGroup">sendToGroup</el-button>
+      </div> -->
+      <div class="settingContainer">
+        <el-input
+          style="width: 200px"
+          v-model="temp.title"
+          placeholder="title"
+        ></el-input>
+        <el-input
+          style="width: 200px"
+          v-model="temp.contents"
+          placeholder="newList"
+        ></el-input>
+        <el-button @click="handleAdd">send</el-button>
       </div>
       <div class="problemListContainer">
         <!-- 待處理 -->
@@ -23,6 +51,7 @@
           <Title title="新增巴士路線"></Title>
           <draggable
             :list="dataStatus0"
+            @change="handleChange0"
             v-if="sortData"
             class="draggableContainer"
             group="stop"
@@ -42,7 +71,7 @@
                 :index="index"
               >
                 <span class="stopName">
-                  {{ stop.name }}
+                  {{ stop.title }}
                 </span>
               </div>
             </transition-group>
@@ -54,6 +83,7 @@
           <Title title="新增巴士路線"></Title>
           <draggable
             :list="dataStatus1"
+            @change="handleChange1"
             v-if="sortData"
             class="draggableContainer"
             group="stop"
@@ -73,7 +103,7 @@
                 :index="index"
               >
                 <span class="stopName">
-                  {{ stop.name }}
+                  {{ stop.title }}
                 </span>
               </div>
             </transition-group>
@@ -84,6 +114,7 @@
         <div class="problemList">
           <Title title="新增巴士路線3"></Title>
           <draggable
+            @change="handleChange2"
             :list="dataStatus2"
             v-if="sortData"
             class="draggableContainer"
@@ -104,7 +135,7 @@
                 :index="index"
               >
                 <span class="stopName">
-                  {{ stop.name }}
+                  {{ stop.title }}
                 </span>
               </div>
             </transition-group>
@@ -119,6 +150,8 @@
 import draggable from "vuedraggable";
 import Title from "@/components/ConsoleTableTitle";
 import * as signalR from "@aspnet/signalr";
+import * as trello from "@/api/trello";
+import { mapGetters } from "vuex";
 export default {
   components: {
     draggable,
@@ -126,6 +159,22 @@ export default {
   },
   data() {
     return {
+      // trello
+      temp: {
+        id: "",
+        title: "",
+        contents: "",
+        status: 0,
+      },
+      // 表單相關
+      list: [],
+      listLoading: false,
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 999,
+        key: undefined,
+      },
       // signalR
       hubConnection: new signalR.HubConnectionBuilder()
         .withUrl("http://openauth.1966.org.tw/api/chatHub")
@@ -133,6 +182,8 @@ export default {
       signalRMsg: null,
       userName: "",
       message: "",
+      groupName: "",
+      newList: "",
 
       sortData: [
         {
@@ -165,7 +216,66 @@ export default {
       url: "https://trello.com/b/mHsiq7jW/%E5%B0%96%E7%9F%B3",
     };
   },
+  computed: {
+    ...mapGetters(["defaultorgid"]),
+  },
   methods: {
+    getList() {
+      const vm = this;
+      trello.load(vm.listQuery).then((res) => {
+        vm.list = res.data;
+        vm.list.forEach((data) => {
+          switch (data.status) {
+            case 0:
+              this.dataStatus0.push(data);
+              break;
+            case 1:
+              this.dataStatus1.push(data);
+              break;
+            case 2:
+              this.dataStatus2.push(data);
+              break;
+
+            default:
+              break;
+          }
+        });
+      });
+    },
+    // trello
+    handleAdd() {
+      const vm = this;
+      trello.add(vm.temp).then((res) => {
+        console.log(res);
+      });
+    },
+    handleChange0(a) {
+      let temp = a.added?.element;
+      if (temp) {
+        temp.status = Number(0);
+        trello.update(temp).then((res) => {
+          console.log(res);
+        });
+      }
+    },
+    handleChange1(a) {
+      let temp = a.added?.element;
+      if (temp) {
+        temp.status = Number(1);
+        trello.update(temp).then((res) => {
+          console.log(res);
+        });
+      }
+    },
+    handleChange2(a) {
+      let temp = a.added?.element;
+      if (temp) {
+        temp.status = Number(2);
+        trello.update(temp).then((res) => {
+          console.log(res);
+        });
+      }
+    },
     // signalR
     send() {
       const vm = this;
@@ -201,6 +311,28 @@ export default {
         });
       });
     },
+    addToGroup() {
+      const vm = this;
+      vm.hubConnection
+        .invoke("AddToGroup", vm.groupName)
+        .then(() => {
+          console.log("addToGroup success");
+        })
+        .catch(function (err) {
+          return console.error(err);
+        });
+    },
+    sendToGroup() {
+      const vm = this;
+      vm.hubConnection
+        .invoke("SendMessageToGroupAsync", vm.groupName, "z")
+        .then(() => {
+          console.log("SendMessageToGroupAsync success");
+        })
+        .catch(function (err) {
+          return console.error(err);
+        });
+    },
 
     // no
     querySearch(queryString, cb) {
@@ -235,24 +367,8 @@ export default {
     },
   },
   mounted() {
-    this.connectHub();
-    // this.restaurants = this.loadAll();
-    this.sortData.forEach((data) => {
-      switch (data.status) {
-        case 0:
-          this.dataStatus0.push(data);
-          break;
-        case 1:
-          this.dataStatus1.push(data);
-          break;
-        case 2:
-          this.dataStatus2.push(data);
-          break;
-
-        default:
-          break;
-      }
-    });
+    // this.connectHub();
+    this.getList();
   },
 };
 </script>
@@ -264,6 +380,12 @@ export default {
   justify-content: center;
   align-items: flex-start;
   overflow: auto;
+}
+
+.settingContainer {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }
 
 .problemList {
@@ -281,7 +403,7 @@ export default {
   min-width: 200px;
 
   span {
-    min-height: 20px;
+    min-height: 40px;
     display: block;
     min-width: 200px;
     // display: flex;

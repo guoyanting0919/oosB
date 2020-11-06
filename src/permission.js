@@ -53,8 +53,8 @@ let elementMappingList = [
   "add",
   "edit",
   "detail",
-  'check',
-  'dispatch',
+  "check",
+  "dispatch",
   "addCaseUser",
   "editCaseUser",
   "checkCaseUser",
@@ -65,7 +65,7 @@ let elementMappingList = [
   "addSelfPayUser",
   "editSelfPayUser",
   "checkSelfPayUser",
-  'dispatchSelfPayUser'
+  "dispatchSelfPayUser",
 ];
 
 const whiteList = [
@@ -78,6 +78,7 @@ const whiteList = [
 ]; // 不重定向白名單
 
 router.beforeEach((to, from, next) => {
+  console.log("router before each");
   NProgress.start();
 
   store
@@ -216,126 +217,6 @@ router.beforeEach((to, from, next) => {
                       // console.log(adr);
                       router.addRoutes(adr);
                     }
-
-                    // 舊的
-                    // let arr = [];
-                    // if (secondRouter.includes(mr.path)) {
-                    //   arr = secondRouterObj.filter((o) => {
-                    //     return o.path == mr.path;
-                    //   });
-                    //   let arr2 = [];
-                    //   arr[0].meta.elements.forEach((el) => {
-                    //     arr2.push(el.domId);
-                    //   });
-                    //   console.log(arr2);
-                    //   let parentPath = mr.path.split("/")[1];
-                    //   if (arr2.includes("editBtn") && arr2.includes("addBtn")) {
-                    //     console.log(parentPath, "hasEditBtn,hasAddBtn");
-                    //     let adr = [
-                    //       {
-                    //         path: `/${parentPath}`,
-                    //         component: Layout,
-                    //         name: mr.title,
-                    //         redirect: "noredirect",
-                    //         hidden: true,
-                    //         meta: {
-                    //           notauth: true,
-                    //           noCache: true,
-                    //         },
-                    //         children: [
-                    //           {
-                    //             path: `edit/:id`,
-                    //             component: () =>
-                    //               import(`@/views/${parentPath}/edit`),
-                    //             name: `${parentPath}編輯`,
-                    //             hidden: true,
-                    //             meta: {
-                    //               notauth: true,
-                    //               noCache: true,
-                    //               title: `編輯`,
-                    //             },
-                    //           },
-                    //           {
-                    //             path: `add/:id`,
-                    //             component: () =>
-                    //               import(`@/views/${parentPath}/add`),
-                    //             name: `${parentPath}新增`,
-                    //             hidden: true,
-                    //             meta: {
-                    //               notauth: true,
-                    //               noCache: true,
-                    //               title: `新增`,
-                    //             },
-                    //           },
-                    //         ],
-                    //       },
-                    //     ];
-                    //     // console.log(adr);
-                    //     router.addRoutes(adr);
-                    //   } else if (arr2.includes("editBtn")) {
-                    //     console.log(parentPath, "hasEditBtn");
-                    //     let adr = [
-                    //       {
-                    //         path: `/${parentPath}`,
-                    //         component: Layout,
-                    //         name: mr.title,
-                    //         redirect: "noredirect",
-                    //         hidden: true,
-                    //         meta: {
-                    //           notauth: true,
-                    //           noCache: true,
-                    //         },
-                    //         children: [
-                    //           {
-                    //             path: `edit/:id`,
-                    //             component: () =>
-                    //               import(`@/views/${parentPath}/edit`),
-                    //             name: `${parentPath}編輯`,
-                    //             hidden: true,
-                    //             meta: {
-                    //               notauth: true,
-                    //               noCache: true,
-                    //               title: `編輯`,
-                    //             },
-                    //           },
-                    //         ],
-                    //       },
-                    //     ];
-                    //     // console.log(adr);
-                    //     router.addRoutes(adr);
-                    //   } else if (arr2.includes("addBtn")) {
-                    //     console.log(parentPath, "hasAddBtn");
-                    //     let adr = [
-                    //       {
-                    //         path: `/${parentPath}`,
-                    //         component: Layout,
-                    //         name: mr.title,
-                    //         redirect: "noredirect",
-                    //         hidden: true,
-                    //         meta: {
-                    //           notauth: true,
-                    //           noCache: true,
-                    //         },
-                    //         children: [
-                    //           {
-                    //             path: `add/:id`,
-                    //             component: () =>
-                    //               import(`@/views/${parentPath}/add`),
-                    //             name: `${parentPath}新增`,
-                    //             hidden: true,
-                    //             meta: {
-                    //               notauth: true,
-                    //               noCache: true,
-                    //               title: `新增`,
-                    //             },
-                    //           },
-                    //         ],
-                    //       },
-                    //     ];
-                    //     // console.log(adr);
-                    //     router.addRoutes(adr);
-                    //   }
-                    // }
                   });
                   router.addRoutes(store.getters.addRouters); // 動態添加可訪問路由表
 

@@ -204,8 +204,10 @@ export default {
         vm.checkedWeek = res.result.workWeek.split(",");
         vm.temp = Object.assign({}, res.result); // copy obj
         vm.checkesStops = vm.temp.assignLineStations;
-        this.handleChange();
-        // vm.temp.
+        this.$nextTick(function () {
+          this.handleChange();
+        });
+        // this.handleChange();
         console.log(res.result);
       });
     },
@@ -259,13 +261,13 @@ export default {
 }
 
 .draggableContainer {
-  overflow: auto;
-  overflow-y: hidden;
-  height: 200px;
-  width: 100%;
+  // overflow: auto;
+  // overflow-y: hidden;
+  // // height: 200px;
+  // width: 100%;
 
   span {
-    height: 100%;
+    height: 200px;
     width: 100%;
     display: flex;
     flex-wrap: wrap;

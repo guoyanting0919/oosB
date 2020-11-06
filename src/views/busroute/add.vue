@@ -64,6 +64,8 @@
         <SubTitle title="站點設定"></SubTitle>
         <div class="sortContainer">
           <el-transfer
+            filter-placeholder="請輸入站牌名"
+            filterable
             style="width: 100%"
             :target-order="'push'"
             v-model="checkesStops"
@@ -249,13 +251,13 @@ export default {
 }
 
 .draggableContainer {
-  overflow: auto;
-  overflow-y: hidden;
-  height: 200px;
-  width: 100%;
+  // overflow: auto;
+  // overflow-y: hidden;
+  // // height: 200px;
+  // width: 100%;
 
   span {
-    height: 100%;
+    height: 200px;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -273,7 +275,9 @@ export default {
   font-weight: 700;
   padding: 0.5rem;
   margin: 0.5rem;
-
+  width: 50px;
+  justify-content: center;
+  align-items: center;
   position: relative;
 
   &:first-child::before {
@@ -315,5 +319,8 @@ export default {
 .stopName {
   -webkit-writing-mode: vertical-lr;
   writing-mode: vertical-lr;
+  display: block;
+  justify-content: flex-start;
+  align-items: center;
 }
 </style>
