@@ -421,8 +421,10 @@ export default {
     getButtons() {
       let router2 = this.$store.getters.modules;
       let a = router2.filter((r) => {
-        return r.item.name == "個案資料";
+        console.log(r.item.name);
+        return r.item.name == "用戶資料";
       });
+      console.log(a);
       let b = a[0].children.filter((r2) => {
         return r2.item.name == "全部個案";
       });

@@ -69,7 +69,7 @@ export default {
     console.log("app.vue mounted");
     window.addEventListener("vuexoidc:userLoaded", this.userLoaded);
     // console.log("defaultorgid", this.defaultorgid);
-    this.connectHub();
+    // this.connectHub();
     // //1、首先我们实例化一个连接器
     //  this.connection = new signalR.HubConnectionBuilder()
     //      //然后配置通道路由

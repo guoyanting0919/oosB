@@ -12,7 +12,7 @@
     <!-- cbsd的主頁 -->
 
     <div v-else class="trelloContainer bg-white customScrollBar">
-      <!-- <div class="settingContainer" style="display: flex">
+      <div class="settingContainer" style="display: flex">
         <el-input
           style="width: 200px"
           v-model="userName"
@@ -31,7 +31,7 @@
         <el-button @click="send">send</el-button>
         <el-button @click="addToGroup">addToGroup</el-button>
         <el-button @click="sendToGroup">sendToGroup</el-button>
-      </div> -->
+      </div>
       <div class="settingContainer">
         <el-input
           style="width: 200px"

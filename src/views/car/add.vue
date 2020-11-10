@@ -402,6 +402,9 @@ export default {
     handleSave() {
       const vm = this;
       vm.temp.orgId = vm.defaultorgid;
+      vm.temp.carCategoryName = vm.carCategorysList.filter((c) => {
+        return c.id == vm.temp.carCategoryId;
+      })[0].name;
 
       let obj = JSON.parse(JSON.stringify(vm.temp));
       console.log(vm.carDevicesChecked);
