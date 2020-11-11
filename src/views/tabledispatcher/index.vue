@@ -96,6 +96,21 @@
             >
             </el-table-column>
             <el-table-column
+              align="center"
+              property="userName"
+              label="訂單狀態"
+              width="100"
+            >
+              <template>
+                <OrderStatusTag type="newOrder"></OrderStatusTag>
+                <OrderStatusTag type="ready"></OrderStatusTag>
+                <OrderStatusTag type="arrival"></OrderStatusTag>
+                <OrderStatusTag type="boarding"></OrderStatusTag>
+                <OrderStatusTag type="complete"></OrderStatusTag>
+                <OrderStatusTag type="cancel"></OrderStatusTag>
+              </template>
+            </el-table-column>
+            <el-table-column
               property="reserveDate"
               label="預約乘車時間"
               width="200"
@@ -134,10 +149,10 @@
             >
               <template slot-scope="scope">
                 <div>
-                  <el-tag v-if="scope.row.canShared" type="success"
+                  <el-tag v-if="scope.row.canShared" size="mini" type="success"
                     >共乘</el-tag
                   >
-                  <el-tag v-else type="danger">不共乘</el-tag>
+                  <el-tag v-else size="mini" type="danger">不共乘</el-tag>
                 </div>
               </template>
             </el-table-column>
@@ -261,6 +276,7 @@ import Title from "@/components/ConsoleTableTitle";
 import permissionBtn from "@/components/PermissionBtn";
 import SubTitle from "@/components/SubTitle";
 import Pagination from "@/components/Pagination";
+import OrderStatusTag from "@/components/OrderStatusTag";
 import * as orderSelfPayUser from "@/api/orderSelfPayUser";
 import * as drivers from "@/api/drivers";
 import * as cars from "@/api/cars";
@@ -272,6 +288,7 @@ export default {
     permissionBtn,
     SubTitle,
     Pagination,
+    OrderStatusTag,
   },
   computed: {
     ...mapGetters(["defaultorgid"]),
