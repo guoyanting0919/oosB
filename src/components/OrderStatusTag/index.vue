@@ -10,6 +10,7 @@ export default {
   data() {
     return {
       msgMapping: {
+        default: "全部訂單",
         newOrder: "新訂單",
         ready: "已排班",
         arrival: "已抵達",
@@ -41,6 +42,7 @@ export default {
         if (
           type &&
           ![
+            "default",
             "newOrder",
             "ready",
             "arrival",
@@ -84,7 +86,7 @@ export default {
 <style lang='scss' >
 $height: 42px;
 $font-size: 16px;
-$color: #606266;
+$color: #3d3d3d;
 $border-color: #dcdfe6;
 $background: #ecf5ff;
 $newOrder: #fa8c16;
@@ -101,7 +103,6 @@ $cancel: #f5222d;
   font-size: 12px;
   padding: 0px 4px;
   font-weight: 700;
-  min-width: 40px;
   box-sizing: border-box;
   display: inline-block;
   line-height: 19px;

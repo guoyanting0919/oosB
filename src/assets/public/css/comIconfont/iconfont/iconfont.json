@@ -6,6 +6,41 @@
   "description": "新北營運端",
   "glyphs": [
     {
+      "icon_id": "1420914",
+      "name": "down",
+      "font_class": "down",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "17544820",
+      "name": "Vector",
+      "font_class": "Vector13",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "17544821",
+      "name": "Vector",
+      "font_class": "Vector14",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "17544817",
+      "name": "Vector-1",
+      "font_class": "Vector-1",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "17544818",
+      "name": "Vector",
+      "font_class": "Vector12",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
       "icon_id": "401157",
       "name": "table",
       "font_class": "table",

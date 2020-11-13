@@ -48,6 +48,10 @@ let routerMappingList = [
     path: "/busroute/index",
     title: "路線及站點管理 / 路線管理",
   },
+  {
+    path: "/orderselfpayuser/index",
+    title: "預約訂單 / 白牌車訂單",
+  },
 ];
 let elementMappingList = [
   "add",

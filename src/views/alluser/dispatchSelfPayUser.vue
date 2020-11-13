@@ -30,6 +30,7 @@
                   v-model="temp.date"
                   type="date"
                   placeholder="選擇日期"
+                  value-format="yyyy-MM-dd"
                 >
                 </el-date-picker>
               </el-form-item>
@@ -49,23 +50,7 @@
                 </el-time-select>
               </el-form-item>
             </el-col>
-            <el-col :sm="12" :md="8">
-              <el-form-item label="搭乘人數">
-                <el-select
-                  style="width: 100%"
-                  v-model="temp.passengerNum"
-                  placeholder="選擇搭乘人數"
-                >
-                  <el-option
-                    v-for="num in 20"
-                    :key="num"
-                    :label="num"
-                    :value="num"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
+
             <el-col :sm="12" :md="8">
               <el-form-item label="車輛類型">
                 <el-select
@@ -84,6 +69,16 @@
               </el-form-item>
             </el-col>
             <el-col :sm="12" :md="8">
+              <el-form-item label="聯絡電話">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.noticePhone"
+                  placeholder="輸入聯絡電話"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="8">
               <el-form-item label="是否共乘">
                 <el-switch
                   active-text="願意共乘"
@@ -92,50 +87,116 @@
                 ></el-switch>
               </el-form-item>
             </el-col>
-            <el-col :sm="12" :md="12">
-              <el-form-item label="起點">
-                <el-autocomplete
+            <el-col :sm="12" :md="8">
+              <el-form-item label="搭乘人數">
+                <el-select
                   style="width: 100%"
-                  popper-class="my-autocomplete"
-                  v-model="temp.fromAddr"
-                  :fetch-suggestions="querySearch"
-                  placeholder="請選擇起點"
-                  @select="handleSelect"
+                  v-model="temp.passengerNum"
+                  placeholder="選擇搭乘人數"
                 >
-                  <i
-                    class="el-icon-edit el-input__icon"
-                    slot="suffix"
-                    @click="handleIconClick"
+                  <el-option
+                    v-for="num in 8"
+                    :key="num"
+                    :label="num"
+                    :value="num"
                   >
-                  </i>
-                  <template slot-scope="{ item }">
-                    <div class="name">{{ item.value }}</div>
-                    <span class="addr">{{ item.address }}</span>
-                  </template>
-                </el-autocomplete>
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
-            <el-col :sm="12" :md="12">
-              <el-form-item label="訖點">
-                <el-autocomplete
+            <template v-if="passengerArr">
+              <el-col
+                class="passengerContainer"
+                :sm="4"
+                :md="24"
+                v-for="item in passengerArr"
+                :key="item.key"
+              >
+                <el-row :gutter="16">
+                  <el-col :sm="4" :md="8" :offset="4">
+                    <el-form-item label="姓名">
+                      <el-input
+                        style="width: 100%"
+                        v-model="item.name"
+                        placeholder="輸入姓名"
+                      >
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+
+                  <el-col :sm="4" :md="8">
+                    <el-form-item label="生日">
+                      <el-date-picker
+                        style="width: 100%"
+                        v-model="item.birth"
+                        type="date"
+                        placeholder="選擇生日"
+                        value-format="yyyy-MM-dd"
+                      >
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </template>
+            <el-col :sm="12" :md="18">
+              <el-form-item label="起點">
+                <el-input
                   style="width: 100%"
-                  popper-class="my-autocomplete"
-                  v-model="temp.toAddr"
-                  :fetch-suggestions="querySearch"
-                  placeholder="請選擇訖點"
-                  @select="handleSelect"
+                  v-model="temp.fromAddr"
+                  placeholder="輸入起點"
                 >
-                  <i
-                    class="el-icon-edit el-input__icon"
-                    slot="suffix"
-                    @click="handleIconClick"
-                  >
-                  </i>
-                  <template slot-scope="{ item }">
-                    <div class="name">{{ item.value }}</div>
-                    <span class="addr">{{ item.address }}</span>
-                  </template>
-                </el-autocomplete>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="4" :md="3">
+              <el-form-item label="起點經度">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.fromLon"
+                  placeholder="輸入起點經度"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="4" :md="3">
+              <el-form-item label="起點緯度">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.fromLat"
+                  placeholder="輸入起點緯度"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="18">
+              <el-form-item label="訖點">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.toAddr"
+                  placeholder="輸入訖點"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="4" :md="3">
+              <el-form-item label="訖點經度">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.toLon"
+                  placeholder="輸入訖點經度"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="4" :md="3">
+              <el-form-item label="訖點緯度">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.toLat"
+                  placeholder="輸入訖點緯度"
+                >
+                </el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -164,7 +225,8 @@ export default {
 
       // 表單相關
       labelPosition: "top",
-      restaurants: [],
+      passengerArr: [],
+      passengerNum: 1,
       temp: {
         // 日期
         date: "",
@@ -173,17 +235,19 @@ export default {
         selfPayUserId: "",
         orgId: "",
         reserveDate: "",
+        noticePhone: "",
         fromAddr: "",
         fromLon: 121.4724972,
         fromLat: 25.0129298,
         toAddr: "",
         toLon: 121.3645382,
         toLat: 25.0589911,
-        passengerNum: 1,
-        canShared: true,
+        passengerNum: 0,
+        canShared: false,
         status: 1,
         carCategoryId: null,
         CarCategoryName: "",
+        remark: [{ name: "", birth: "" }],
         // carCategoryName: "",
         // orderNo: "",
         // expectedMinute: 0,
@@ -193,7 +257,6 @@ export default {
         // toAddrRemark: "",
         // wheelchairType: "",
         // cancelReamrk: "",
-        // remark: "",
         // withAmt: 0,
         // totalAmt: 0,
       },
@@ -201,26 +264,29 @@ export default {
         // Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
         caseUserNo: [{ required: true, message: "必填欄位", tigger: "blur" }],
         orgAId: [{ required: true, message: "必填欄位", tigger: "change" }],
-        disabilityLevel: [
-          { required: true, message: "必填欄位", tigger: "change" },
-        ],
-        county: [{ required: true, message: "必填欄位", tigger: "change" }],
-        district: [{ required: true, message: "必填欄位", tigger: "change" }],
-        addr: [{ required: true, message: "必填欄位", tigger: "blur" }],
-        urgentName: [{ required: true, message: "必填欄位", tigger: "blur" }],
-        urgentRelationship: [
-          { required: true, message: "必填欄位", tigger: "blur" },
-        ],
-        urgentPhone: [{ required: true, message: "必填欄位", tigger: "blur" }],
-        urgentTel: [{ required: true, message: "必填欄位", tigger: "blur" }],
-        caseUserStatus: [
-          { required: true, message: "必填欄位", tigger: "blur" },
-        ],
-        reviewDate: [{ required: true, message: "必填欄位" }],
-        wealTypeId: [{ required: true, message: "必填欄位", tigger: "change" }],
       },
     };
   },
+  watch: {
+    "temp.passengerNum"(val, oldVal) {
+      const vm = this;
+      let num;
+      if (val > oldVal) {
+        num = val - oldVal;
+        console.log(val, oldVal, num);
+        for (let index = oldVal + 1; index <= val; index++) {
+          let obj = { name: "", birth: "", key: index };
+          vm.passengerArr.push(obj);
+        }
+      } else {
+        num = oldVal - val;
+        console.log(val, oldVal, num);
+        vm.passengerArr = vm.passengerArr.slice(0, val);
+        console.log(vm.passengerArr);
+      }
+    },
+  },
+
   methods: {
     //獲取所有車輛類別
     getCarCategorys() {
@@ -236,6 +302,7 @@ export default {
     },
     //預約訂單
     handleReservation() {
+      // console.log(this.passengerArr);
       const vm = this;
       let date = moment(vm.temp.date).format("yyyy-MM-DD");
       vm.temp.selfPayUserId = vm.$route.params.id.split("-")[1];
@@ -243,15 +310,17 @@ export default {
       vm.temp.CarCategoryName = vm.carCategorysList.filter((car) => {
         return car.id === vm.temp.carCategoryId;
       })[0].name;
-      console.log(vm.temp.CarCategoryName);
+      vm.temp.remark = JSON.stringify(vm.passengerArr);
+      console.log(vm.temp, JSON.parse(vm.temp.remark));
+
       orderSelfPayUser.add(vm.temp).then((res) => {
         console.log(res);
       });
     },
     handleChange() {
-      let ex = this.temp.startSite;
-      this.temp.startSite = this.temp.endSite;
-      this.temp.endSite = ex;
+      let ex = this.temp.fromAddr;
+      this.temp.fromAddr = this.temp.toAddr;
+      this.temp.toAddr = ex;
     },
     querySearch(queryString, cb) {
       var restaurants = this.restaurants;
@@ -292,6 +361,7 @@ export default {
   mounted() {
     this.restaurants = this.loadAll();
     this.getCarCategorys();
+    // this.temp.passengerNum = 1;
   },
 };
 </script>
@@ -306,5 +376,8 @@ export default {
 }
 .addr {
   font-size: 10px;
+}
+.passengerContainer {
+  background: rgb(255, 244, 230);
 }
 </style>

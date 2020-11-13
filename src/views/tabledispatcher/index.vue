@@ -39,23 +39,24 @@
               <div class="orderCardTitle" v-if="newOrderList">
                 <p>{{ item.carCategoryName }}</p>
                 <!-- <p>普通輪椅(可收拆)</p> -->
+                <p v-if="item.canShared">可共乘</p>
+                <p v-else>不可共乘</p>
+                <p>{{ item.passengerNum }}人搭乘</p>
                 <el-button
+                  @click="handleReceive(item.id)"
                   size="mini"
                   type="success"
                   style="padding: 3px 8px; margin-left: auto"
-                  >搶單</el-button
+                  >接收</el-button
                 >
               </div>
               <div class="orderCardMain">
                 <div class="orderInfo">
                   <p class="orderInfoName">{{ item.userName }}</p>
-                  <p v-if="item.canShared">可共乘</p>
-                  <p v-else>不可共乘</p>
-                  <p>{{ item.passengerNum }}人搭乘</p>
+                  <p>聯絡電話 : {{ item.noticePhone }}</p>
                 </div>
                 <p class="orderTime">
-                  {{ item.reserveDate | dateFilter }} |
-                  {{ item.expectedMinute }}分鐘
+                  {{ item.reserveDate | dateFilter }}
                 </p>
                 <div class="orderAddr">
                   <i class="iconfont icon-circle"></i>
@@ -101,13 +102,10 @@
               label="訂單狀態"
               width="100"
             >
-              <template>
-                <OrderStatusTag type="newOrder"></OrderStatusTag>
-                <OrderStatusTag type="ready"></OrderStatusTag>
-                <OrderStatusTag type="arrival"></OrderStatusTag>
-                <OrderStatusTag type="boarding"></OrderStatusTag>
-                <OrderStatusTag type="complete"></OrderStatusTag>
-                <OrderStatusTag type="cancel"></OrderStatusTag>
+              <template slot-scope="scope">
+                <OrderStatusTag
+                  :type="orderStatusMapping[scope.row.status - 1]"
+                ></OrderStatusTag>
               </template>
             </el-table-column>
             <el-table-column
@@ -123,11 +121,12 @@
               </template>
             </el-table-column>
             <el-table-column
-              property="expectedMinute"
-              label="預估時間(分鐘)"
+              property="orgId"
+              label="所屬單位"
               align="center"
               width="130"
             >
+              『orgName 目前沒抓到』
             </el-table-column>
             <el-table-column property="name" label="起訖點" width="400">
               <template slot-scope="scope">
@@ -178,10 +177,11 @@
             >
               <template slot-scope="scope">
                 <el-select
-                  v-model="scope.row.driver"
+                  v-model="scope.row.driverInfoId"
                   filterable
                   size="mini"
                   placeholder="選擇司機"
+                  :disabled="scope.row.status != 1"
                 >
                   <el-option
                     v-for="driver in driverList"
@@ -202,10 +202,11 @@
             >
               <template slot-scope="scope">
                 <el-select
-                  v-model="scope.row.car"
+                  v-model="scope.row.carId"
                   filterable
                   size="mini"
                   placeholder="選擇車輛"
+                  :disabled="scope.row.status != 1"
                 >
                   <el-option
                     v-for="car in carList"
@@ -224,33 +225,41 @@
               align="center"
               :label="'操作'"
               fixed="right"
-              width="400"
+              width="300"
             >
               <template slot-scope="scope">
-                <el-button
-                  type="info"
-                  size="mini"
-                  @click="handleUpdate(scope.row)"
-                  >排班</el-button
-                >
-                <el-button
-                  type="success"
-                  size="mini"
-                  @click="handleUpdate(scope.row)"
-                  >編輯訂單</el-button
-                >
-                <el-button
-                  type="warning"
-                  size="mini"
-                  @click="handleUpdate(scope.row)"
-                  >變更司機</el-button
-                >
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleModifyStatus(scope.row, true)"
-                  >取消排班</el-button
-                >
+                <div class="buttonFlexBox">
+                  <el-button
+                    type="info"
+                    size="mini"
+                    v-if="scope.row.status == 1"
+                    @click="handleRoster(scope.row)"
+                    >排班</el-button
+                  >
+                  <el-button
+                    type="success"
+                    size="mini"
+                    v-if="scope.row.status !== 1"
+                    disabled
+                    @click="handleUpdate(scope.row)"
+                    >編輯訂單</el-button
+                  >
+                  <el-button
+                    type="warning"
+                    size="mini"
+                    v-if="scope.row.status !== 1"
+                    disabled
+                    @click="handleUpdate(scope.row)"
+                    >變更司機</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    disabled
+                    type="danger"
+                    @click="handleModifyStatus(scope.row, true)"
+                    >取消排班</el-button
+                  >
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -265,7 +274,7 @@
       </div>
     </div>
   </div>
-</template>
+</template> 
 
 <script>
 import moment from "moment";
@@ -280,6 +289,7 @@ import OrderStatusTag from "@/components/OrderStatusTag";
 import * as orderSelfPayUser from "@/api/orderSelfPayUser";
 import * as drivers from "@/api/drivers";
 import * as cars from "@/api/cars";
+import * as dispatchSelfPayUser from "@/api/dispatchSelfPayUser";
 export default {
   name: "dispatch",
   components: {
@@ -306,43 +316,8 @@ export default {
       driverList: [],
       //車輛列表
       carList: [],
-      //新訂單
-      newOrderList: [
-        {
-          canShared: true,
-          cancelReamrk: null,
-          carCategoryId: "6720763004631687169",
-          carCategoryName: "一般車",
-          createDate: "2020-11-10T14:56:14.1756762+08:00",
-          createUserId: "00000000-0000-0000-0000-000000000000",
-          createUserName: "超級管理員",
-          expectedMinute: 29.4,
-          fromAddr: "秀巒部落",
-          fromAddrRemark: "",
-          fromLat: 25.0129298,
-          fromLon: 121.4724972,
-          highwayMileage: 0,
-          id: "6725119860279910401",
-          modifyDate: "2020-11-10T14:56:14.1411258+08:00",
-          modifyUserId: "",
-          modifyUserName: "",
-          orderNo: "SP6725119860279914496",
-          orgId: "",
-          passengerNum: 3,
-          remark: null,
-          reserveDate: "2020-10-30T09:00:00",
-          selfPayUserId: "6721145284776730624",
-          status: 1,
-          toAddr: "玉峰大橋",
-          toAddrRemark: "",
-          toLat: 25.0589911,
-          toLon: 121.3645382,
-          totalAmt: 45,
-          totalMileage: 18736,
-          wheelchairType: null,
-          withAmt: 0,
-        },
-      ],
+      // 無組織訂單
+      newOrderList: [],
 
       //table
       list: [],
@@ -355,6 +330,15 @@ export default {
       },
       multipleSelection: [], // 列表checkbox選中的值
 
+      // order status mapping
+      orderStatusMapping: [
+        "newOrder",
+        "ready",
+        "arrival",
+        "boarding",
+        "complete",
+        "cancel",
+      ],
       // signalR
       hubConnection: new signalR.HubConnectionBuilder()
         .withUrl("http://openauth.1966.org.tw/api/chatHub")
@@ -375,11 +359,11 @@ export default {
       }
     },
     handleModifyStatus() {},
-    //獲取訂單
+    //獲取派遣訂單
     getList() {
       const vm = this;
       vm.listLoading = true;
-      orderSelfPayUser.load(vm.listQuery).then((res) => {
+      dispatchSelfPayUser.load(vm.listQuery).then((res) => {
         vm.list = res.data.map((d) => {
           d.driver = "";
           d.car = "";
@@ -387,6 +371,13 @@ export default {
         });
         vm.total = res.count;
         vm.listLoading = false;
+      });
+    },
+    //獲取無組織訂單
+    async getListNoOrg() {
+      const vm = this;
+      await orderSelfPayUser.loadNoOrg({ key: undefined }).then((res) => {
+        vm.newOrderList = res.data;
       });
     },
     // 獲取所有司機
@@ -435,6 +426,51 @@ export default {
         }
       });
     },
+    //接收訂單
+    handleReceive(orderId) {
+      const vm = this;
+      console.log(orderId);
+      orderSelfPayUser
+        .receive({
+          id: orderId,
+          orgId: vm.defaultorgid,
+        })
+        .then((res) => {
+          console.log(res);
+        });
+    },
+    //排班
+    handleRoster(order) {
+      const vm = this;
+      if (order.driverInfoId == null || order.carId == null) {
+        vm.$alertM.fire({
+          icon: "error",
+          title: `請確實選擇司機及車輛`,
+        });
+        return;
+      }
+      console.log(order);
+      let data = {
+        id: order.id,
+        driverInfoId: order.driverInfoId,
+        carId: order.carId,
+        driverInfoName: vm.driverList.filter((d) => {
+          return d.id == order.driverInfoId;
+        })[0].userName,
+        carNo: vm.carList.filter((c) => {
+          return c.id == order.carId;
+        })[0].carNo,
+      };
+      console.log(data);
+      dispatchSelfPayUser.addOrUpdate(data).then((res) => {
+        console.log(res);
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        vm.getList();
+      });
+    },
     //signalR
     //建立連線
     connectHub() {
@@ -444,6 +480,7 @@ export default {
         .then(() => {
           console.log("signalR success connect");
           vm.addListener();
+          vm.addListenerReceive();
           vm.addToGroup();
         })
         .catch((err) => {
@@ -461,6 +498,23 @@ export default {
           title: "有一筆新訂單",
         });
         vm.newOrderList.push(order);
+      });
+    },
+    //建立接收成功signalR
+    addListenerReceive() {
+      const vm = this;
+      vm.hubConnection.on("ReceiveOrderHide", function (orderId) {
+        console.info("update success!", orderId);
+        // vm.signalRMsg = `${user}`;
+        vm.$alertT.fire({
+          icon: "success",
+          title: `成功接收訂單(${orderId})`,
+        });
+        vm.newOrderList = vm.newOrderList.filter(function (order) {
+          return order.id != orderId;
+        });
+        vm.getList();
+        // vm.newOrderList.push(order);
       });
     },
     //加入分組
@@ -486,11 +540,12 @@ export default {
       this.multipleSelection = val;
     },
   },
-  mounted() {
+  async mounted() {
     this.connectHub();
-    this.getList();
     this.getDriverList();
     this.getCarList();
+    await this.getListNoOrg();
+    this.getList();
   },
   beforeDestroy() {
     // Make sure to cleanup SignalR event handlers when removing the component
@@ -503,6 +558,7 @@ export default {
 .newOrderContainer {
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
 }

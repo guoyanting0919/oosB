@@ -7,11 +7,28 @@ export function load(params) {
     params,
   });
 }
+
+export function loadNoOrg(params) {
+  return request({
+    url: "/orderOfSelfPayUsers/loadNoOrg",
+    method: "get",
+    params,
+  });
+}
+
 export function get(params) {
   return request({
     url: "/orderOfSelfPayUsers/get",
     method: "get",
     params,
+  });
+}
+
+export function receive(data) {
+  return request({
+    url: "/orderOfSelfPayUsers/updateOrgId",
+    method: "post",
+    data,
   });
 }
 
@@ -36,5 +53,21 @@ export function remove(data) {
     url: "/orderOfSelfPayUsers/delete",
     method: "post",
     data,
+  });
+}
+
+export function roster(data) {
+  return request({
+    url: "/despatchOfSelfPayUsers/addOrUpdate",
+    method: "post",
+    data,
+  });
+}
+
+export function loadDespatch(params) {
+  return request({
+    url: "/despatchOfSelfPayUsers/load",
+    method: "get",
+    params,
   });
 }
