@@ -93,14 +93,14 @@
               align="center"
               property="userName"
               label="姓名"
-              width="100"
+              width="80"
             >
             </el-table-column>
             <el-table-column
               align="center"
               property="userName"
               label="訂單狀態"
-              width="100"
+              width="80"
             >
               <template slot-scope="scope">
                 <OrderStatusTag
@@ -108,10 +108,64 @@
                 ></OrderStatusTag>
               </template>
             </el-table-column>
+
+            <el-table-column
+              property="driver"
+              label="司機"
+              width="150"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  v-model="scope.row.driverInfoId"
+                  filterable
+                  size="mini"
+                  placeholder="選擇司機"
+                  :disabled="scope.row.status != 1"
+                >
+                  <el-option
+                    v-for="driver in driverList"
+                    :key="driver.id"
+                    :label="driver.userName"
+                    :value="driver.id"
+                  >
+                    {{ driver.userName }} / {{ driver.phone }}
+                  </el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column
+              property="car"
+              label="車輛"
+              width="150"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <el-select
+                  v-model="scope.row.carId"
+                  filterable
+                  size="mini"
+                  placeholder="選擇車輛"
+                  :disabled="scope.row.status != 1"
+                >
+                  <el-option
+                    v-for="car in carList"
+                    :key="car.id"
+                    :label="car.carNo"
+                    :value="car.id"
+                  >
+                    {{ car.carCategoryName || "一般車" }} /
+                    {{ car.seatNum }}人座 /
+                    {{ car.carNo }}
+                  </el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+
             <el-table-column
               property="reserveDate"
               label="預約乘車時間"
-              width="200"
+              width="160"
               align="center"
             >
               <template slot-scope="scope">
@@ -120,14 +174,7 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column
-              property="orgId"
-              label="所屬單位"
-              align="center"
-              width="130"
-            >
-              『orgName 目前沒抓到』
-            </el-table-column>
+
             <el-table-column property="name" label="起訖點" width="400">
               <template slot-scope="scope">
                 <div class="orderAddr">
@@ -170,56 +217,12 @@
             >
             </el-table-column>
             <el-table-column
-              property="driver"
-              label="司機"
-              width="200"
+              property="orgId"
+              label="所屬單位"
               align="center"
+              width="130"
             >
-              <template slot-scope="scope">
-                <el-select
-                  v-model="scope.row.driverInfoId"
-                  filterable
-                  size="mini"
-                  placeholder="選擇司機"
-                  :disabled="scope.row.status != 1"
-                >
-                  <el-option
-                    v-for="driver in driverList"
-                    :key="driver.id"
-                    :label="driver.userName"
-                    :value="driver.id"
-                  >
-                    {{ driver.userName }} / {{ driver.phone }}
-                  </el-option>
-                </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column
-              property="car"
-              label="車輛"
-              width="200"
-              align="center"
-            >
-              <template slot-scope="scope">
-                <el-select
-                  v-model="scope.row.carId"
-                  filterable
-                  size="mini"
-                  placeholder="選擇車輛"
-                  :disabled="scope.row.status != 1"
-                >
-                  <el-option
-                    v-for="car in carList"
-                    :key="car.id"
-                    :label="car.carNo"
-                    :value="car.id"
-                  >
-                    {{ car.carCategoryName || "一般車" }} /
-                    {{ car.seatNum }}人座 /
-                    {{ car.carNo }}
-                  </el-option>
-                </el-select>
-              </template>
+              『orgName 目前沒抓到』
             </el-table-column>
             <el-table-column
               align="center"

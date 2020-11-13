@@ -69,7 +69,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import Hamburger from "@/components/Hamburger";
-import logo from "@/assets/images/logo1.png";
+import logo from "@/assets/images/尖石logo.png";
 
 export default {
   data: function () {
