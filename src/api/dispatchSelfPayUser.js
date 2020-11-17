@@ -7,6 +7,13 @@ export function load(params) {
     params,
   });
 }
+export function loadGroup(params) {
+  return request({
+    url: "/despatchOfSelfPayUsers/loadGroup",
+    method: "get",
+    params,
+  });
+}
 export function get(params) {
   return request({
     url: "/despatchOfSelfPayUsers/get",
@@ -23,13 +30,13 @@ export function addOrUpdate(data) {
   });
 }
 
-// export function update(data) {
-//   return request({
-//     url: "/despatchOfSelfPayUsers/update",
-//     method: "post",
-//     data,
-//   });
-// }
+export function cancel(data) {
+  return request({
+    url: "/despatchOfSelfPayUsers/cancelDespatch",
+    method: "post",
+    data,
+  });
+}
 
 export function remove(data) {
   return request({
