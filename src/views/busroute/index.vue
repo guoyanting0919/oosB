@@ -200,6 +200,7 @@ export default {
         console.log(res.data);
         res.data.forEach((r) => {
           r.weekArr = r.workWeek?.split(",");
+          r.weekArr.sort();
         });
 
         // res.data
