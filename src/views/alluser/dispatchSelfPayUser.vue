@@ -62,7 +62,7 @@
                     v-for="type in carCategorysList"
                     :key="type.id"
                     :label="type.name"
-                    :value="type.id"
+                    :value="type.dtValue"
                   >
                   </el-option>
                 </el-select>
@@ -308,7 +308,7 @@ export default {
       vm.temp.selfPayUserId = vm.$route.params.id.split("-")[1];
       vm.temp.reserveDate = `${date} ${vm.temp.time}`;
       vm.temp.CarCategoryName = vm.carCategorysList.filter((car) => {
-        return car.id === vm.temp.carCategoryId;
+        return car.dtValue === vm.temp.carCategoryId;
       })[0].name;
       vm.temp.remark = JSON.stringify(vm.passengerArr);
       console.log(vm.temp, JSON.parse(vm.temp.remark));

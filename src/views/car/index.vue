@@ -67,16 +67,11 @@
             align="center"
           ></el-table-column>
           <el-table-column
-            property="carCategoryId"
+            property="carCategoryName"
             label="車輛類別"
             min-width="140"
             align="center"
           >
-            <template slot-scope="scope">
-              <span>{{
-                scope.row.carCategoryId | carCategoryFilter(carCategorysList)
-              }}</span>
-            </template>
           </el-table-column>
           <el-table-column
             property="carTop"
@@ -178,7 +173,6 @@ import Title from "@/components/ConsoleTableTitle";
 import permissionBtn from "@/components/PermissionBtn";
 import Pagination from "@/components/Pagination";
 import * as cars from "@/api/cars";
-import * as categorys from "@/api/categorys";
 import * as drivers from "@/api/drivers";
 export default {
   name: "car",
@@ -216,8 +210,6 @@ export default {
       ],
       // 司機列表
       driverList: [],
-      //車輛類型列表
-      carCategorysList: [],
       // main data
       list: [],
       listLoading: false,
@@ -232,13 +224,6 @@ export default {
     };
   },
   filters: {
-    carCategoryFilter(id, carCategorysList) {
-      // const vm = this;
-      let arr = carCategorysList?.filter((category) => {
-        return category.id === id;
-      });
-      return arr[0]?.name;
-    },
     driverFilter(id, driverList) {
       // const vm = this;
       let arr = driverList?.filter((category) => {
@@ -290,18 +275,7 @@ export default {
         vm.driverList = res.data;
       });
     },
-    //獲取所有車輛類別
-    getCarCategorys() {
-      const vm = this;
-      let query = {
-        page: 1,
-        limit: 20,
-        TypeId: "SYS_CAR",
-      };
-      categorys.getList(query).then((res) => {
-        vm.carCategorysList = res.data;
-      });
-    },
+
     // table 功能
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -403,7 +377,6 @@ export default {
   mounted() {
     this.getButtons();
     this.getList();
-    this.getCarCategorys();
     this.getDrivers();
   },
 };

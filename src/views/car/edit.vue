@@ -40,7 +40,7 @@
                   <el-option
                     v-for="category in carCategorysList"
                     :key="category.id"
-                    :value="category.id"
+                    :value="category.dtValue"
                     :label="category.name"
                   ></el-option>
                   <!-- <el-option :value="2" :label="'不可派發'">不可派發</el-option> -->
@@ -376,7 +376,7 @@ export default {
       categorys.getList(query).then((res) => {
         res.data.forEach((license) => {
           let obj = {};
-          obj.categoryId = license.id;
+          obj.categoryId = license.dtValue;
           obj.categoryName = license.name;
           vm.carLicensesList.push(obj);
         });
@@ -393,7 +393,7 @@ export default {
       categorys.getList(query).then((res) => {
         res.data.forEach((device) => {
           let obj = {};
-          obj.categoryId = device.id;
+          obj.categoryId = device.dtValue;
           obj.categoryName = device.name;
           vm.carDevicesList.push(obj);
         });
@@ -410,7 +410,7 @@ export default {
       categorys.getList(query).then((res) => {
         res.data.forEach((insurances) => {
           let obj = {};
-          obj.categoryId = insurances.id;
+          obj.categoryId = insurances.dtValue;
           obj.categoryName = insurances.name;
           obj.expireDate = "";
           vm.carInsurancesList.push(obj);
@@ -424,7 +424,7 @@ export default {
       });
     },
 
-    // 確認編輯司機
+    // 確認編輯車輛
     handleSave() {
       const vm = this;
       vm.temp.orgId = vm.defaultorgid;
@@ -434,7 +434,9 @@ export default {
       obj.carDevices = vm.carDevicesChecked;
       obj.carInsurances = vm.carInsurancesChecked;
       obj.carLicenses = vm.carLicensesChecked;
-
+      obj.carCategoryName = vm.carCategorysList.filter((c) => {
+        return c.dtValue == obj.carCategoryId;
+      })[0].name;
       console.log(obj);
       cars.update(obj).then(() => {
         vm.$router.push("/car/index");

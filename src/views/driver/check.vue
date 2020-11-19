@@ -285,7 +285,7 @@ export default {
       categorys.getList(query).then((res) => {
         res.data.forEach((license) => {
           let obj = {};
-          obj.categoryId = license.id;
+          obj.categoryId = license.dtValue;
           obj.categoryName = license.name;
           obj.expireDate = "";
           vm.driverLicensesList.push(obj);
@@ -309,7 +309,7 @@ export default {
       categorys.getList(query).then((res) => {
         res.data.forEach((insurances) => {
           let obj = {};
-          obj.categoryId = insurances.id;
+          obj.categoryId = insurances.dtValue;
           obj.categoryName = insurances.name;
           obj.expireDate = "";
           vm.driverInsurancesList.push(obj);

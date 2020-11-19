@@ -137,36 +137,6 @@
             </el-checkbox-group>
           </div>
 
-          <!-- <SubTitle title="證照"></SubTitle>
-          <div class="tableContainer">
-            <div class="tableHeader">
-              <div class="headerCheckBox">持有證照</div>
-              <div class="expireDate">證照到期日</div>
-            </div>
-            <el-checkbox-group v-model="temp.Type">
-              <div
-                v-for="item in 2"
-                :key="item"
-                style="border-bottom: 1px solid #ddd; display: flex"
-              >
-                <el-checkbox
-                  label="計程車執業登記證"
-                  name="type"
-                  style="width: 50%; text-align: center; padding: 1rem"
-                ></el-checkbox>
-                <div class="expireDateBox">
-                  <el-date-picker
-                    style="width: 70%"
-                    v-model="temp.Id"
-                    type="date"
-                    size="mini"
-                    placeholder="選擇日期"
-                  ></el-date-picker>
-                </div>
-              </div>
-            </el-checkbox-group>
-          </div> -->
-
           <SubTitle title="備註"></SubTitle>
           <el-input
             type="textarea"
@@ -254,7 +224,7 @@ export default {
       categorys.getList(query).then((res) => {
         res.data.forEach((license) => {
           let obj = {};
-          obj.categoryId = license.id;
+          obj.categoryId = license.dtValue;
           obj.categoryName = license.name;
           vm.driverLicensesList.push(obj);
         });
@@ -271,7 +241,7 @@ export default {
       categorys.getList(query).then((res) => {
         res.data.forEach((insurances) => {
           let obj = {};
-          obj.categoryId = insurances.id;
+          obj.categoryId = insurances.dtValue;
           obj.categoryName = insurances.name;
           obj.expireDate = "";
           vm.driverInsurancesList.push(obj);
