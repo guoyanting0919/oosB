@@ -198,6 +198,9 @@ export default {
         "boarding",
         "complete",
         "cancel",
+        "cancel",
+        "cancel",
+        "cancel",
       ],
 
       value: "",

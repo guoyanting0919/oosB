@@ -56,18 +56,10 @@ export function remove(data) {
   });
 }
 
-export function roster(data) {
+export function cancel(data) {
   return request({
-    url: "/despatchOfSelfPayUsers/addOrUpdate",
+    url: "/orderOfBusUsers/cancelOrderReq",
     method: "post",
     data,
-  });
-}
-
-export function loadDespatch(params) {
-  return request({
-    url: "/despatchOfSelfPayUsers/load",
-    method: "get",
-    params,
   });
 }

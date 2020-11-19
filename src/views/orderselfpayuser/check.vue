@@ -312,12 +312,15 @@ export default {
 
       // order status mapping
       orderStatusMapping: [
-        "新訂單",
-        "已排班",
-        "已抵達",
-        "客上",
-        "已完成",
-        "已取消",
+        "newOrder",
+        "ready",
+        "arrival",
+        "boarding",
+        "complete",
+        "cancel",
+        "cancel",
+        "cancel",
+        "cancel",
       ],
     };
   },

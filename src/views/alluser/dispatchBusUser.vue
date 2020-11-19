@@ -247,6 +247,8 @@ export default {
       cloneObj.map((obj, index) => {
         if (index <= idFlag) {
           obj.disabled = true;
+        } else {
+          obj.disabled = false;
         }
       });
       // console.log(cloneObj);

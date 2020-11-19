@@ -20,7 +20,7 @@
     </sticky>
 
     <div style="padding-bottom: 0px" class="app-container flex-item">
-      <Title title="幸福巴士表格式調度台"></Title>
+      <Title title="白牌車表格式調度台"></Title>
       <div
         class="bg-white formContainer"
         style="height: calc(100% - 50px); padding: 0 16px"
@@ -256,15 +256,17 @@
                   <el-button
                     type="warning"
                     size="mini"
-                    v-if="scope.row.status !== 1"
-                    disabled
-                    @click="handleUpdate(scope.row)"
-                    >變更司機</el-button
+                    v-if="scope.row.status !== 1 && scope.row.status !== 9"
+                    @click="
+                      changeDialog = true;
+                      handleChange(scope.row);
+                    "
+                    >變更司機車輛</el-button
                   >
                   <el-button
                     size="mini"
                     type="danger"
-                    v-if="scope.row.status !== 1"
+                    v-if="scope.row.status !== 1 && scope.row.status !== 9"
                     @click="handleCancelDispatch(scope.row.despatchNo)"
                     >取消排班</el-button
                   >
@@ -542,6 +544,64 @@
         <el-button type="primary" @click="handleSetCarPool()">確 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- change dialog -->
+    <el-dialog title="變更司機車輛" :visible.sync="changeDialog" width="800px">
+      <div class="changeDialogBody">
+        <el-form
+          :label-position="labelPosition"
+          label-width="200px"
+          :model="temp"
+          ref="form"
+        >
+          <el-row :gutter="16">
+            <el-col :sm="12" :md="12">
+              <el-form-item label="司機">
+                <el-select
+                  v-model="orderTemp.driverInfoId"
+                  filterable
+                  placeholder="選擇司機"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="driver in driverList"
+                    :key="driver.id"
+                    :label="`${driver.userName} / ${driver.phone}`"
+                    :value="driver.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :sm="12" :md="12">
+              <el-form-item label="車輛">
+                <el-select
+                  v-model="orderTemp.carId"
+                  filterable
+                  placeholder="選擇車輛"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="car in carList"
+                    :key="car.id"
+                    :label="`${car.carCategoryName || '一般車'} / ${
+                      car.seatNum
+                    }人座 / ${car.carNo}`"
+                    :value="car.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="changeDialog = false">取 消</el-button>
+        <el-button type="primary" @click="handleConfirmChange()"
+          >確 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template> 
 
@@ -604,6 +664,7 @@ export default {
       multipleSelection: [],
 
       // order temp
+      orderTemp: [],
       // 表單相關
       labelPosition: "top",
       passengerArr: [],
@@ -660,11 +721,15 @@ export default {
         "boarding",
         "complete",
         "cancel",
+        "cancel",
+        "cancel",
+        "cancel",
       ],
 
       // dialog
       editDialog: false,
       carPoolDialog: false,
+      changeDialog: false,
 
       // signalR
       hubConnection: new signalR.HubConnectionBuilder()
@@ -708,10 +773,10 @@ export default {
     //獲取派遣訂單
     getList() {
       const vm = this;
-      vm.spanArr = [];
       vm.pos = "";
       vm.listLoading = true;
       dispatchSelfPayUser.load(vm.listQuery).then((res) => {
+        vm.spanArr = [];
         vm.list = res.data.map((d) => {
           d.driver = "";
           d.car = "";
@@ -773,7 +838,6 @@ export default {
     // 獲取所有司機
     getDriverList() {
       const vm = this;
-      vm.listLoading = true;
       drivers.load({ limit: 9999, page: 1 }).then((res) => {
         vm.driverList = res.data;
       });
@@ -781,7 +845,6 @@ export default {
     // 獲取所有車輛
     getCarList() {
       const vm = this;
-      vm.listLoading = true;
       cars.load({ limit: 9999, page: 1 }).then((res) => {
         vm.carList = res.data;
       });
@@ -899,7 +962,7 @@ export default {
       const vm = this;
       let params = {
         id,
-        cancelRemark: "原因",
+        cancelRemark: "SYS_ORDERCANCEL_REMARK_ADMIN",
       };
       orderSelfPayUser.cancel(params).then((res) => {
         vm.$alertT.fire({
@@ -985,6 +1048,38 @@ export default {
           title: res.message,
         });
         vm.carPoolDialog = false;
+        vm.getList();
+      });
+    },
+
+    //變更司機車輛
+    handleChange(order) {
+      const vm = this;
+      vm.orderTemp = Object.assign({}, order); // copy obj
+      console.log(vm.orderTemp);
+    },
+
+    //確認變更司機車輛
+    handleConfirmChange() {
+      const vm = this;
+
+      let data = {
+        id: [vm.orderTemp.id],
+        driverInfoId: vm.orderTemp.driverInfoId,
+        carId: vm.orderTemp.carId,
+        driverInfoName: vm.driverList.filter((d) => {
+          return d.id == vm.orderTemp.driverInfoId;
+        })[0].userName,
+        carNo: vm.carList.filter((c) => {
+          return c.id == vm.orderTemp.carId;
+        })[0].carNo,
+      };
+      dispatchSelfPayUser.addOrUpdate(data).then((res) => {
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        vm.changeDialog = false;
         vm.getList();
       });
     },
