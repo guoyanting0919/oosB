@@ -42,14 +42,14 @@
             align="center"
             property="userName"
             label="姓名"
-            width="80"
+            width="120"
           >
           </el-table-column>
           <el-table-column
             align="center"
             property="userName"
             label="訂單狀態"
-            width="80"
+            width="100"
           >
             <template slot-scope="scope">
               <OrderStatusTag
@@ -61,7 +61,7 @@
           <el-table-column
             property="driver"
             label="司機"
-            width="150"
+            width="200"
             align="center"
           >
             <template slot-scope="scope">
@@ -86,7 +86,7 @@
           <el-table-column
             property="car"
             label="車輛"
-            width="150"
+            width="200"
             align="center"
           >
             <template slot-scope="scope">
@@ -114,7 +114,7 @@
           <el-table-column
             property="reserveDate"
             label="預約乘車時間"
-            width="160"
+            width="220"
             align="center"
           >
             <template slot-scope="scope">
@@ -127,12 +127,12 @@
           <el-table-column
             property="stationLineName"
             label="預約路線"
-            width="100"
+            width="150"
             align="center"
           >
           </el-table-column>
 
-          <el-table-column property="name" label="起迄站" width="200">
+          <el-table-column property="name" label="起迄站">
             <template slot-scope="scope">
               <div class="orderAddr">
                 <i class="iconfont icon-circle"></i>
@@ -148,7 +148,7 @@
           <el-table-column
             property="passengerNum"
             label="搭乘人數"
-            width="80"
+            width="100"
             align="center"
           >
           </el-table-column>
