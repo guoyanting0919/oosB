@@ -820,8 +820,10 @@ export default {
       vm.lineStop = [];
       orderBusUser.get({ id }).then((res) => {
         vm.temp = Object.assign({}, res.result); // copy obj
-        vm.temp.date = vm.temp.reserveDate.split(" ")[0];
-        vm.temp.time = vm.temp.reserveDate.split(" ")[1].slice(0, 5);
+        let date = vm.temp.reserveDate.split(" ")[0];
+        let time = vm.temp.reserveDate.split(" ")[1].slice(0, 5);
+        vm.$set(vm.temp, "date", date);
+        vm.$set(vm.temp, "time", time);
         vm.$nextTick(() => {
           busStationLines.get({ id: vm.temp.stationLineId }).then((res) => {
             console.log(res);

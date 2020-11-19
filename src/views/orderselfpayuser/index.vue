@@ -48,7 +48,7 @@
             <div class="orderLeft">
               <div class="orderLeftTitle">訂單編號 {{ order.orderNo }}</div>
               <div class="orderLeftDetail">
-                <p>單位：『目前沒有』</p>
+                <p>單位：{{ order.orgName }}</p>
                 <p>車種類型：{{ order.carCategoryName }}</p>
                 <p>預約時間：{{ order.reserveDate | dateFilter }}</p>
                 <p>建立時間：{{ order.createDate | dateFilter }}</p>
@@ -107,9 +107,31 @@
                   >
                     查看訂單
                   </button>
-                  <button class="orderButton orderEdit">編輯訂單</button>
+                  <button
+                    class="orderButton orderEdit"
+                    @click="
+                      editDialog = true;
+                      getOrder(order.id);
+                    "
+                    v-if="order.status == 1"
+                  >
+                    編輯訂單
+                  </button>
                   <button class="orderButton orderStatus">修改狀態</button>
-                  <button class="orderButton orderCancel">取消訂單</button>
+                  <button
+                    class="orderButton orderCancel"
+                    v-if="order.status == 1"
+                    @click="handleCancelOrder(order.id)"
+                  >
+                    取消訂單
+                  </button>
+                  <button
+                    class="orderButton orderCancel"
+                    v-if="order.status == 2"
+                    @click="handleCancelDispatch(order.despatchNo)"
+                  >
+                    取消排班
+                  </button>
                 </div>
               </div>
             </div>
@@ -126,26 +148,205 @@
       </div>
     </div>
 
-    <!-- violation dialog -->
-    <!-- <el-dialog
-      v-el-drag-dialog
-      title="各車行違規點數"
-      :visible.sync="violationDialog"
+    <!-- eidt dialog -->
+    <el-dialog
+      title="編輯訂單"
+      @closed="temp.passengerNum = 0"
+      :visible.sync="editDialog"
+      width="800px"
     >
-      <el-table :data="gridData">
-        <el-table-column
-          property="date"
-          label="日期"
-          width="150"
-        ></el-table-column>
-        <el-table-column
-          property="name"
-          label="姓名"
-          width="200"
-        ></el-table-column>
-        <el-table-column property="address" label="地址"></el-table-column>
-      </el-table>
-    </el-dialog> -->
+      <div class="editDialogBody">
+        <el-form
+          :label-position="labelPosition"
+          label-width="200px"
+          :model="temp"
+          ref="form"
+        >
+          <el-row :gutter="16">
+            <el-col :sm="12" :md="8">
+              <el-form-item label="預約日期">
+                <el-date-picker
+                  style="width: 100%"
+                  v-model="temp.date"
+                  type="date"
+                  placeholder="選擇日期"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="8">
+              <el-form-item label="預約時間">
+                <el-time-select
+                  style="width: 100%"
+                  v-model="temp.time"
+                  :picker-options="{
+                    start: '08:30',
+                    step: '00:15',
+                    end: '18:30',
+                  }"
+                  placeholder="選擇時間"
+                >
+                </el-time-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :sm="12" :md="8">
+              <el-form-item label="車輛類型">
+                <el-select
+                  style="width: 100%"
+                  v-model="temp.carCategoryId"
+                  placeholder="選擇車輛類型"
+                >
+                  <el-option
+                    v-for="type in carCategorysList"
+                    :key="type.id"
+                    :label="type.name"
+                    :value="type.dtValue"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="8">
+              <el-form-item label="聯絡電話">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.noticePhone"
+                  placeholder="輸入聯絡電話"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="8">
+              <el-form-item label="是否共乘">
+                <el-switch
+                  active-text="願意共乘"
+                  inactive-text="不共乘"
+                  v-model="temp.canShared"
+                ></el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="8">
+              <el-form-item label="搭乘人數">
+                <el-select
+                  style="width: 100%"
+                  v-model="temp.passengerNum"
+                  placeholder="選擇搭乘人數"
+                >
+                  <el-option
+                    v-for="num in 8"
+                    :key="num"
+                    :label="num"
+                    :value="num"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <template v-if="passengerArr">
+              <el-col
+                class="passengerContainer"
+                :sm="4"
+                :md="24"
+                v-for="item in passengerArr"
+                :key="item.key"
+              >
+                <el-row :gutter="16">
+                  <el-col :sm="4" :md="8" :offset="4">
+                    <el-form-item label="姓名">
+                      <el-input
+                        style="width: 100%"
+                        v-model="item.name"
+                        placeholder="輸入姓名"
+                      >
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+
+                  <el-col :sm="4" :md="8">
+                    <el-form-item label="生日">
+                      <el-date-picker
+                        style="width: 100%"
+                        v-model="item.birth"
+                        type="date"
+                        placeholder="選擇生日"
+                        value-format="yyyy-MM-dd"
+                      >
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </template>
+            <el-col :sm="12" :md="18">
+              <el-form-item label="起點">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.fromAddr"
+                  placeholder="輸入起點"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="4" :md="3">
+              <el-form-item label="起點經度">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.fromLon"
+                  placeholder="輸入起點經度"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="4" :md="3">
+              <el-form-item label="起點緯度">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.fromLat"
+                  placeholder="輸入起點緯度"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="12" :md="18">
+              <el-form-item label="訖點">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.toAddr"
+                  placeholder="輸入訖點"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="4" :md="3">
+              <el-form-item label="訖點經度">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.toLon"
+                  placeholder="輸入訖點經度"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :sm="4" :md="3">
+              <el-form-item label="訖點緯度">
+                <el-input
+                  style="width: 100%"
+                  v-model="temp.toLat"
+                  placeholder="輸入訖點緯度"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialog = false">取 消</el-button>
+        <el-button type="primary" @click="handleEdit()">確 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -158,6 +359,8 @@ import elDragDialog from "@/directive/el-dragDialog";
 import Pagination from "@/components/Pagination";
 import OrderStatusTag from "@/components/OrderStatusTag";
 import * as orderSelfPayUser from "@/api/orderSelfPayUser";
+import * as categorys from "@/api/categorys";
+import * as dispatchSelfPayUser from "@/api/dispatchSelfPayUser";
 export default {
   name: "orderSelfPayUser",
   components: {
@@ -179,6 +382,8 @@ export default {
   },
   data() {
     return {
+      //車輛類別
+      carCategorysList: [],
       //table
       list: [],
       listLoading: false,
@@ -189,6 +394,35 @@ export default {
         key: undefined,
       },
       multipleSelection: [], // 列表checkbox選中的值
+      // 表單相關
+      labelPosition: "top",
+      passengerArr: [],
+      passengerNum: 1,
+      temp: {
+        // 日期
+        date: "",
+        time: "",
+        id: "",
+        selfPayUserId: "",
+        orgId: "",
+        reserveDate: "",
+        noticePhone: "",
+        fromAddr: "",
+        fromLon: "",
+        fromLat: "",
+        toAddr: "",
+        toLon: "",
+        toLat: "",
+        passengerNum: 0,
+        canShared: false,
+        status: 1,
+        carCategoryId: null,
+        CarCategoryName: "",
+        remark: [{ name: "", birth: "" }],
+      },
+
+      // dialog
+      editDialog: false,
 
       // order status mapping
       orderStatusMapping: [
@@ -209,13 +443,42 @@ export default {
       violationDialog: false,
     };
   },
+  watch: {
+    "temp.passengerNum"(val, oldVal) {
+      const vm = this;
+      let num;
+      if (val > oldVal) {
+        num = val - oldVal;
+        console.log(val, oldVal, num);
+        for (let index = oldVal + 1; index <= val; index++) {
+          let obj = { name: "", birth: "", key: index };
+          vm.passengerArr.push(obj);
+        }
+      } else {
+        num = oldVal - val;
+        vm.passengerArr = vm.passengerArr.slice(0, val);
+      }
+    },
+  },
   methods: {
     //獲取訂單
     getList() {
       const vm = this;
-      orderSelfPayUser.load(vm.listQuery).then((res) => {
+      dispatchSelfPayUser.load(vm.listQuery).then((res) => {
         vm.list = res.data;
         vm.total = res.count;
+      });
+    },
+    // 獲取所有車輛類型
+    getCarCategorys() {
+      const vm = this;
+      let query = {
+        page: 1,
+        limit: 20,
+        TypeId: "SYS_CAR",
+      };
+      categorys.getList(query).then((res) => {
+        vm.carCategorysList = res.data;
       });
     },
     onBtnClicked(domId) {
@@ -227,6 +490,67 @@ export default {
         default:
           break;
       }
+    },
+    // 獲取單筆訂單資料
+    getOrder(id) {
+      const vm = this;
+      orderSelfPayUser.get({ id }).then((res) => {
+        vm.temp = Object.assign({}, res.result); // copy obj
+        let date = vm.temp.reserveDate.split(" ")[0];
+        let time = vm.temp.reserveDate.split(" ")[1].slice(0, 5);
+        vm.$set(vm.temp, "date", date);
+        vm.$set(vm.temp, "time", time);
+        vm.$nextTick(() => {
+          vm.passengerArr = JSON.parse(vm.temp.remark);
+        });
+      });
+    },
+    // 編輯訂單
+    handleEdit() {
+      const vm = this;
+      let date = moment(vm.temp.date).format("yyyy-MM-DD");
+      vm.temp.reserveDate = `${date} ${vm.temp.time}`;
+      vm.temp.CarCategoryName = vm.carCategorysList.filter((car) => {
+        return car.dtValue === vm.temp.carCategoryId;
+      })[0].name;
+      vm.temp.remark = JSON.stringify(vm.passengerArr);
+      console.log(vm.temp, JSON.parse(vm.temp.remark));
+
+      orderSelfPayUser.update(vm.temp).then((res) => {
+        // console.log(res);
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        vm.editDialog = false;
+        vm.getList();
+      });
+    },
+    // 取消排班
+    handleCancelDispatch(id) {
+      const vm = this;
+      dispatchSelfPayUser.cancel([id]).then((res) => {
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        vm.getList();
+      });
+    },
+    //取消訂單
+    handleCancelOrder(id) {
+      const vm = this;
+      let params = {
+        id,
+        cancelRemark: "SYS_ORDERCANCEL_REMARK_ADMIN",
+      };
+      orderSelfPayUser.cancel(params).then((res) => {
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        vm.getList();
+      });
     },
     handleCheck(id) {
       this.$router.push({
@@ -243,6 +567,7 @@ export default {
   },
   mounted() {
     this.getList();
+    this.getCarCategorys();
   },
 };
 </script>

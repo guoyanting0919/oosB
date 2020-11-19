@@ -11,7 +11,7 @@
       </div>
     </sticky>
     <div class="app-container flex-item">
-      <Title title="新增車輛"></Title>
+      <Title title="編輯車輛"></Title>
       <div class="bg-white formContainer customScrollBar">
         <el-form
           :label-position="labelPosition"

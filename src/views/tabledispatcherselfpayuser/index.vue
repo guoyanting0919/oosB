@@ -691,17 +691,6 @@ export default {
         carCategoryId: null,
         CarCategoryName: "",
         remark: [{ name: "", birth: "" }],
-        // carCategoryName: "",
-        // orderNo: "",
-        // expectedMinute: 0,
-        // totalMileage: 0,
-        // highwayMileage: 0,
-        // fromAddrRemark: "",
-        // toAddrRemark: "",
-        // wheelchairType: "",
-        // cancelReamrk: "",
-        // withAmt: 0,
-        // totalAmt: 0,
       },
 
       //car pool temp
@@ -866,8 +855,11 @@ export default {
       const vm = this;
       orderSelfPayUser.get({ id }).then((res) => {
         vm.temp = Object.assign({}, res.result); // copy obj
-        vm.temp.date = vm.temp.reserveDate.split(" ")[0];
-        vm.temp.time = vm.temp.reserveDate.split(" ")[1].slice(0, 5);
+
+        let date = vm.temp.reserveDate.split(" ")[0];
+        let time = vm.temp.reserveDate.split(" ")[1].slice(0, 5);
+        vm.$set(vm.temp, "date", date);
+        vm.$set(vm.temp, "time", time);
         vm.$nextTick(() => {
           vm.passengerArr = JSON.parse(vm.temp.remark);
         });
@@ -947,7 +939,6 @@ export default {
     },
     // 取消排班
     handleCancelDispatch(id) {
-      // let a = { idx: id };
       const vm = this;
       dispatchSelfPayUser.cancel([id]).then((res) => {
         vm.$alertT.fire({
