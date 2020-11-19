@@ -20,7 +20,7 @@
     </sticky>
 
     <div style="padding-bottom: 0px" class="app-container flex-item">
-      <Title title="白牌車表格式調度台"></Title>
+      <Title title="幸福巴士表格式調度台"></Title>
       <div
         class="bg-white formContainer"
         style="height: calc(100% - 50px); padding: 0 16px"
@@ -222,18 +222,17 @@
             >
             </el-table-column>
             <el-table-column
-              property="orgId"
+              property="orgName"
               label="所屬單位"
               align="center"
-              width="130"
+              width="180"
             >
-              『orgName 目前沒抓到』
             </el-table-column>
             <el-table-column
               align="center"
               :label="'操作'"
               fixed="right"
-              width="300"
+              width="260"
             >
               <template slot-scope="scope">
                 <div class="buttonFlexBox">
@@ -266,8 +265,15 @@
                     size="mini"
                     type="danger"
                     v-if="scope.row.status !== 1"
-                    @click="handleCancelDispatch(scope.row.id)"
+                    @click="handleCancelDispatch(scope.row.despatchNo)"
                     >取消排班</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    v-if="scope.row.status == 1"
+                    @click="handleCancelOrder(scope.row.id)"
+                    >取消訂單</el-button
                   >
                 </div>
               </template>
@@ -744,6 +750,7 @@ export default {
         columnIndex === 11 ||
         columnIndex === 0 ||
         columnIndex === 3 ||
+        columnIndex === 7 ||
         columnIndex === 4
       ) {
         const _row = this.spanArr[rowIndex];
@@ -880,6 +887,21 @@ export default {
       // let a = { idx: id };
       const vm = this;
       dispatchSelfPayUser.cancel([id]).then((res) => {
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        vm.getList();
+      });
+    },
+    //取消訂單
+    handleCancelOrder(id) {
+      const vm = this;
+      let params = {
+        id,
+        cancelRemark: "原因",
+      };
+      orderSelfPayUser.cancel(params).then((res) => {
         vm.$alertT.fire({
           icon: "success",
           title: res.message,
@@ -1027,6 +1049,7 @@ export default {
     },
     // 換頁
     handleCurrentChange(val) {
+      console.log("a");
       this.listQuery.page = val.page;
       this.listQuery.limit = val.limit;
       this.getList();
@@ -1051,7 +1074,11 @@ export default {
   },
 };
 </script>
-
+<style scoped>
+::v-deep .hover-row > td {
+  background-color: initial !important;
+}
+</style>
 <style lang='scss' scoped>
 .newOrderContainer {
   display: flex;

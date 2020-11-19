@@ -66,6 +66,7 @@ let elementMappingList = [
   "addBusUser",
   "editBusUser",
   "checkBusUser",
+  "dispatchBusUser",
   "addSelfPayUser",
   "editSelfPayUser",
   "checkSelfPayUser",

@@ -178,10 +178,10 @@
                 <!-- 巴士派車 -->
                 <el-button
                   size="mini"
-                  @click="dispatchSelfPayUser(scope.row)"
+                  @click="dispatchBusUser(scope.row)"
                   type="info"
                   v-if="
-                    hasButton('dispatchSelfPayUser') &&
+                    hasButton('dispatchBusUser') &&
                     roles[scope.row.id] &&
                     roles[scope.row.id].split('-')[0] == 'bususer'
                   "
@@ -974,17 +974,17 @@ export default {
       this.$router.push(`/alluser/dispatchSelfPayUser/${user.id}-${caseId}`);
     },
 
-    // 編輯白牌資料
+    // 編輯巴士資料
     handleEditBusUser(user) {
       let caseId = this.roles[user.id].split("-")[1];
       this.$router.push(`/alluser/editBusUser/${user.id}-${caseId}`);
     },
-    // 檢視白牌資料
+    // 檢視巴士資料
     handleCheckBusUser(user) {
       let caseId = this.roles[user.id].split("-")[1];
       this.$router.push(`/alluser/checkBusUser/${user.id}-${caseId}`);
     },
-    // 白牌派車
+    // 巴士派車
     dispatchBusUser(user) {
       let caseId = this.roles[user.id].split("-")[1];
       this.$router.push(`/alluser/dispatchBusUser/${user.id}-${caseId}`);
