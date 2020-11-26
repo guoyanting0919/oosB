@@ -3,7 +3,7 @@
     <div class="loginContainer">
       <!-- loginTitle -->
       <div class="loginTitle">
-        <h1 class="cityTitle" @click="loginBy('z')">尖石鄉政府</h1>
+        <h1 class="cityTitle" @click="loginBy('superadmin')">尖石鄉政府</h1>
         <h5 class="cityDescrip" @click="loginBy('r')">
           長照交通接送統一預約服務及管理系統
         </h5>

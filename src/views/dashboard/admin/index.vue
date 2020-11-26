@@ -143,6 +143,18 @@
         </div>
       </div>
     </div>
+
+    <vue-esign
+      ref="esign"
+      :width="800"
+      :height="300"
+      :isCrop="isCrop"
+      :lineWidth="lineWidth"
+      :lineColor="lineColor"
+      :bgColor.sync="bgColor"
+    />
+    <button @click="handleReset">清空画板</button>
+    <button @click="handleGenerate">生成图片</button>
   </div>
 </template>
 
@@ -159,6 +171,11 @@ export default {
   },
   data() {
     return {
+      lineWidth: 4,
+      lineColor: "#fff",
+      bgColor: "#000",
+      resultImg: "",
+      isCrop: false,
       // trello
       temp: {
         id: "",
@@ -220,6 +237,19 @@ export default {
     ...mapGetters(["defaultorgid"]),
   },
   methods: {
+    handleReset() {
+      this.$refs.esign.reset();
+    },
+    handleGenerate() {
+      this.$refs.esign
+        .generate()
+        .then((res) => {
+          this.resultImg = res;
+        })
+        .catch((err) => {
+          alert(err); // 画布没有签字时会执行这里 'Not Signned'
+        });
+    },
     getList() {
       const vm = this;
       trello.load(vm.listQuery).then((res) => {

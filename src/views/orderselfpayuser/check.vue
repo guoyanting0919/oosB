@@ -17,7 +17,9 @@
                   <h4 class="textCenter" style="margin-bottom: 3rem">
                     {{ order.orderNo }}
                   </h4>
-                  <h3 class="mb-2 textCenter">訂單建立時間<br />『無資料』</h3>
+                  <h3 class="mb-2 textCenter">
+                    訂單建立時間<br />{{ order.createDate | dateFilter }}
+                  </h3>
                   <h3 class="mb-2 textCenter">
                     預約搭乘時間<br />{{ order.reserveDate | dateFilter }}
                   </h3>
@@ -46,21 +48,67 @@
                     搭乘人數：{{ order.passengerNum }} 人
                   </h3>
                 </div>
-                <div class="routeMap"></div>
+                <div class="routeMap">
+                  <div class="routeMain routeMainFirst">
+                    <div
+                      class="routeMainHeader"
+                      style="margin-bottom: 2rem; width: 100%"
+                    >
+                      <p class="startRoute">
+                        {{ order.fromAddr }}
+                      </p>
+                      <p style="margin: 0 1rem">--></p>
+                      <p class="endRoute">
+                        {{ order.toAddr }}
+                      </p>
+                    </div>
+                    <div class="customSteps">
+                      <el-steps :active="2" align-center>
+                        <el-step
+                          title="新訂單"
+                          description="2020-09-08 20:06"
+                        ></el-step>
+                        <el-step
+                          title="已排班"
+                          description="2020-09-08 20:06"
+                        ></el-step>
+
+                        <el-step
+                          title="已抵達"
+                          description="2020-09-08 20:06"
+                        ></el-step>
+                        <el-step
+                          title="客上"
+                          description="2020-09-08 20:06"
+                        ></el-step>
+
+                        <el-step
+                          title="已完成"
+                          description="2020-09-08 20:06"
+                        ></el-step>
+                      </el-steps>
+                    </div>
+                  </div>
+                </div>
                 <div class="routeDriver">
                   <div class="caseUserDetailBox">
                     <div>
                       <h2 class="textCenter mb-2">{{ order.userName }}</h2>
-                      <h4 class="mb-1 textCenter">個案編號：1081213001</h4>
-                      <h4 class="mb-3 textCenter">社會福利身分：一般戶</h4>
+                      <h4 class="mb-1">聯絡電話：{{ order.noticePhone }}</h4>
+                      <div class="mb-3">
+                        <p class="passengerTitle">乘車人員：</p>
+                        <div v-if="order" class="passengerListContainer">
+                          <p
+                            class="passengerBlock"
+                            v-for="p in passengerList"
+                            :key="p.key"
+                          >
+                            <span class="passengerName">{{ p.name }}</span>
+                            {{ p.birth }}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <!-- <div>
-                      <h3 class="textCenter mb-2">聯絡人</h3>
-                      <h4 class="mb-1 textCenter">聯絡人姓名：</h4>
-                      <h4 class="mb-1 textCenter">關係：</h4>
-                      <h4 class="mb-1 textCenter">手機：0924012210</h4>
-                      <h4 class="mb-1 textCenter">市話：</h4>
-                    </div> -->
                   </div>
                   <div class="routeTimeBox">
                     <!-- <div class="routeTimeTitle mb-3">
@@ -311,18 +359,14 @@ export default {
       user: "",
 
       // order status mapping
-      orderStatusMapping: [
-        "newOrder",
-        "ready",
-        "arrival",
-        "boarding",
-        "complete",
-        "cancel",
-        "cancel",
-        "cancel",
-        "cancel",
-      ],
+      orderStatusMapping: ["新訂單", "已排班", "已抵達", "客上", "已完成"],
     };
+  },
+  computed: {
+    passengerList() {
+      return JSON.parse(this.order.remark);
+      // return this.order.remark;
+    },
   },
   methods: {
     //獲取訂單

@@ -52,6 +52,10 @@ let routerMappingList = [
     path: "/orderselfpayuser/index",
     title: "預約訂單 / 白牌車訂單",
   },
+  {
+    path: "/news/index",
+    title: "前台頁面管理 / 最新消息管理",
+  },
 ];
 let elementMappingList = [
   "add",

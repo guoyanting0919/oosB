@@ -36,6 +36,9 @@ import "../src/assets/all.scss";
 import FrmLeaveReqAdd from "@/views/forms/userDefine/frmLeaveReq/add";
 import FrmLeaveReqDetail from "@/views/forms/userDefine/frmLeaveReq/detail";
 
+import vueEsign from "vue-esign";
+Vue.use(vueEsign);
+
 Vue.use(ElementUI, { locale });
 Vue.use(VueSweetalert2);
 Vue.use(VueContextMenu);

@@ -104,7 +104,7 @@
   }
   .routeMap {
     height: 40%;
-    background: lightskyblue;
+    background: #fffbf0;
   }
   .routeDriver {
     height: 50%;
@@ -236,10 +236,17 @@
       height: 90%;
     }
   }
+  .routeMainFirst {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
   .routeMainHeader {
     height: 10%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0 1rem;
     align-items: center;
 
@@ -668,5 +675,27 @@
   }
   .mb-3 {
     margin-bottom: 2.5rem;
+  }
+}
+
+.passengerListContainer {
+  // background: rgb(231, 244, 248);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0.25rem 0;
+  overflow: auto;
+
+  .passengerBlock {
+    margin-bottom: 0.35rem;
+    // border-bottom: 1px solid #dddddd;
+  }
+
+  .passengerName {
+    display: inline-block;
+    width: 70px;
+    text-align: left;
+    // background: lightcoral;
   }
 }
