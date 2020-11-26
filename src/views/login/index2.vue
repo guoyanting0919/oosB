@@ -3,7 +3,9 @@
     <div class="loginContainer">
       <!-- loginTitle -->
       <div class="loginTitle">
-        <h1 class="cityTitle" @click="loginBy('superadmin')">尖石鄉政府</h1>
+        <h1 class="cityTitle" @click="loginBy('System', '123456')">
+          尖石鄉政府
+        </h1>
         <h5 class="cityDescrip" @click="loginBy('r')">
           長照交通接送統一預約服務及管理系統
         </h5>
@@ -211,8 +213,8 @@ export default {
 
       // input
       isForget: 1,
-      accountInput: "System",
-      passwordInput: "123456",
+      accountInput: "CBSD_Admin",
+      passwordInput: "CBSD_Admin",
       accountForgetInput: "test",
       codeInput: "",
       newPwInput: "",
@@ -258,9 +260,9 @@ export default {
     },
   },
   methods: {
-    loginBy(str) {
+    loginBy(str, pas) {
+      pas ? (this.passwordInput = pas) : (this.passwordInput = str);
       this.accountInput = str;
-      this.passwordInput = str;
       this.handleLogin();
     },
     handleLogin() {

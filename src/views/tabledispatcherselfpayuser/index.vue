@@ -231,7 +231,7 @@
             <el-table-column
               align="center"
               :label="'操作'"
-              fixed="right"
+              :fixed="isMobile()"
               width="260"
             >
               <template slot-scope="scope">
@@ -745,6 +745,15 @@ export default {
     },
   },
   methods: {
+    // 是否為移動端
+    isMobile() {
+      const vm = this;
+      if (vm.$store.state.app.device === "mobile") {
+        return null;
+      } else {
+        return "right";
+      }
+    },
     onBtnClicked(domId) {
       console.log(domId);
       switch (domId) {
@@ -1111,8 +1120,8 @@ export default {
         console.info("update success!", orderId);
         // vm.signalRMsg = `${user}`;
         vm.$alertT.fire({
-          icon: "success",
-          title: `成功接收訂單(${orderId})`,
+          icon: "info",
+          title: `訂單(${orderId})已被接收`,
         });
         vm.newOrderList = vm.newOrderList.filter(function (order) {
           return order.id != orderId;

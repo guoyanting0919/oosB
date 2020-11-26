@@ -2,28 +2,34 @@
   <div class="dragDispatcherContainer">
     <div class="orderContainer customScrollBar">
       <div
-        v-for="item in 10"
-        :key="item"
+        v-for="item in list"
+        :key="item.id"
         draggable="true"
         class="orderCard"
         @dragstart="test($event)"
       >
-        <div class="orderCardTitle">
-          <p>一般車</p>
-          <p>普通輪椅(可收拆)</p>
+        <div class="orderCardTitle" v-if="list">
+          <p>{{ item.carCategoryName }}</p>
+          <!-- <p>普通輪椅(可收拆)</p> -->
+          <p v-if="item.canShared">可共乘</p>
+          <p v-else>不可共乘</p>
+          <p>{{ item.passengerNum }}人搭乘</p>
         </div>
         <div class="orderCardMain">
           <div class="orderInfo">
-            <p class="orderInfoName">吳阿花</p>
-            <p>可共乘</p>
-            <p>0人陪同</p>
+            <p class="orderInfoName">{{ item.userName }}</p>
+            <p style="margin: 0">聯絡電話 : {{ item.noticePhone }}</p>
           </div>
-          <p class="orderTime">06:55 | 32分鐘</p>
+          <p class="orderTime">
+            {{ item.reserveDate | dateFilter }}
+          </p>
           <div class="orderAddr">
             <i class="iconfont icon-circle"></i>
             <i class="iconfont icon-Vector10"></i>
-            <p class="startAddr">新北市板橋區板新路27號</p>
-            <p class="endAddr">臺北市內湖區內湖路一段285號</p>
+            <p class="startAddr">
+              {{ item.fromAddr }}
+            </p>
+            <p class="endAddr">{{ item.toAddr }}</p>
           </div>
         </div>
       </div>
@@ -121,6 +127,7 @@
 </template>
 
 <script>
+import * as dispatchSelfPayUser from "@/api/dispatchSelfPayUser";
 import IScroll from "iscroll/build/iscroll-probe";
 import moment from "moment";
 import dispatchs from "@/assets/dispatch";
@@ -155,7 +162,24 @@ export default {
       isDown: false,
       realDispatchList: [],
       sensitivity: 1,
+
+      //派遣訂單
+      list: [],
+      listLoading: false,
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 999,
+        key: undefined,
+      },
     };
+  },
+  filters: {
+    dateFilter(date) {
+      let day = moment(date).format("yyyy-MM-DD");
+      let time = moment(date).format("HH:mm");
+      return `${day} ${time}`;
+    },
   },
   computed: {
     timelist() {
@@ -171,6 +195,18 @@ export default {
     },
   },
   methods: {
+    //獲取派遣訂單
+    getList() {
+      const vm = this;
+      dispatchSelfPayUser.load(vm.listQuery).then((res) => {
+        vm.list = res.data.filter((o) => {
+          return o.status == 1;
+        });
+        console.log(vm.list);
+        vm.total = res.count;
+        vm.listLoading = false;
+      });
+    },
     dragSetting() {
       const vm = this;
       this.scroll = new IScroll(".distatchContainer", {
@@ -289,6 +325,7 @@ export default {
   },
   mounted() {
     this.dragSetting();
+    this.getList();
   },
 };
 </script>

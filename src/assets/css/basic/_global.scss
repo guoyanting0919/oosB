@@ -100,3 +100,33 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.custom-theme .el-dialog__body {
+  max-height: calc(70vh - 54px - 70px);
+  overflow: auto;
+  &::-webkit-scrollbar {
+    z-index: 11;
+    width: 6px;
+
+    &:horizontal {
+      height: 6px;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    width: 6px;
+    background: #69696982;
+    // opacity: 0.5;
+  }
+
+  &::-webkit-scrollbar-corner,
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-track-piece {
+    background: transparent;
+    width: 6px;
+  }
+}

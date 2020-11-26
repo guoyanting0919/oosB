@@ -45,103 +45,6 @@
         ></el-input>
         <el-button @click="handleAdd">send</el-button>
       </div>
-      <div class="problemListContainer">
-        <!-- 待處理 -->
-        <div class="problemList">
-          <Title title="新增巴士路線"></Title>
-          <draggable
-            :list="dataStatus0"
-            @change="handleChange0"
-            v-if="sortData"
-            class="draggableContainer"
-            group="stop"
-            :options="{
-              animation: 300,
-              group: 'people',
-              scroll: true,
-              scrollSpeed: 2000,
-              scrollSensitivity: 10,
-            }"
-          >
-            <transition-group>
-              <div
-                v-for="(stop, index) in dataStatus0"
-                :key="stop.id"
-                class="graggableItem"
-                :index="index"
-              >
-                <span class="stopName">
-                  {{ stop.title }}
-                </span>
-              </div>
-            </transition-group>
-          </draggable>
-        </div>
-
-        <!-- 處理中 -->
-        <div class="problemList">
-          <Title title="新增巴士路線"></Title>
-          <draggable
-            :list="dataStatus1"
-            @change="handleChange1"
-            v-if="sortData"
-            class="draggableContainer"
-            group="stop"
-            :options="{
-              animation: 300,
-              group: 'people',
-              scroll: true,
-              scrollSpeed: 2000,
-              scrollSensitivity: 10,
-            }"
-          >
-            <transition-group>
-              <div
-                v-for="(stop, index) in dataStatus1"
-                :key="stop.id"
-                class="graggableItem"
-                :index="index"
-              >
-                <span class="stopName">
-                  {{ stop.title }}
-                </span>
-              </div>
-            </transition-group>
-          </draggable>
-        </div>
-
-        <!-- 已完成 -->
-        <div class="problemList">
-          <Title title="新增巴士路線3"></Title>
-          <draggable
-            @change="handleChange2"
-            :list="dataStatus2"
-            v-if="sortData"
-            class="draggableContainer"
-            group="stop"
-            :options="{
-              animation: 300,
-              group: 'people',
-              scroll: true,
-              scrollSpeed: 2000,
-              scrollSensitivity: 10,
-            }"
-          >
-            <transition-group>
-              <div
-                v-for="(stop, index) in dataStatus2"
-                :key="stop.id"
-                class="graggableItem"
-                :index="index"
-              >
-                <span class="stopName">
-                  {{ stop.title }}
-                </span>
-              </div>
-            </transition-group>
-          </draggable>
-        </div>
-      </div>
     </div>
 
     <!-- <vue-esign
@@ -159,16 +62,9 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
-import Title from "@/components/ConsoleTableTitle";
 import * as signalR from "@aspnet/signalr";
-import * as trello from "@/api/trello";
 import { mapGetters } from "vuex";
 export default {
-  components: {
-    draggable,
-    Title,
-  },
   data() {
     return {
       lineWidth: 4,
@@ -230,7 +126,6 @@ export default {
 
       input: "",
       state: window.localStorage.getItem("CBSD_ADMIN"),
-      url: "https://trello.com/b/mHsiq7jW/%E5%B0%96%E7%9F%B3",
     };
   },
   computed: {
@@ -250,62 +145,7 @@ export default {
           alert(err); // 画布没有签字时会执行这里 'Not Signned'
         });
     },
-    getList() {
-      const vm = this;
-      trello.load(vm.listQuery).then((res) => {
-        vm.list = res.data;
-        vm.list.forEach((data) => {
-          switch (data.status) {
-            case 0:
-              this.dataStatus0.push(data);
-              break;
-            case 1:
-              this.dataStatus1.push(data);
-              break;
-            case 2:
-              this.dataStatus2.push(data);
-              break;
 
-            default:
-              break;
-          }
-        });
-      });
-    },
-    // trello
-    handleAdd() {
-      const vm = this;
-      trello.add(vm.temp).then((res) => {
-        console.log(res);
-      });
-    },
-    handleChange0(a) {
-      let temp = a.added?.element;
-      if (temp) {
-        temp.status = Number(0);
-        trello.update(temp).then((res) => {
-          console.log(res);
-        });
-      }
-    },
-    handleChange1(a) {
-      let temp = a.added?.element;
-      if (temp) {
-        temp.status = Number(1);
-        trello.update(temp).then((res) => {
-          console.log(res);
-        });
-      }
-    },
-    handleChange2(a) {
-      let temp = a.added?.element;
-      if (temp) {
-        temp.status = Number(2);
-        trello.update(temp).then((res) => {
-          console.log(res);
-        });
-      }
-    },
     // signalR
     send() {
       const vm = this;
@@ -398,7 +238,6 @@ export default {
   },
   mounted() {
     // this.connectHub();
-    this.getList();
   },
 };
 </script>
