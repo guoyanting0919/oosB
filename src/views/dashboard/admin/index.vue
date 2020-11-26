@@ -144,7 +144,7 @@
       </div>
     </div>
 
-    <vue-esign
+    <!-- <vue-esign
       ref="esign"
       :width="800"
       :height="300"
@@ -154,7 +154,7 @@
       :bgColor.sync="bgColor"
     />
     <button @click="handleReset">清空画板</button>
-    <button @click="handleGenerate">生成图片</button>
+    <button @click="handleGenerate">生成图片</button> -->
   </div>
 </template>
 
