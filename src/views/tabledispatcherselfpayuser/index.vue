@@ -20,7 +20,7 @@
     </sticky>
 
     <div style="padding-bottom: 0px" class="app-container flex-item">
-      <Title title="白牌車表格式調度台"></Title>
+      <Title title="白牌車調度台"></Title>
       <div
         class="bg-white formContainer"
         style="height: calc(100% - 50px); padding: 0 16px"
@@ -210,7 +210,7 @@
             <el-table-column
               property="carCategoryName"
               label="車輛類型"
-              width="130"
+              width="150"
               align="center"
             >
             </el-table-column>

@@ -6,6 +6,14 @@
         <el-button size="mini" @click="handleSave" type="success" plain
           >儲存</el-button
         >
+        <el-button
+          size="mini"
+          v-if="$route.query.fast != 'undefined'"
+          @click="rolesDialog = true"
+          type="success"
+          plain
+          >儲存並繼續新增用戶其他身份</el-button
+        >
       </div>
     </sticky>
 
@@ -37,7 +45,7 @@
                   clearable
                   v-model="basicTemp.sex"
                   placeholder="請選擇性別"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="1" :label="'男'">男</el-option>
                   <el-option :value="0" :label="'女'">女</el-option>
@@ -60,7 +68,7 @@
                   v-model="basicTemp.birthday"
                   type="date"
                   placeholder="請選擇生日"
-                  style="width:100%"
+                  style="width: 100%"
                 ></el-date-picker>
               </el-form-item>
             </el-col>
@@ -90,7 +98,7 @@
                 <el-select
                   v-model="temp.wealTypeId"
                   placeholder="社會福利身份"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="'1'" :label="'低收入戶'"
                     >低收入戶</el-option
@@ -108,7 +116,7 @@
                 <el-date-picker
                   v-model="temp.reviewDate"
                   type="month"
-                  style="width:100%"
+                  style="width: 100%"
                   placeholder="請選擇額度控管留用首月"
                   value-format="yyyy-MM"
                 ></el-date-picker>
@@ -119,7 +127,7 @@
                 <el-select
                   v-model="temp.disabilityLevel"
                   placeholder="請選擇失能等級"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option :value="'0'" :label="'1級(無失能)'"
                     >1級(無失能)</el-option
@@ -147,13 +155,13 @@
                   >
                 </span>
                 <el-row :gutter="16">
-                  <el-col :sm="12" :md="3" style="margin-bottom:1rem">
+                  <el-col :sm="12" :md="3" style="margin-bottom: 1rem">
                     <el-form-item prop="county">
                       <el-select
                         v-model="temp.county"
                         clearable
                         placeholder="居住縣市"
-                        style="width:100%"
+                        style="width: 100%"
                       >
                         <el-option
                           v-for="(conty, key, index) in taiwanCity"
@@ -167,14 +175,14 @@
                   <el-col
                     :sm="12"
                     :md="3"
-                    style="margin-bottom:1rem"
+                    style="margin-bottom: 1rem"
                     v-if="temp.county"
                   >
                     <el-form-item prop="district">
                       <el-select
                         v-model="temp.district"
                         placeholder="居住區域"
-                        style="width:100%"
+                        style="width: 100%"
                       >
                         <el-option
                           v-for="(district, key, index) in taiwanCity[
@@ -198,7 +206,7 @@
                   <el-col
                     :sm="12"
                     :md="3"
-                    style="margin-bottom:1rem"
+                    style="margin-bottom: 1rem"
                     v-if="temp.addr && temp.district && temp.county"
                   >
                     <el-form-item prop="county">
@@ -211,7 +219,7 @@
                   <el-col
                     :sm="12"
                     :md="3"
-                    style="margin-bottom:1rem"
+                    style="margin-bottom: 1rem"
                     v-if="temp.addr && temp.district && temp.county"
                   >
                     <el-form-item prop="county">
@@ -229,7 +237,7 @@
                 <el-select
                   v-model="temp.orgAId"
                   placeholder="請選擇管理單位"
-                  style="width:100%"
+                  style="width: 100%"
                 >
                   <el-option
                     v-for="org in unitAs"
@@ -247,7 +255,7 @@
                     <el-select
                       v-model="temp.caseUserStatus"
                       placeholder="請選擇派發狀態"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="'1'" :label="'可派發'"
                         >可派發</el-option
@@ -400,6 +408,37 @@
         </el-form>
       </div>
     </div>
+
+    <!-- rolesDialog -->
+    <el-dialog
+      title="請選擇欲新增的身份"
+      :visible.sync="rolesDialog"
+      width="500px"
+    >
+      <div class="rolesBox">
+        <!-- <el-button
+          v-if="hasButton('addCaseUser')"
+          type="primary"
+          plain
+          @click="handleRole('1')"
+          >長照身份</el-button
+        > -->
+        <el-button
+          v-if="hasButton('addSelfPayUser')"
+          type="primary"
+          plain
+          @click="handleRole('2')"
+          >白牌身份</el-button
+        >
+        <el-button
+          v-if="hasButton('addBusUser')"
+          type="primary"
+          plain
+          @click="handleRole('3')"
+          >幸福巴士身份</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -420,6 +459,10 @@ export default {
   },
   data() {
     return {
+      //權限按鈕
+      buttons: [],
+      //dialog
+      rolesDialog: false,
       taiwanCity: "",
       unitAs: "",
       unitAId: "8ccf3297-8e45-43eb-8cc1-17476538b70a",
@@ -480,6 +523,23 @@ export default {
     };
   },
   methods: {
+    //獲取特殊修改權限
+    getButtons() {
+      let router2 = this.$store.getters.modules;
+      let a = router2.filter((r) => {
+        return r.item.name == "用戶資料";
+      });
+      let b = a[0].children.filter((r2) => {
+        return r2.item.name == "全部個案";
+      });
+      this.buttons = b[0].item.elements.map((btn) => {
+        return btn.domId;
+      });
+    },
+    // 是否擁有按鈕功能權限
+    hasButton(domId) {
+      return this.buttons.includes(domId);
+    },
     // 獲取用戶基本資料
     getUserBasic() {
       const vm = this;
@@ -535,9 +595,53 @@ export default {
         this.temp.lun.splice(index, 1);
       }
     },
+    handleFastSave(myRoute) {
+      const vm = this;
+      vm.$refs.form.validate((valid) => {
+        if (valid) {
+          vm.temp.userId = vm.$route.params.id;
+          // vm.temp.reviewDate = moment(vm.temp.reviewDate).format('yyyy')
+          console.log(vm.temp);
+          caseUsers.add(vm.temp).then(() => {
+            // console.log(res);
+
+            vm.$alertT.fire({
+              icon: "success",
+              title: `用戶${vm.basicTemp.name} 成功新增白牌身份`,
+            });
+            vm.$router.push(
+              `/alluser/${myRoute}/${vm.$route.params.id}?fast=true`
+            );
+          });
+        } else {
+          console.log("submit error");
+        }
+      });
+    },
+    // 替用戶添加身份
+    handleRole(role) {
+      console.log(role);
+      switch (role) {
+        case "1":
+          this.rolesDialog = false;
+          this.handleFastSave("addCaseUser");
+          break;
+        case "2":
+          this.rolesDialog = false;
+          this.handleFastSave("addSelfPayUser");
+          break;
+        case "3":
+          this.rolesDialog = false;
+          this.handleFastSave("addBusUser");
+          break;
+        default:
+          break;
+      }
+    },
   },
   mounted() {
     this.getUserBasic();
+    this.getButtons();
     this.getUnitAs();
     this.taiwanCity = taiwan.cityAndCountiesLite;
     console.log(this.taiwanCity);

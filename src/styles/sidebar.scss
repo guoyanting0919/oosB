@@ -12,7 +12,7 @@
   .sidebar-container {
     z-index: 99;
     transition: width 0.28s;
-    width: 240px !important;
+    width: 220px !important;
     height: 100%;
     // position: fixed;
     font-size: 0px;
@@ -88,14 +88,14 @@
   }
   .sidebar-container .nest-menu .el-submenu > .el-submenu__title,
   .sidebar-container .el-submenu .el-menu-item {
-    min-width: 240px !important;
+    min-width: 220px !important;
     // background-color: #018dae !important;
     &:hover {
       // background-color: #f1f5f8 !important;
     }
   }
   .el-menu--collapse .el-menu .el-submenu {
-    min-width: 240px !important;
+    min-width: 220px !important;
   }
 
   //适配移动端
@@ -105,7 +105,7 @@
     }
     .sidebar-container {
       transition: 0.3s;
-      width: 240px !important;
+      width: 220px !important;
       position: absolute;
       @include rwd($md) {
         position: absolute;

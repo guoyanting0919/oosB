@@ -11,7 +11,7 @@
       />
     </div> -->
     <el-container class="flex-column">
-      <el-header height="64px">
+      <el-header height="50px">
         <navbar></navbar>
       </el-header>
       <el-container class="flex-row flex-item">

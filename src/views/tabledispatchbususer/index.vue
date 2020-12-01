@@ -20,7 +20,7 @@
     </sticky>
 
     <div class="app-container flex-item">
-      <Title title="幸福巴士表格式調度台"></Title>
+      <Title title="幸福巴士調度台"></Title>
       <div class="bg-white" style="height: calc(100% - 50px)">
         <el-table
           ref="mainTable"

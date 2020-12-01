@@ -6,11 +6,19 @@
         <el-button size="mini" @click="handleSave" type="success" plain
           >儲存</el-button
         >
+        <el-button
+          size="mini"
+          v-if="$route.query.fast != 'undefined'"
+          @click="rolesDialog = true"
+          type="success"
+          plain
+          >儲存並繼續新增用戶其他身份</el-button
+        >
       </div>
     </sticky>
 
     <div class="app-container flex-item">
-      <Title title="新增長照個案基本資料"></Title>
+      <Title title="新增白牌個案基本資料"></Title>
       <div class="formContainer bg-white customScrollBar">
         <el-form
           :label-position="labelPosition"
@@ -147,6 +155,37 @@
         </el-form>
       </div>
     </div>
+
+    <!-- rolesDialog -->
+    <el-dialog
+      title="請選擇欲新增的身份"
+      :visible.sync="rolesDialog"
+      width="500px"
+    >
+      <div class="rolesBox">
+        <el-button
+          v-if="hasButton('addCaseUser')"
+          type="primary"
+          plain
+          @click="handleRole('1')"
+          >長照身份</el-button
+        >
+        <!-- <el-button
+          v-if="hasButton('addSelfPayUser')"
+          type="primary"
+          plain
+          @click="handleRole('2')"
+          >白牌身份</el-button
+        > -->
+        <el-button
+          v-if="hasButton('addBusUser')"
+          type="primary"
+          plain
+          @click="handleRole('3')"
+          >幸福巴士身份</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -167,6 +206,10 @@ export default {
   },
   data() {
     return {
+      //權限按鈕
+      buttons: [],
+      //dialog
+      rolesDialog: false,
       taiwanCity: "",
       // 表單相關
       labelPosition: "top",
@@ -192,6 +235,23 @@ export default {
     };
   },
   methods: {
+    //獲取特殊修改權限
+    getButtons() {
+      let router2 = this.$store.getters.modules;
+      let a = router2.filter((r) => {
+        return r.item.name == "用戶資料";
+      });
+      let b = a[0].children.filter((r2) => {
+        return r2.item.name == "全部個案";
+      });
+      this.buttons = b[0].item.elements.map((btn) => {
+        return btn.domId;
+      });
+    },
+    // 是否擁有按鈕功能權限
+    hasButton(domId) {
+      return this.buttons.includes(domId);
+    },
     // 獲取用戶基本資料
     getUserBasic() {
       const vm = this;
@@ -223,14 +283,59 @@ export default {
         }
       });
     },
+    handleFastSave(myRoute) {
+      const vm = this;
+      vm.$refs.form.validate((valid) => {
+        if (valid) {
+          vm.temp.userId = vm.$route.params.id;
+          // vm.temp.reviewDate = moment(vm.temp.reviewDate).format('yyyy')
+          console.log(vm.temp);
+          selfPayUsers.add(vm.temp).then(() => {
+            // console.log(res);
+
+            vm.$alertT.fire({
+              icon: "success",
+              title: `用戶${vm.basicTemp.name} 成功新增白牌身份`,
+            });
+            vm.$router.push(
+              `/alluser/${myRoute}/${vm.$route.params.id}?fast=true`
+            );
+          });
+        } else {
+          console.log("submit error");
+        }
+      });
+    },
     handleClear() {
       this.temp.district = "";
       this.temp.addr = "";
     },
+    // 替用戶添加身份
+    handleRole(role) {
+      console.log(role);
+      switch (role) {
+        case "1":
+          this.rolesDialog = false;
+          this.handleFastSave("addCaseUser");
+          break;
+        case "2":
+          this.rolesDialog = false;
+          this.handleFastSave("addSelfPayUser");
+          break;
+        case "3":
+          this.rolesDialog = false;
+          this.handleFastSave("addBusUser");
+          break;
+        default:
+          break;
+      }
+    },
   },
   mounted() {
     this.getUserBasic();
+    this.getButtons();
     this.taiwanCity = taiwan.cityAndCountiesLite;
+    // console.log(this.$route.query.fast);
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
-    <div class="logo">
+    <div class="logo" style="height: 50px">
       <img class="user-avatar" :src="logo" />
       <!-- <div class="user-avatar-text">LOGO</div> -->
     </div>

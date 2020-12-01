@@ -246,9 +246,9 @@ table thead th {
 
 .app-container {
   background-color: #efefef;
-  padding: 8px 24px;
+  padding: 8px 16px;
   padding-bottom: 0;
-  padding-top: 16px;
+  padding-top: 8px;
 }
 
 .el-card__header {
@@ -383,17 +383,17 @@ table thead th {
 .navbar {
   background: #409eff;
   .hamburger-container {
-    line-height: 64px;
-    height: 64px;
+    line-height: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     padding: 0 10px;
     // margin-right: auto;
   }
   .avatar-container {
-    height: 64px;
+    height: 50px;
     display: block;
-    line-height: 64px;
+    line-height: 50px;
     margin-left: auto;
     margin-right: 4px;
     order: 10;
@@ -416,15 +416,12 @@ table thead th {
     }
     .user-avatar {
       width: 200px;
-      margin-bottom: 5px;
       height: 50px;
-      vertical-align: middle;
-      margin-right: 5px;
     }
 
     .user-avatar-text {
       width: 200px;
-      height: 64px;
+      height: 50px;
       font-weight: 700;
       vertical-align: middle;
       margin-right: 5px;

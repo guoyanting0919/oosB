@@ -41,6 +41,29 @@
             width="55"
             align="center"
           ></el-table-column>
+
+          <el-table-column
+            property="lock"
+            label="預約"
+            width="100"
+            align="center"
+            fixed="left"
+          >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                @click="handleDespatch(scope.row)"
+                type="info"
+                v-if="
+                  (hasButton('dispatchCaseUser') ||
+                    hasButton('dispatchSelfPayUser') ||
+                    hasButton('dispatchBusUser')) &&
+                  scope.row.caseList.length != 0
+                "
+                >預約</el-button
+              >
+            </template>
+          </el-table-column>
           <el-table-column
             property="lock"
             label="鎖定狀態"
@@ -132,22 +155,10 @@
             property="setting"
             label="操作"
             :fixed="isMobile()"
-            width="460"
+            width="400"
           >
             <template slot-scope="scope">
               <div class="buttonFlexBox">
-                <el-button
-                  size="mini"
-                  @click="handleDespatch(scope.row)"
-                  type="info"
-                  v-if="
-                    (hasButton('dispatchCaseUser') ||
-                      hasButton('dispatchSelfPayUser') ||
-                      hasButton('dispatchBusUser')) &&
-                    scope.row.caseList.length != 0
-                  "
-                  >預約</el-button
-                >
                 <el-select
                   style="margin: 0 0.5rem; width: 100px"
                   size="mini"
@@ -889,9 +900,18 @@ export default {
             vm.userTemp.account = vm.userTemp.uid;
             console.log("vm.userTemp", vm.userTemp);
             users.addClient(vm.userTemp).then((res) => {
-              console.log(res);
-              vm.addOrUpdateDialog = false;
               vm.getList();
+              console.log(res.result);
+              let arr = [
+                {
+                  id: res.result,
+                  fast: true,
+                },
+              ];
+              console.log(arr);
+              vm.multipleSelection = arr;
+              vm.addOrUpdateDialog = false;
+              vm.rolesDialog = true;
             });
           } else {
             console.log("error submit!!", vm.defaultorgid);
@@ -925,17 +945,17 @@ export default {
         case "1":
           this.rolesDialog = false;
           this.$router.push(
-            `/alluser/addCaseUser/${this.multipleSelection[0].id}`
+            `/alluser/addCaseUser/${this.multipleSelection[0].id}?fast=${this.multipleSelection[0].fast}`
           );
           break;
         case "2":
           this.$router.push(
-            `/alluser/addSelfPayUser/${this.multipleSelection[0].id}`
+            `/alluser/addSelfPayUser/${this.multipleSelection[0].id}?fast=${this.multipleSelection[0].fast}`
           );
           break;
         case "3":
           this.$router.push(
-            `/alluser/addBusUser/${this.multipleSelection[0].id}`
+            `/alluser/addBusUser/${this.multipleSelection[0].id}?fast=${this.multipleSelection[0].fast}`
           );
           break;
         default:
