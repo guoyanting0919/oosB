@@ -38,7 +38,7 @@ export default {
 <style scoped>
 .app-main {
   width: 100%;
-  height: calc(100vh - 104px);
+  height: calc(100vh - 88px);
   min-height: calc(100vh - 104px);
   position: relative;
   overflow: auto;
