@@ -233,17 +233,18 @@ export default {
         time: "",
         id: "",
         selfPayUserId: "",
+        userId: "",
         orgId: "",
         reserveDate: "",
         noticePhone: "",
-        fromAddr: "",
+        fromAddr: "新北市板橋區中山路二段109號",
         fromLon: 121.4724972,
         fromLat: 25.0129298,
-        toAddr: "",
+        toAddr: "新北市板橋區板新路109號",
         toLon: 121.3645382,
         toLat: 25.0589911,
         passengerNum: 0,
-        canShared: false,
+        canShared: true,
         status: 1,
         carCategoryId: null,
         CarCategoryName: "",
@@ -306,6 +307,7 @@ export default {
       const vm = this;
       let date = moment(vm.temp.date).format("yyyy-MM-DD");
       vm.temp.selfPayUserId = vm.$route.params.id.split("-")[1];
+      vm.temp.userId = vm.$route.params.id.split("-")[0];
       vm.temp.reserveDate = `${date} ${vm.temp.time}`;
       vm.temp.CarCategoryName = vm.carCategorysList.filter((car) => {
         return car.dtValue === vm.temp.carCategoryId;

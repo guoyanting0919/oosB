@@ -105,7 +105,7 @@ export default {
   background-color: #24262f;
   background-color: #f8f8f8;
   text-align: right;
-  line-height: 42px;
+  line-height: 32px;
   padding-right: 20px;
 }
 </style>

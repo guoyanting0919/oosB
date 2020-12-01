@@ -464,7 +464,7 @@ export default {
     //獲取訂單
     getList() {
       const vm = this;
-      dispatchSelfPayUser.load(vm.listQuery).then((res) => {
+      orderSelfPayUser.load(vm.listQuery).then((res) => {
         vm.list = res.data;
         vm.total = res.count;
       });

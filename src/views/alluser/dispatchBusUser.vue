@@ -166,6 +166,7 @@ export default {
 
         id: "",
         busUserId: "",
+        userId: "",
         orgId: "",
         reserveDate: "",
         stationLineId: "",
@@ -260,6 +261,7 @@ export default {
       const vm = this;
       let date = moment(vm.temp.date).format("yyyy-MM-DD");
       vm.temp.busUserId = vm.$route.params.id.split("-")[1];
+      vm.temp.userId = vm.$route.params.id.split("-")[0];
       vm.temp.reserveDate = `${date} ${vm.temp.time}`;
       vm.temp.stationLineName = vm.lineList.filter((l) => {
         return l.id === vm.temp.stationLineId;

@@ -773,7 +773,7 @@ export default {
       const vm = this;
       vm.pos = "";
       vm.listLoading = true;
-      dispatchSelfPayUser.load(vm.listQuery).then((res) => {
+      orderSelfPayUser.load(vm.listQuery).then((res) => {
         vm.spanArr = [];
         vm.list = res.data.map((d) => {
           d.driver = "";
@@ -1183,7 +1183,7 @@ export default {
   align-items: center;
 }
 .orderCard {
-  width: 320px;
+  width: 330px;
   margin-right: 0.5rem;
   height: auto;
   background: #fff;

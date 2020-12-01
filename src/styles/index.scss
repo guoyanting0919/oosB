@@ -246,7 +246,9 @@ table thead th {
 
 .app-container {
   background-color: #efefef;
-  padding: 24px;
+  padding: 8px 24px;
+  padding-bottom: 0;
+  padding-top: 16px;
 }
 
 .el-card__header {

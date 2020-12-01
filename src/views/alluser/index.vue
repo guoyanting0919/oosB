@@ -72,31 +72,16 @@
             width="120"
             align="center"
           ></el-table-column>
-          <el-table-column
-            property="setting"
-            align="center"
-            label="身份"
-            width="250"
-          >
+          <el-table-column property="setting" label="身份" width="210px">
             <template slot-scope="scope">
-              <el-select
-                style="margin-right: 0.5rem"
-                size="mini"
-                no-data-text="該用戶尚未新增身份"
-                v-model="roles[scope.row.id]"
-                placeholder="選擇身份"
-                clearable
+              <el-tag
+                v-for="(item, idx) in scope.row.userTypes"
+                :key="idx"
+                type="primary"
+                effect="dark"
               >
-                <el-option
-                  v-for="item in scope.row.userTypeOption"
-                  :key="item.caseId"
-                  :label="userRoleMap[item.userType]"
-                  :value="`${item.userType}-${item.caseId}`"
-                >
-                  {{ userRoleMap[item.userType] }}
-                  <span v-if="item.caseUserNo">({{ item.caseUserNo }})</span>
-                </el-option>
-              </el-select>
+                {{ userRoleMap[item] }}
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -147,12 +132,42 @@
             property="setting"
             label="操作"
             :fixed="isMobile()"
-            width="350"
+            width="460"
           >
             <template slot-scope="scope">
               <div class="buttonFlexBox">
-                <!-- 長照派車 -->
                 <el-button
+                  size="mini"
+                  @click="handleDespatch(scope.row)"
+                  type="info"
+                  v-if="
+                    (hasButton('dispatchCaseUser') ||
+                      hasButton('dispatchSelfPayUser') ||
+                      hasButton('dispatchBusUser')) &&
+                    scope.row.caseList.length != 0
+                  "
+                  >預約</el-button
+                >
+                <el-select
+                  style="margin: 0 0.5rem; width: 100px"
+                  size="mini"
+                  no-data-text="該用戶尚未新增身份"
+                  v-model="roles[scope.row.id]"
+                  placeholder="選擇身份"
+                  clearable
+                >
+                  <el-option
+                    v-for="item in scope.row.userTypeOption"
+                    :key="item.caseId"
+                    :label="userRoleMap[item.userType]"
+                    :value="`${item.userType}-${item.caseId}`"
+                  >
+                    {{ userRoleMap[item.userType] }}
+                    <span v-if="item.caseUserNo">({{ item.caseUserNo }})</span>
+                  </el-option>
+                </el-select>
+                <!-- 長照派車 -->
+                <!-- <el-button
                   size="mini"
                   @click="dispatchCaseUser(scope.row)"
                   type="info"
@@ -162,9 +177,9 @@
                     roles[scope.row.id].split('-')[0] == 'caseuser'
                   "
                   >預約</el-button
-                >
+                > -->
                 <!-- 白牌派車 -->
-                <el-button
+                <!-- <el-button
                   size="mini"
                   @click="dispatchSelfPayUser(scope.row)"
                   type="info"
@@ -174,9 +189,9 @@
                     roles[scope.row.id].split('-')[0] == 'selfpayuser'
                   "
                   >預約</el-button
-                >
+                > -->
                 <!-- 巴士派車 -->
-                <el-button
+                <!-- <el-button
                   size="mini"
                   @click="dispatchBusUser(scope.row)"
                   type="info"
@@ -186,7 +201,7 @@
                     roles[scope.row.id].split('-')[0] == 'bususer'
                   "
                   >預約</el-button
-                >
+                > -->
                 <!-- 基本編輯 -->
                 <el-button
                   size="mini"
@@ -382,6 +397,68 @@
           >確 定</el-button
         >
       </span>
+    </el-dialog>
+
+    <!-- despatchDialog -->
+    <el-dialog
+      title="請選擇預約身份"
+      :visible.sync="despatchDialog"
+      width="500px"
+    >
+      <el-select
+        style="margin-right: 0.5rem"
+        size="mini"
+        no-data-text="該用戶尚未新增身份"
+        v-model="despatchRole"
+        placeholder="請選擇預約身份"
+        clearable
+      >
+        <el-option
+          v-for="item in despatchOptions.userTypeOption"
+          :key="item.caseId"
+          :label="userRoleMap[item.userType]"
+          :value="`${item.userType}-${item.caseId}`"
+        >
+          {{ userRoleMap[item.userType] }}
+          <span v-if="item.caseUserNo">({{ item.caseUserNo }})</span>
+        </el-option>
+      </el-select>
+      <!-- 長照派車 -->
+      <el-button
+        size="mini"
+        @click="dispatchCaseUser(despatchRole.split('-')[1])"
+        type="info"
+        v-if="
+          hasButton('dispatchCaseUser') &&
+          despatchRole &&
+          despatchRole.split('-')[0] == 'caseuser'
+        "
+        >長照預約</el-button
+      >
+      <!-- 白牌派車 -->
+      <el-button
+        size="mini"
+        @click="dispatchSelfPayUser(despatchRole.split('-')[1])"
+        type="info"
+        v-if="
+          hasButton('dispatchSelfPayUser') &&
+          despatchRole &&
+          despatchRole.split('-')[0] == 'selfpayuser'
+        "
+        >白牌預約</el-button
+      >
+      <!-- 巴士派車 -->
+      <el-button
+        size="mini"
+        @click="dispatchBusUser(despatchRole.split('-')[1])"
+        type="info"
+        v-if="
+          hasButton('dispatchBusUser') &&
+          despatchRole &&
+          despatchRole.split('-')[0] == 'bususer'
+        "
+        >巴士預約</el-button
+      >
     </el-dialog>
 
     <!-- rolesDialog -->
@@ -582,6 +659,7 @@ export default {
       checkedUnitBs: [],
 
       roles: {},
+      despatchRole: "",
       // button
       buttons: [],
 
@@ -595,6 +673,8 @@ export default {
       quotaDialog: false,
       unitBDialog: false,
       rolesDialog: false,
+      despatchDialog: false,
+      despatchOptions: [],
 
       // table相關
       list: [],
@@ -726,10 +806,14 @@ export default {
         // console.log(res.data, ex);
         let users = res.data.map((user) => {
           user.userTypeOption = [];
+          user.userTypes = [];
           if (user.caseList.length > 0) {
             user.caseList.forEach((type) => {
               if (ex.includes(type.userType)) {
                 user.userTypeOption.push(type);
+              }
+              if (!user.userTypes.includes(type.userType)) {
+                user.userTypes.push(type.userType);
               }
             });
           } else {
@@ -776,6 +860,13 @@ export default {
       } else {
         this.handleEditBasic(user.id);
       }
+    },
+    // 預約訂車
+    handleDespatch(data) {
+      const vm = this;
+      vm.despatchDialog = true;
+      vm.despatchOptions = data;
+      console.log(data);
     },
     // 編輯用戶基本資料
     handleEditBasic(id) {
@@ -969,9 +1060,11 @@ export default {
       this.$router.push(`/alluser/checkSelfPayUser/${user.id}-${caseId}`);
     },
     // 白牌派車
-    dispatchSelfPayUser(user) {
-      let caseId = this.roles[user.id].split("-")[1];
-      this.$router.push(`/alluser/dispatchSelfPayUser/${user.id}-${caseId}`);
+    dispatchSelfPayUser() {
+      let caseId = this.despatchRole.split("-")[1];
+      this.$router.push(
+        `/alluser/dispatchSelfPayUser/${this.despatchOptions.id}-${caseId}`
+      );
     },
 
     // 編輯巴士資料
@@ -985,9 +1078,11 @@ export default {
       this.$router.push(`/alluser/checkBusUser/${user.id}-${caseId}`);
     },
     // 巴士派車
-    dispatchBusUser(user) {
-      let caseId = this.roles[user.id].split("-")[1];
-      this.$router.push(`/alluser/dispatchBusUser/${user.id}-${caseId}`);
+    dispatchBusUser() {
+      let caseId = this.despatchRole.split("-")[1];
+      this.$router.push(
+        `/alluser/dispatchBusUser/${this.despatchOptions.id}-${caseId}`
+      );
     },
 
     handleResetUserTemp() {
@@ -1129,6 +1224,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .el-tag {
+  margin-right: 8px;
+}
 .allUser {
   .el-checkbox {
     width: 50%;

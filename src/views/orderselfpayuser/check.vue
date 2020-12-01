@@ -3,326 +3,131 @@
     <sticky :className="'sub-navbar'">
       <el-button type="info" plain size="mini">回列表</el-button>
     </sticky>
-    <div class="app-container flex-item">
-      <Title title="訂單總覽"></Title>
-      <div class="formContainer bg-white" style="height: calc(100% - 50px)">
-        <el-tabs v-model="activeName">
-          <el-tab-pane label="訂單明細" name="first">
-            <div class="tabContainer">
-              <div class="orderBox">
-                <div class="orderBoxDetail">
-                  <h3 class="textCenter" style="margin-bottom: 0.5rem">
-                    訂單編號
-                  </h3>
-                  <h4 class="textCenter" style="margin-bottom: 3rem">
-                    {{ order.orderNo }}
-                  </h4>
-                  <h3 class="mb-2 textCenter">
-                    訂單建立時間<br />{{ order.createDate | dateFilter }}
-                  </h3>
-                  <h3 class="mb-2 textCenter">
-                    預約搭乘時間<br />{{ order.reserveDate | dateFilter }}
-                  </h3>
-                </div>
-                <div class="orderCost">
-                  <h2 class="textCenter">訂單狀態</h2>
-                  <h2 class="textCenter">
-                    {{ orderStatusMapping[order.status - 1] }}
-                  </h2>
-                  <!-- <h3 class="textCenter">總金額：$ 1520</h3> -->
+    <div class="app-container flex-item" style="display: flex; flex-wrap: wrap">
+      <Title title="查看訂單" style="width: 100%"></Title>
+      <div
+        class="formContainer bg-white"
+        style="height: calc(100% - 80px); width: 49%; margin-right: 2%"
+      >
+        <div class="userInfo">
+          <SubTitle title="訂單資訊"></SubTitle>
+          <el-row :gutter="16" v-if="order">
+            <el-col :sm="12" :md="12">
+              <div class="inputBox">
+                <div class="inputLable">訂單編號</div>
+                <div class="inputValue">{{ order.orderNo }}</div>
+              </div>
+            </el-col>
+            <el-col :sm="12" :md="12">
+              <div class="inputBox">
+                <div class="inputLable">訂單狀態</div>
+                <div class="inputValue">
+                  <OrderStatusTag
+                    size="normal"
+                    :type="orderStatusMapping[order.status - 1]"
+                  ></OrderStatusTag>
                 </div>
               </div>
-              <div class="routeBox">
-                <div class="routeTitle">
-                  <h3
-                    v-if="!order.canShared"
-                    style="margin-right: auto; color: #fd8115"
-                  >
-                    不可共乘
-                  </h3>
-                  <h3 v-else style="margin-right: auto; color: #fd8115">
-                    可共乘
-                  </h3>
-
-                  <h3 style="color: #343434">
-                    搭乘人數：{{ order.passengerNum }} 人
-                  </h3>
-                </div>
-                <div class="routeMap">
-                  <div class="routeMain routeMainFirst">
-                    <div
-                      class="routeMainHeader"
-                      style="margin-bottom: 2rem; width: 100%"
-                    >
-                      <p class="startRoute">
-                        {{ order.fromAddr }}
-                      </p>
-                      <p style="margin: 0 1rem">--></p>
-                      <p class="endRoute">
-                        {{ order.toAddr }}
-                      </p>
-                    </div>
-                    <div class="customSteps">
-                      <el-steps :active="2" align-center>
-                        <el-step
-                          title="新訂單"
-                          description="2020-09-08 20:06"
-                        ></el-step>
-                        <el-step
-                          title="已排班"
-                          description="2020-09-08 20:06"
-                        ></el-step>
-
-                        <el-step
-                          title="已抵達"
-                          description="2020-09-08 20:06"
-                        ></el-step>
-                        <el-step
-                          title="客上"
-                          description="2020-09-08 20:06"
-                        ></el-step>
-
-                        <el-step
-                          title="已完成"
-                          description="2020-09-08 20:06"
-                        ></el-step>
-                      </el-steps>
-                    </div>
-                  </div>
-                </div>
-                <div class="routeDriver">
-                  <div class="caseUserDetailBox">
-                    <div>
-                      <h2 class="textCenter mb-2">{{ order.userName }}</h2>
-                      <h4 class="mb-1">聯絡電話：{{ order.noticePhone }}</h4>
-                      <div class="mb-3">
-                        <p class="passengerTitle">乘車人員：</p>
-                        <div v-if="order" class="passengerListContainer">
-                          <p
-                            class="passengerBlock"
-                            v-for="p in passengerList"
-                            :key="p.key"
-                          >
-                            <span class="passengerName">{{ p.name }}</span>
-                            {{ p.birth }}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="routeTimeBox">
-                    <!-- <div class="routeTimeTitle mb-3">
-                      <h3>預估行車時間：11分鐘</h3>
-                      <h3>預估里程數：3.399公里</h3>
-                    </div> -->
-                    <div style="height: calc(100%)">
-                      <el-steps direction="vertical" :active="1">
-                        <el-step
-                          icon="iconfont icon-iconfont icon-home"
-                          title="起點"
-                          :description="order.fromAddr"
-                        ></el-step>
-                        <el-step
-                          icon="iconfont icon-iconfont icon-home"
-                          title="迄點"
-                          :description="order.toAddr"
-                        ></el-step>
-                      </el-steps>
-                    </div>
+            </el-col>
+            <el-col :sm="12" :md="12">
+              <div class="inputBox">
+                <div class="inputLable">訂車人姓名</div>
+                <div class="inputValue">{{ order.userName }}</div>
+              </div>
+            </el-col>
+            <el-col :sm="12" :md="12">
+              <div class="inputBox">
+                <div class="inputLable">訂車人聯絡電話</div>
+                <div class="inputValue">{{ order.noticePhone }}</div>
+              </div>
+            </el-col>
+            <el-col :sm="12" :md="12">
+              <div class="inputBox">
+                <div class="inputLable">預約乘車時間</div>
+                <div class="inputValue">{{ order.reserveDate }}</div>
+              </div>
+            </el-col>
+            <el-col :sm="12" :md="12">
+              <div class="inputBox">
+                <div class="inputLable">乘車人數</div>
+                <div class="inputValue">{{ order.passengerNum }}</div>
+              </div>
+            </el-col>
+            <el-col :sm="12" :md="12">
+              <div class="inputBox">
+                <div class="inputLable">司機</div>
+                <div class="inputValue">『暫時資料』</div>
+              </div>
+            </el-col>
+            <el-col :sm="12" :md="12">
+              <div class="inputBox">
+                <div class="inputLable">車輛(車號/車種)</div>
+                <div class="inputValue">『暫時資料』</div>
+              </div>
+            </el-col>
+            <el-col :sm="12" :md="24">
+              <div class="inputBox" style="margin-bottom: 8px">
+                <div class="inputLable">起迄點</div>
+                <div class="inputValue">
+                  <div class="cardBody" style="width: 100%">
+                    <p class="fromAddr" style="margin: 8px 0; width: 100%">
+                      <i class="iconfont icon-circle"></i>
+                      {{ order.fromAddr }}
+                    </p>
+                    <p class="toAddr">
+                      <i class="iconfont icon-Vector10"></i>
+                      {{ order.toAddr }}
+                    </p>
                   </div>
                 </div>
               </div>
-              <div class="orderCostDetail">
-                <!-- <h4>車資總額</h4>
-                <h4 class="mb-2">$170</h4>
-                <h4>政府補助</h4>
-                <h4 class="mb-2">$125</h4>
-                <h4>陪同金額</h4>
-                <h4 class="mb-2">$0</h4>
-                <h4>實際應收</h4>
-                <h4 class="mb-2">$0</h4>
-                <h4>實際實收</h4>
-                <h4 style="margin-bottom: auto">$0</h4> -->
-                <div class="rbBoxs">
-                  <div class="rbBox">司機</div>
-                  <div class="rbBox">車輛</div>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="行車歷程" name="second">
-            <div class="tabContainer tabContainer2">
-              <div class="caseUserBox">
-                <h2 class="mb-2 textCenter">Name</h2>
-                <h3 class="mb-1 textCenter">個案編號 1081213001</h3>
-                <h3 class="mb-2 caseUserUid textCenter">
-                  身分證字號 A123456789
-                </h3>
-                <div class="userPicBox"></div>
-              </div>
-              <div class="routeMain">
-                <div class="routeMainHeader">
-                  <p class="startRoute">新北市新店區建國路２２５巷１號二樓</p>
-                  <p>--></p>
-                  <p class="endRoute">
-                    231台灣新北市新店區建國路289號(慈濟醫院門診)
+            </el-col>
+            <el-col :sm="12" :md="24">
+              <div class="inputBox">
+                <div class="inputLable">乘車名單</div>
+                <div class="passengerList">
+                  <p v-for="item in passengerList" :key="item.key">
+                    {{ item.name }} {{ item.birth }}
                   </p>
                 </div>
-                <div class="customSteps">
-                  <el-steps :active="2" align-center>
-                    <el-step
-                      title="新訂單"
-                      description="2020-09-08 20:06"
-                    ></el-step>
-                    <el-step
-                      title="已排班"
-                      description="2020-09-08 20:06"
-                    ></el-step>
-                    <el-step
-                      title="已出發"
-                      description="2020-09-08 20:06"
-                    ></el-step>
-                    <el-step
-                      title="已抵達"
-                      description="2020-09-08 20:06"
-                    ></el-step>
-                    <el-step
-                      title="客上"
-                      description="2020-09-08 20:06"
-                    ></el-step>
-                    <el-step
-                      title="客下"
-                      description="2020-09-08 20:06"
-                    ></el-step>
-                    <el-step
-                      title="已完成"
-                      description="2020-09-08 20:06"
-                    ></el-step>
-                  </el-steps>
-                </div>
-                <div class="mapMainContainer">
-                  <div class="mapHeader">
-                    不可共乘 輪椅類型： 普通輪椅 陪同人員： 1 人
-                  </div>
-                  <div class="googleMapContainer"></div>
-                  <div class="mapFooter">
-                    司機：楊定富 車輛編號：TDP-5552 實收金額：22 預估里
-                  </div>
-                </div>
-                <div class="driverRecord">司機備註</div>
               </div>
-              <!-- <div class="costBox"></div> -->
-            </div>
-          </el-tab-pane>
-          <el-tab-pane label="個案基本資料" name="third">
-            <div class="tabContainer">
-              <div class="caseUserHeader">
-                <div class="caseUserNo">
-                  <p class="mb-1">個案編號</p>
-                  <p>1081213001</p>
-                </div>
-                <div class="caseUserStatus">
-                  <p>違規點數：3</p>
-                  <p>停權到期日：2020-04-03</p>
-                </div>
-                <div class="caseUserPay">公費</div>
-              </div>
-              <div class="caseUserMainContainer">
-                <div class="caseUserNameBox">
-                  <div class="caseUserNameBoxTop">
-                    <h1 class="mb-2">Name</h1>
-                    <h4 class="mb-2">身分證字號：F394857687</h4>
-                    <div class="userPicBox"></div>
-                  </div>
-                  <div class="caseUserNameBoxBottom">
-                    <p class="mb-2">審核日期： 2020-05-01</p>
-                    <p>失效日期：2020-05-01</p>
-                  </div>
-                </div>
-                <div class="caseUserDetailMain">
-                  <div class="caseUserMainTop">
-                    <div class="mainBoxA">
-                      <h1>基本資料</h1>
-                      <p>市話：0924012210</p>
-                      <p>手機：0924012210</p>
-                      <p>生日：2015-06-23</p>
-                      <p>電子郵件：test@gmail.com</p>
-                      <p>居住地址：新北市 板橋區 英士路192號</p>
-                      <p>通訊地址：新北市 新莊區 中泰里011鄰中港二街４３號</p>
-                    </div>
-                    <div class="mainBoxB">
-                      <h1>聯絡人</h1>
-                      <p>聯絡人姓名：</p>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
 
-                      <p>關係：</p>
-
-                      <p>市話：</p>
-
-                      <p>手機：0924012210</p>
-
-                      <p>電子郵件：</p>
-                    </div>
+      <div
+        class="formContainer bg-white"
+        style="height: calc(100% - 80px); width: 49%"
+      >
+        <div class="userInfo">
+          <SubTitle title="訂單歷程"></SubTitle>
+          <div style="height: calc(100% - 80px)">
+            <el-table
+              ref="mainTable"
+              height="100%"
+              :data="order.statusLogs"
+              border
+              fit
+              style="width: 100%"
+            >
+              <el-table-column label="變更時間" align="center">
+                <template slot-scope="scope">
+                  <div>
+                    {{ scope.row.modifyDate }}
                   </div>
-                  <div class="caseUserMainBottom">
-                    <h2>個案備註</h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-          <!-- <el-tab-pane label="個案可用輔助" name="fourth">
-            <div class="tabContainer">
-              <div class="caseUserHeader">
-                <div class="caseUserNo">
-                  <p class="mb-1">個案編號</p>
-                  <p>1081213001</p>
-                </div>
-                <div class="caseUserStatus">
-                  <p>違規點數：0</p>
-                </div>
-                <div class="caseUserPay">可派送</div>
-              </div>
-              <div class="caseUserMainContainer">
-                <div class="caseUserNameBox">
-                  <div class="caseUserNameBoxTop">
-                    <h1 class="mb-2">Name</h1>
-                    <h4 class="mb-2">身分證字號：F394857687</h4>
-                    <div class="userPicBox"></div>
-                  </div>
-                  <div class="caseUserNameBoxBottom">
-                    <p class="mb-2">審核日期： 2020-05-01</p>
-                    <p>失效日期：2020-05-01</p>
-                  </div>
-                </div>
-                <div class="caseUserDetailMain">
-                  <div class="caseUserMainTop">
-                    <div class="mainBoxA">
-                      <h1>總額度：$1840</h1>
-                      <p>使用額度：$444</p>
-                      <p>剩餘額度：$1396</p>
-                    </div>
-                    <div class="mainBoxB">
-                      <h1>趟次紀錄</h1>
-                      <p>總趟次 13</p>
-
-                      <p>每月預設補助 1840</p>
-
-                      <p>本月空趟次數 0</p>
-
-                      <p>總共空趟次數 0</p>
-
-                      <p>本月自付額 168</p>
-                    </div>
-                  </div>
-                  <div class="caseUserMainBottom">
-                    <h2 class="mb-2">修改紀錄</h2>
-                    <p>系統新增1601431951 $1840 日期:2020-09-01</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane> -->
-        </el-tabs>
+                </template>
+              </el-table-column>
+              <el-table-column label="狀態" align="center">
+                <template slot-scope="scope">
+                  <OrderStatusTag
+                    :type="orderStatusMapping[scope.row.status - 1]"
+                  ></OrderStatusTag>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -332,7 +137,9 @@
 import moment from "moment";
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
+import SubTitle from "@/components/SubTitle";
 import * as orderSelfPayUser from "@/api/orderSelfPayUser";
+import OrderStatusTag from "@/components/OrderStatusTag";
 import * as selfPayUsers from "@/api/selfPayUsers";
 import * as users from "@/api/users";
 export default {
@@ -340,6 +147,8 @@ export default {
   components: {
     Sticky,
     Title,
+    SubTitle,
+    OrderStatusTag,
   },
   filters: {
     dateFilter(date) {
@@ -350,7 +159,6 @@ export default {
   },
   data() {
     return {
-      activeName: "third",
       selfPayUserId: "",
       userId: "",
 
@@ -359,7 +167,17 @@ export default {
       user: "",
 
       // order status mapping
-      orderStatusMapping: ["新訂單", "已排班", "已抵達", "客上", "已完成"],
+      orderStatusMapping: [
+        "newOrder",
+        "ready",
+        "arrival",
+        "boarding",
+        "complete",
+        "cancel",
+        "cancel",
+        "cancel",
+        "cancel",
+      ],
     };
   },
   computed: {
@@ -397,10 +215,35 @@ export default {
   },
   mounted() {
     const vm = this;
-    this.activeName = this.$route.query.type || "third";
     vm.getOrderList();
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.userInfo {
+  height: 95%;
+}
+.inputBox {
+  width: 100%;
+  height: 84px;
+}
+.inputLable {
+  height: 30%;
+  display: flex;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.85);
+}
+.inputValue {
+  min-height: 50%;
+  display: flex;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.45);
+}
+.passengerList {
+  color: rgba(0, 0, 0, 0.45);
+  p {
+    margin: 0 0 4px 0;
+  }
+}
+</style>

@@ -114,7 +114,7 @@
           <el-table-column
             property="reserveDate"
             label="預約乘車時間"
-            width="220"
+            width="200"
             align="center"
           >
             <template slot-scope="scope">
@@ -132,7 +132,7 @@
           >
           </el-table-column>
 
-          <el-table-column property="name" label="起迄站">
+          <el-table-column property="name" label="起迄站" width="300">
             <template slot-scope="scope">
               <div class="orderAddr">
                 <i class="iconfont icon-circle"></i>
