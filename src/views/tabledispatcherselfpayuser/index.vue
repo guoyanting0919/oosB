@@ -98,7 +98,7 @@
               align="center"
               property="userName"
               label="姓名"
-              width="80"
+              width="100"
             >
             </el-table-column>
             <el-table-column
