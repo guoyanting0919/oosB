@@ -14,7 +14,10 @@
 
     <div class="app-container flex-item">
       <Title title="白牌車預約"></Title>
+
+      <!-- 預約表單 -->
       <div class="dispatchContainer bg-white">
+        <SubTitle title="預約表單"></SubTitle>
         <el-form
           :label-position="labelPosition"
           label-width="200px"
@@ -202,6 +205,93 @@
           </el-row>
         </el-form>
       </div>
+
+      <!-- 歷史訂單 -->
+
+      <div class="bg-white dispatchContainer" style="height: calc(100% - 50px)">
+        <SubTitle title="歷史訂單"></SubTitle>
+        <el-table
+          ref="mainTable"
+          height="calc(100% - 52px)"
+          :data="list"
+          border
+          fit
+          v-loading="listLoading"
+          highlight-current-row
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+          @row-click="rowClick"
+        >
+          <el-table-column
+            property="reserveDate"
+            label="預約日期"
+            width="150"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <span>{{ scope.row.createDate | dateFilter }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            property="reserveDate"
+            label="預約時間"
+            width="150"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <span>{{ scope.row.createDate | dateFilter }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            property="carCategoryName"
+            label="車輛類型"
+            width="200"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            property="noticePhone"
+            label="聯絡電話"
+            width="150"
+            align="center"
+          >
+          </el-table-column>
+          <el-table-column
+            property="canShared"
+            label="是否共乘"
+          ></el-table-column>
+          <el-table-column
+            property="passengerNum"
+            label="搭乘人數"
+          ></el-table-column>
+          <el-table-column property="fromAddr" label="起點"></el-table-column>
+          <el-table-column property="toAddr" label="訖點"></el-table-column>
+
+          <el-table-column
+            property="setting"
+            label="操作"
+            fixed="right"
+            width="100"
+          >
+            <template slot-scope="scope">
+              <div class="buttonFlexBox">
+                <el-button
+                  size="mini"
+                  @click="handleCopy(scope.row)"
+                  type="success"
+                  >複製訂單</el-button
+                >
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-if="total > 0"
+          :total="total"
+          :page.sync="listQuery.page"
+          :limit.sync="listQuery.limit"
+          @pagination="handleCurrentChange"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -210,6 +300,8 @@
 import moment from "moment";
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
+import Pagination from "@/components/Pagination";
+import SubTitle from "@/components/SubTitle";
 import * as categorys from "@/api/categorys";
 import * as orderSelfPayUser from "@/api/orderSelfPayUser";
 export default {
@@ -217,11 +309,27 @@ export default {
   components: {
     Sticky,
     Title,
+    SubTitle,
+    Pagination,
   },
   data() {
     return {
+      buttons: [],
       //車輛類別
       carCategorysList: [],
+
+      // table相關
+      list: [],
+      listLoading: false,
+      listQuery: {
+        // 查詢條件
+        page: 1,
+        limit: 10,
+        orgId: "",
+        key: undefined,
+      },
+      total: "",
+      multipleSelection: [], // 列表checkbox選中的值
 
       // 表單相關
       labelPosition: "top",
@@ -237,10 +345,10 @@ export default {
         orgId: "",
         reserveDate: "",
         noticePhone: "",
-        fromAddr: "新北市板橋區中山路二段109號",
+        fromAddr: "", //新北市板橋區中山路二段109號
         fromLon: 121.4724972,
         fromLat: 25.0129298,
-        toAddr: "新北市板橋區板新路109號",
+        toAddr: "", //新北市板橋區板新路109號
         toLon: 121.3645382,
         toLat: 25.0589911,
         passengerNum: 0,
@@ -249,24 +357,18 @@ export default {
         carCategoryId: null,
         CarCategoryName: "",
         remark: [{ name: "", birth: "" }],
-        // carCategoryName: "",
-        // orderNo: "",
-        // expectedMinute: 0,
-        // totalMileage: 0,
-        // highwayMileage: 0,
-        // fromAddrRemark: "",
-        // toAddrRemark: "",
-        // wheelchairType: "",
-        // cancelReamrk: "",
-        // withAmt: 0,
-        // totalAmt: 0,
       },
       rules: {
-        // Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
         caseUserNo: [{ required: true, message: "必填欄位", tigger: "blur" }],
         orgAId: [{ required: true, message: "必填欄位", tigger: "change" }],
       },
     };
+  },
+  filters: {
+    dateFilter(date) {
+      let res = moment(date).format("YYYY-MM-DD");
+      return res;
+    },
   },
   watch: {
     "temp.passengerNum"(val, oldVal) {
@@ -289,6 +391,27 @@ export default {
   },
 
   methods: {
+    // 獲取本路由下所有功能按鈕
+    getButtons() {
+      this.$route.meta.elements.forEach((el) => {
+        this.buttons.push(el.domId);
+      });
+    },
+    // 是否擁有按鈕功能權限
+    hasButton(domId) {
+      return this.buttons.includes(domId);
+    },
+    //獲取歷史訂單
+    getList() {
+      const vm = this;
+      vm.listQuery.key = vm.$route.params.id.split("-")[0];
+      orderSelfPayUser.load(vm.listQuery).then((res) => {
+        vm.list = res.data;
+        vm.total = res.count;
+        vm.listLoading = false;
+        console.log(vm.list);
+      });
+    },
     //獲取所有車輛類別
     getCarCategorys() {
       const vm = this;
@@ -305,6 +428,9 @@ export default {
     handleReservation() {
       // console.log(this.passengerArr);
       const vm = this;
+      vm.temp.id = "";
+      vm.temp.orgId = "";
+      vm.temp.orgName = "";
       let date = moment(vm.temp.date).format("yyyy-MM-DD");
       vm.temp.selfPayUserId = vm.$route.params.id.split("-")[1];
       vm.temp.userId = vm.$route.params.id.split("-")[0];
@@ -319,6 +445,34 @@ export default {
         console.log(res);
       });
     },
+    //複製訂單
+    handleCopy(order) {
+      this.temp = Object.assign({}, order); // copy obj
+      this.temp.remark = [{ name: "", birth: "" }];
+      this.$nextTick(() => {
+        this.passengerArr = [];
+        console.log(this.passengerArr);
+        console.log(order.remark);
+        this.passengerArr = JSON.parse(order.remark);
+        console.log(this.passengerArr);
+      });
+    },
+
+    // 換頁
+    handleCurrentChange(val) {
+      this.listQuery.page = val.page;
+      this.listQuery.limit = val.limit;
+      this.getList();
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    rowClick(row) {
+      this.$refs.mainTable.clearSelection();
+      this.$refs.mainTable.toggleRowSelection(row);
+    },
+
+    //起訖點互換
     handleChange() {
       let ex = this.temp.fromAddr;
       this.temp.fromAddr = this.temp.toAddr;
@@ -332,6 +486,7 @@ export default {
       // 调用 callback 返回建议列表的数据
       cb(results);
     },
+
     createFilter(queryString) {
       return (restaurant) => {
         return (
@@ -363,6 +518,7 @@ export default {
   mounted() {
     this.restaurants = this.loadAll();
     this.getCarCategorys();
+    this.getList();
     // this.temp.passengerNum = 1;
   },
 };
@@ -371,6 +527,7 @@ export default {
 <style lang="scss" scoped>
 .dispatchContainer {
   padding: 24px;
+  padding-top: 12px;
 }
 .name {
   line-height: 20px;

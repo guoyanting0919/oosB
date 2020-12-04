@@ -290,6 +290,7 @@ export default {
 <style lang="scss" scoped>
 .dispatchContainer {
   padding: 24px;
+  padding-top: 12px;
 }
 .name {
   line-height: 20px;

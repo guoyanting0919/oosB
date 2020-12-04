@@ -15,7 +15,7 @@
       <div class="mainContainer">
         <!-- google map -->
         <div class="mapContainer">
-          <div id="map" ref="map" style="width: 100%; height: 100%;"></div>
+          <div id="map" ref="map" style="width: 100%; height: 100%"></div>
         </div>
 
         <!-- dispatch -->
@@ -36,7 +36,7 @@
                       v-model="temp.Id"
                       type="date"
                       placeholder="請選擇乘車日期"
-                      style="width:100%"
+                      style="width: 100%"
                     ></el-date-picker>
                   </el-form-item>
                 </el-col>
@@ -45,7 +45,7 @@
                     <el-time-picker
                       v-model="temp.Id2"
                       placeholder="請選擇乘車時間"
-                      style="width:100%"
+                      style="width: 100%"
                     ></el-time-picker>
                   </el-form-item>
                 </el-col>
@@ -68,7 +68,7 @@
                       clearable
                       v-model="temp.Id"
                       placeholder="請選擇訂車人身份"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
@@ -89,7 +89,7 @@
                       clearable
                       v-model="temp.Id"
                       placeholder="請選擇備註"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
@@ -118,7 +118,7 @@
                       clearable
                       v-model="temp.Id"
                       placeholder="請選擇備註"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
@@ -147,7 +147,7 @@
                       v-model="temp.Id"
                       type="date"
                       placeholder="請選擇回程乘車時間"
-                      style="width:100%"
+                      style="width: 100%"
                     ></el-date-picker>
                   </el-form-item>
                 </el-col>
@@ -165,7 +165,7 @@
                       clearable
                       v-model="temp.Id"
                       placeholder="請選擇車種"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
@@ -178,7 +178,7 @@
                       clearable
                       v-model="temp.Id"
                       placeholder="請選擇輪椅"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
@@ -191,7 +191,7 @@
                       clearable
                       v-model="temp.Id"
                       placeholder="請選擇陪同人數"
-                      style="width:100%"
+                      style="width: 100%"
                     >
                       <el-option :value="1" :label="'男'">男</el-option>
                       <el-option :value="2" :label="'女'">女</el-option>
@@ -210,8 +210,8 @@
             </el-form>
           </div>
           <div class="dispatchFooter">
-            <el-button style="height:40px" type="info">立即預約</el-button>
-            <el-button style="height:40px" type="info">新增下個地點</el-button>
+            <el-button style="height: 40px" type="info">立即預約</el-button>
+            <el-button style="height: 40px" type="info">新增下個地點</el-button>
           </div>
         </div>
       </div>
@@ -344,6 +344,7 @@ export default {
     display: flex;
     flex-direction: column;
     padding: 24px;
+    padding-top: 12px;
   }
 
   .caseUserName {
