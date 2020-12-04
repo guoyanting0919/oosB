@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <!-- <vue-esign
+    <!-- <vue-esign 
       ref="esign"
       :width="800"
       :height="300"

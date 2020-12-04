@@ -6,7 +6,7 @@
     <div class="app-container flex-item" style="display: flex; flex-wrap: wrap">
       <Title title="查看訂單" style="width: 100%"></Title>
       <div
-        class="formContainer bg-white"
+        class="formContainer bg-white customScrollBar"
         style="height: calc(100% - 80px); width: 49%; margin-right: 2%"
       >
         <div class="userInfo">
@@ -56,13 +56,18 @@
             <el-col :sm="12" :md="12">
               <div class="inputBox">
                 <div class="inputLable">司機</div>
-                <div class="inputValue">『暫時資料』</div>
+                <div class="inputValue">
+                  {{ order.driverInfoName || "尚未排班" }}
+                </div>
               </div>
             </el-col>
             <el-col :sm="12" :md="12">
               <div class="inputBox">
                 <div class="inputLable">車輛(車號/車種)</div>
-                <div class="inputValue">『暫時資料』</div>
+                <div v-if="order.carId" class="inputValue">
+                  {{ order.carNo }} / {{ order.carCategoryName }}
+                </div>
+                <div class="inputValue" v-else>尚未排班</div>
               </div>
             </el-col>
             <el-col :sm="12" :md="24">
@@ -114,7 +119,14 @@
               <el-table-column label="變更時間" align="center">
                 <template slot-scope="scope">
                   <div>
-                    {{ scope.row.modifyDate }}
+                    {{ scope.row.createDate }}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="變更者" align="center">
+                <template slot-scope="scope">
+                  <div>
+                    {{ scope.row.createUserName }}
                   </div>
                 </template>
               </el-table-column>
@@ -193,7 +205,7 @@ export default {
       orderSelfPayUser.get({ id: vm.$route.params.id }).then((res) => {
         vm.order = res.result;
         vm.selfPayUserId = res.result.selfPayUserId;
-        vm.getSelfPayUser();
+        // vm.getSelfPayUser();
       });
     },
     //獲取身份資料
@@ -202,7 +214,7 @@ export default {
       selfPayUsers.get({ id: vm.selfPayUserId }).then((res) => {
         vm.selfPayUser = res.result;
         vm.userId = res.result.userId;
-        vm.getUser();
+        // vm.getUser();
       });
     },
     //獲取用戶資料

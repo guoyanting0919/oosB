@@ -112,11 +112,15 @@
                 >
                   {{ userRoleMap[item] }}
                 </el-tag>
+                <!-- rolesDialog = true -->
                 <el-button
                   style="margin-left: auto"
                   size="mini"
                   class="xsBtn"
-                  @click="rolesDialog = true"
+                  @click="
+                    handleCheckRoles(scope.row);
+                    rolesDialog = true;
+                  "
                   type="primary"
                   v-if="hasButton('addRole')"
                 >
@@ -495,22 +499,25 @@
       width="500px"
     >
       <div class="rolesBox">
+        <p v-if="canUseRoles.length == 0">該用戶已擁有所有身份</p>
         <el-button
-          v-if="hasButton('addCaseUser')"
+          v-if="hasButton('addCaseUser') && canUseRoles.includes('caseuser')"
           type="primary"
           plain
           @click="handleRole('1')"
           >長照身份</el-button
         >
         <el-button
-          v-if="hasButton('addSelfPayUser')"
+          v-if="
+            hasButton('addSelfPayUser') && canUseRoles.includes('selfpayuser')
+          "
           type="primary"
           plain
           @click="handleRole('2')"
           >白牌身份</el-button
         >
         <el-button
-          v-if="hasButton('addBusUser')"
+          v-if="hasButton('addBusUser') && canUseRoles.includes('bususer')"
           type="primary"
           plain
           @click="handleRole('3')"
@@ -792,6 +799,7 @@ export default {
         ],
       },
 
+      canUseRoles: [],
       roleSelect: "",
 
       value: "",
@@ -1127,6 +1135,24 @@ export default {
       let caseId = user.caseId;
       let userId = user.userId;
       this.$router.push(`/alluser/dispatchBusUser/${userId}-${caseId}`);
+    },
+    //檢查用戶身份
+    handleCheckRoles(user) {
+      const vm = this;
+      let params = {
+        userId: user.id,
+      };
+      vm.rowClick(user);
+      users.CheckRole(params).then((res) => {
+        let map = ["selfpayuser", "bususer", "caseuser"];
+        let arr = res.data.map((item) => {
+          return item.userType;
+        });
+        vm.canUseRoles = map.filter(function (v) {
+          return arr.indexOf(v) == -1;
+        });
+        console.log(vm.canUseRoles);
+      });
     },
 
     handleResetUserTemp() {

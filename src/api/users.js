@@ -104,3 +104,11 @@ export function LoadByOrg(params) {
     params,
   });
 }
+
+export function CheckRole(params) {
+  return request({
+    url: "/Users/GetUnPermissionUserType",
+    method: "get",
+    params,
+  });
+}

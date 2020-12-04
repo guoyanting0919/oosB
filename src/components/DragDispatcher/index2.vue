@@ -352,7 +352,7 @@ export default {
   }
 
   .orderCard {
-    width: 270px;
+    width: 280px;
     height: auto;
     background: #fff;
     border: 2px solid #fa8c16;

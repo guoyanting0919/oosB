@@ -1173,7 +1173,7 @@ export default {
 ::v-deep .hover-row > td {
   background-color: initial !important;
 }
-</style>
+</style> 
 <style lang='scss' scoped>
 .newOrderContainer {
   display: flex;
