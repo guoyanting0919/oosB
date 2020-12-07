@@ -24,7 +24,7 @@ export function get(params) {
 
 export function addOrUpdate(data) {
   return request({
-    url: "/despatchOfBusUsers/addOrUpdate",
+    url: "/despatchs/addOrUpdate",
     method: "post",
     data,
   });
@@ -32,7 +32,7 @@ export function addOrUpdate(data) {
 
 export function cancel(data) {
   return request({
-    url: "/despatchOfBusUsers/cancelDespatch",
+    url: "/despatchs/cancelDespatch",
     method: "post",
     data,
   });

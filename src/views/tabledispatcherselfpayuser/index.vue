@@ -619,7 +619,7 @@ import * as orderSelfPayUser from "@/api/orderSelfPayUser";
 import * as drivers from "@/api/drivers";
 import * as cars from "@/api/cars";
 import * as categorys from "@/api/categorys";
-import * as dispatchSelfPayUser from "@/api/dispatchSelfPayUser";
+import * as dispatchs from "@/api/dispatchs";
 export default {
   name: "dispatch",
   components: {
@@ -938,7 +938,7 @@ export default {
         })[0].carNo,
       };
       console.log(data);
-      dispatchSelfPayUser.addOrUpdate(data).then((res) => {
+      dispatchs.addOrUpdate(data).then((res) => {
         vm.$alertT.fire({
           icon: "success",
           title: res.message,
@@ -949,7 +949,7 @@ export default {
     // 取消排班
     handleCancelDispatch(id) {
       const vm = this;
-      dispatchSelfPayUser.cancel([id]).then((res) => {
+      dispatchs.cancel([id]).then((res) => {
         vm.$alertT.fire({
           icon: "success",
           title: res.message,
@@ -1042,7 +1042,7 @@ export default {
           return c.id == vm.carPoolTemp.carId;
         })[0].carNo,
       };
-      dispatchSelfPayUser.addOrUpdate(data).then((res) => {
+      dispatchs.addOrUpdate(data).then((res) => {
         vm.$alertT.fire({
           icon: "success",
           title: res.message,
@@ -1074,7 +1074,7 @@ export default {
           return c.id == vm.orderTemp.carId;
         })[0].carNo,
       };
-      dispatchSelfPayUser.addOrUpdate(data).then((res) => {
+      dispatchs.addOrUpdate(data).then((res) => {
         vm.$alertT.fire({
           icon: "success",
           title: res.message,

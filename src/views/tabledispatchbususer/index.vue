@@ -192,7 +192,7 @@
                   size="mini"
                   type="danger"
                   v-if="scope.row.status !== 1 && scope.row.status !== 9"
-                  @click="handleCancelDispatch(scope.row.id)"
+                  @click="handleCancelDispatch(scope.row.despatchNo)"
                   >取消排班</el-button
                 >
                 <el-button
@@ -473,9 +473,7 @@ import * as drivers from "@/api/drivers";
 import * as cars from "@/api/cars";
 import * as busStationLines from "@/api/busStationLines";
 import * as busStations from "@/api/busStations";
-// import * as categorys from "@/api/categorys";
-// import * as dispatchSelfPayUser from "@/api/dispatchSelfPayUser";
-import * as dispatchBusUser from "@/api/dispatchBusUser";
+import * as dispatchs from "@/api/dispatchs";
 export default {
   name: "dispatch",
   components: {
@@ -611,7 +609,7 @@ export default {
       vm.spanArr = [];
       vm.pos = "";
       vm.listLoading = true;
-      dispatchBusUser.load(vm.listQuery).then((res) => {
+      orderBusUser.load(vm.listQuery).then((res) => {
         vm.list = res.data.map((d) => {
           d.despatchNo = d.despatchNo ? d.despatchNo : d.orderNo;
           return d;
@@ -690,7 +688,7 @@ export default {
           return c.id == order.carId;
         })[0].carNo,
       };
-      dispatchBusUser.addOrUpdate(data).then((res) => {
+      dispatchs.addOrUpdate(data).then((res) => {
         vm.$alertT.fire({
           icon: "success",
           title: res.message,
@@ -725,7 +723,7 @@ export default {
         })[0].carNo,
       };
       console.log(data);
-      dispatchBusUser.addOrUpdate(data).then((res) => {
+      dispatchs.addOrUpdate(data).then((res) => {
         vm.$alertT.fire({
           icon: "success",
           title: res.message,
@@ -738,7 +736,7 @@ export default {
     handleCancelDispatch(id) {
       // let a = { idx: id };
       const vm = this;
-      dispatchBusUser.cancel([id]).then((res) => {
+      dispatchs.cancel([id]).then((res) => {
         vm.$alertT.fire({
           icon: "success",
           title: res.message,
@@ -946,7 +944,7 @@ export default {
           return c.id == vm.orderTemp.carId;
         })[0].carNo,
       };
-      dispatchBusUser.addOrUpdate(data).then((res) => {
+      dispatchs.addOrUpdate(data).then((res) => {
         vm.$alertT.fire({
           icon: "success",
           title: res.message,

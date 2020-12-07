@@ -256,7 +256,7 @@ export default {
       // cloneObj.splice(0, idFlag + 1, ...[]);
       vm.toLineStop = cloneObj;
     },
-    //預約訂單
+    //預約訂單 58985e5b-a659-4ac4-94aa-352ccabb3198  58985e5b-a659-4ac4-94aa-352ccabb319
     handleReservation() {
       const vm = this;
       let date = moment(vm.temp.date).format("yyyy-MM-DD");
@@ -272,7 +272,10 @@ export default {
       vm.temp.toStationName = vm.toLineStop.filter((s) => {
         return s.id === vm.temp.toStationId;
       })[0].stationName;
-      console.log(vm.temp);
+      vm.temp.orgId = vm.lineList.filter((item) => {
+        return item.id === vm.temp.stationLineId;
+      })[0].orgId;
+      console.log(vm.temp.orgId);
 
       orderBusUser.add(vm.temp).then((res) => {
         console.log(res);

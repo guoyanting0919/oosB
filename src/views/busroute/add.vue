@@ -116,6 +116,7 @@
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
 import SubTitle from "@/components/SubTitle";
+import { mapGetters } from "vuex";
 import * as busStations from "@/api/busStations";
 import * as busStationLines from "@/api/busStationLines";
 import draggable from "vuedraggable";
@@ -177,6 +178,7 @@ export default {
       checkedWeek: [],
       temp: {
         id: "",
+        orgId: "",
         name: "",
         lineCode: "",
         sort: 0,
@@ -189,6 +191,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["defaultorgid"]),
     sortList() {
       const vm = this;
       return vm.checkesStops.map((id) => {
@@ -221,6 +224,7 @@ export default {
     handleAdd() {
       const vm = this;
       vm.temp.workWeek = vm.checkedWeek.join(",");
+      vm.temp.orgId = vm.defaultorgid;
       vm.temp.assignLineStations = [];
       vm.sortData.forEach((stop) => {
         vm.temp.assignLineStations.push(stop.key);

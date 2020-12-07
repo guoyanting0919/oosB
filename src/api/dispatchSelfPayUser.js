@@ -7,24 +7,10 @@ export function load(params) {
     params,
   });
 }
-export function loadGroup(params) {
-  return request({
-    url: "/despatchOfSelfPayUsers/loadGroup",
-    method: "get",
-    params,
-  });
-}
-export function get(params) {
-  return request({
-    url: "/despatchOfSelfPayUsers/get",
-    method: "get",
-    params,
-  });
-}
 
 export function addOrUpdate(data) {
   return request({
-    url: "/despatchOfSelfPayUsers/addOrUpdate",
+    url: "/despatchs/addOrUpdate",
     method: "post",
     data,
   });
@@ -32,15 +18,7 @@ export function addOrUpdate(data) {
 
 export function cancel(data) {
   return request({
-    url: "/despatchOfSelfPayUsers/cancelDespatch",
-    method: "post",
-    data,
-  });
-}
-
-export function remove(data) {
-  return request({
-    url: "/despatchOfSelfPayUsers/delete",
+    url: "/despatchs/cancelDespatch",
     method: "post",
     data,
   });
