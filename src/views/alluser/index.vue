@@ -935,7 +935,10 @@ export default {
               console.log(arr);
               vm.multipleSelection = arr;
               vm.addOrUpdateDialog = false;
-              vm.rolesDialog = true;
+              vm.canUseRoles = ["selfpayuser", "bususer", "caseuser"];
+              vm.$nextTick(() => {
+                vm.rolesDialog = true;
+              });
             });
           } else {
             console.log("error submit!!", vm.defaultorgid);
