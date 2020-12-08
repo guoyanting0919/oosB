@@ -278,7 +278,12 @@ export default {
       console.log(vm.temp.orgId);
 
       orderBusUser.add(vm.temp).then((res) => {
-        console.log(res);
+        // console.log(res);
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        vm.$router.push("/alluser/index");
       });
     },
   },

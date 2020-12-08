@@ -442,7 +442,11 @@ export default {
       console.log(vm.temp, JSON.parse(vm.temp.remark));
 
       orderSelfPayUser.add(vm.temp).then((res) => {
-        console.log(res);
+        vm.$alertT.fire({
+          icon: "success",
+          title: res.message,
+        });
+        vm.$router.push("/alluser/index");
       });
     },
     //複製訂單
