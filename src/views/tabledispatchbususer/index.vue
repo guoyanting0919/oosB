@@ -678,7 +678,7 @@ export default {
         return;
       }
       let data = {
-        id: [order.id],
+        id: [order.despatchNo],
         driverInfoId: order.driverInfoId,
         carId: order.carId,
         driverInfoName: vm.driverList.filter((d) => {
@@ -707,29 +707,38 @@ export default {
         });
         return;
       }
-      let id = [];
+      let ids = [];
       vm.multipleSelection.forEach((o) => {
-        id.push(o.id);
+        ids.push(o.despatchNo);
       });
-      let data = {
-        id,
-        driverInfoId: vm.rosterDriver,
-        carId: vm.rosterCar,
-        driverInfoName: vm.driverList.filter((d) => {
-          return d.id == vm.rosterDriver;
-        })[0].userName,
-        carNo: vm.carList.filter((c) => {
-          return c.id == vm.rosterCar;
-        })[0].carNo,
-      };
-      console.log(data);
-      dispatchs.addOrUpdate(data).then((res) => {
-        vm.$alertT.fire({
-          icon: "success",
-          title: res.message,
+      console.log(ids);
+      let idLength = ids.length;
+      let flag = 1;
+      ids.forEach((id) => {
+        let data = {
+          id: [id],
+          driverInfoId: vm.rosterDriver,
+          carId: vm.rosterCar,
+          driverInfoName: vm.driverList.filter((d) => {
+            return d.id == vm.rosterDriver;
+          })[0].userName,
+          carNo: vm.carList.filter((c) => {
+            return c.id == vm.rosterCar;
+          })[0].carNo,
+        };
+        console.log(data);
+        dispatchs.addOrUpdate(data).then((res) => {
+          if (flag < idLength) {
+            flag++;
+          } else {
+            vm.$alertT.fire({
+              icon: "success",
+              title: res.message,
+            });
+            vm.rosterDialog = false;
+            vm.getList();
+          }
         });
-        vm.rosterDialog = false;
-        vm.getList();
       });
     },
     // 取消排班
@@ -934,7 +943,7 @@ export default {
       const vm = this;
 
       let data = {
-        id: [vm.orderTemp.id],
+        id: [vm.orderTemp.despatchNo],
         driverInfoId: vm.orderTemp.driverInfoId,
         carId: vm.orderTemp.carId,
         driverInfoName: vm.driverList.filter((d) => {

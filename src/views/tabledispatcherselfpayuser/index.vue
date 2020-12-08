@@ -927,7 +927,7 @@ export default {
         return;
       }
       let data = {
-        id: [order.id],
+        id: [order.despatchNo],
         driverInfoId: order.driverInfoId,
         carId: order.carId,
         driverInfoName: vm.driverList.filter((d) => {
@@ -1031,7 +1031,7 @@ export default {
       }
       let data = {
         id: vm.multipleSelection.map((i) => {
-          return i.id;
+          return i.despatchNo;
         }),
         driverInfoId: vm.carPoolTemp.driverInfoId,
         carId: vm.carPoolTemp.carId,
@@ -1064,7 +1064,7 @@ export default {
       const vm = this;
 
       let data = {
-        id: [vm.orderTemp.id],
+        id: [vm.orderTemp.despatchNo],
         driverInfoId: vm.orderTemp.driverInfoId,
         carId: vm.orderTemp.carId,
         driverInfoName: vm.driverList.filter((d) => {
