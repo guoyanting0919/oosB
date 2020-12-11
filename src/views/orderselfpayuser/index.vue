@@ -422,6 +422,8 @@ export default {
       },
 
       // dialog
+
+      violationDialog: false,
       editDialog: false,
 
       // order status mapping
@@ -439,29 +441,23 @@ export default {
 
       value: "",
       value1: "",
-
-      violationDialog: false,
     };
   },
   watch: {
     "temp.passengerNum"(val, oldVal) {
       const vm = this;
-      let num;
       if (val > oldVal) {
-        num = val - oldVal;
-        console.log(val, oldVal, num);
         for (let index = oldVal + 1; index <= val; index++) {
           let obj = { name: "", birth: "", key: index };
           vm.passengerArr.push(obj);
         }
       } else {
-        num = oldVal - val;
         vm.passengerArr = vm.passengerArr.slice(0, val);
       }
     },
   },
   methods: {
-    //獲取訂單
+    /* 獲取訂單 */
     getList() {
       const vm = this;
       orderSelfPayUser.load(vm.listQuery).then((res) => {
@@ -469,7 +465,8 @@ export default {
         vm.total = res.count;
       });
     },
-    // 獲取所有車輛類型
+
+    /* 獲取所有車輛類型 */
     getCarCategorys() {
       const vm = this;
       let query = {
@@ -481,17 +478,8 @@ export default {
         vm.carCategorysList = res.data;
       });
     },
-    onBtnClicked(domId) {
-      //   console.log(domId);
-      switch (domId) {
-        case "violationBtn":
-          this.violationDialog = true;
-          break;
-        default:
-          break;
-      }
-    },
-    // 獲取單筆訂單資料
+
+    /* 獲取單筆訂單資料 */
     getOrder(id) {
       const vm = this;
       orderSelfPayUser.get({ id }).then((res) => {
@@ -505,7 +493,8 @@ export default {
         });
       });
     },
-    // 編輯訂單
+
+    /* 確認編輯訂單 */
     handleEdit() {
       const vm = this;
       let date = moment(vm.temp.date).format("yyyy-MM-DD");
@@ -514,10 +503,8 @@ export default {
         return car.dtValue === vm.temp.carCategoryId;
       })[0].name;
       vm.temp.remark = JSON.stringify(vm.passengerArr);
-      console.log(vm.temp, JSON.parse(vm.temp.remark));
 
       orderSelfPayUser.update(vm.temp).then((res) => {
-        // console.log(res);
         vm.$alertT.fire({
           icon: "success",
           title: res.message,
@@ -526,7 +513,8 @@ export default {
         vm.getList();
       });
     },
-    // 取消排班
+
+    /* 取消排班 */
     handleCancelDispatch(id) {
       const vm = this;
       dispatchSelfPayUser.cancel([id]).then((res) => {
@@ -537,7 +525,8 @@ export default {
         vm.getList();
       });
     },
-    //取消訂單
+
+    /* 取消排班 */
     handleCancelOrder(id) {
       const vm = this;
       let params = {
@@ -552,17 +541,31 @@ export default {
         vm.getList();
       });
     },
+
+    /* 檢視訂單 */
     handleCheck(id) {
       this.$router.push({
         path: `/orderselfpayuser/check/${id}`,
-        query: { type: "first" },
       });
     },
-    // 換頁
+
+    /* 換頁 */
     handleCurrentChange(val) {
       this.listQuery.page = val.page;
       this.listQuery.limit = val.limit;
       this.getList();
+    },
+
+    /* 權限按鈕 */
+    onBtnClicked(domId) {
+      this.$cl(domId);
+      switch (domId) {
+        case "violationBtn":
+          this.violationDialog = true;
+          break;
+        default:
+          break;
+      }
     },
   },
   mounted() {

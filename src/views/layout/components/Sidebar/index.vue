@@ -1,7 +1,7 @@
 <template>
   <el-scrollbar
     wrapClass="scrollbar-wrapper"
-    style="border-right: 1px solid #f5f5f5;"
+    style="border-right: 1px solid #f5f5f5"
   >
     <el-menu
       mode="vertical"
@@ -10,9 +10,6 @@
       :collapse="isCollapse"
       router
       unique-opened
-      :background-color="themeStatus ? '#fff' : ''"
-      :text-color="themeStatus ? '#3b3b3b' : ''"
-      :active-text-color="themeStatus ? '#f3971a' : '#f3971a'"
     >
       <sidebar-item
         v-for="route in routes"

@@ -183,7 +183,7 @@ router.beforeEach((to, from, next) => {
                                 path: `/${parentPath}`,
                                 component: Layout,
                                 name: mr.title,
-                                redirect: "noredirect",
+                                redirect: `/${parentPath}/index`,
                                 hidden: true,
                                 meta: {
                                   notauth: true,

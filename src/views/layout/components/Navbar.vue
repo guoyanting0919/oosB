@@ -46,18 +46,17 @@
             />
           </span>
         </el-dropdown-item>
-        <!-- <el-dropdown-item disabled>
+        <el-dropdown-item>
           <span>
             切換主題
             <el-switch
-              disabled
               :active-value="1"
               :inactive-value="0"
               style="margin-left: 5px"
               v-model="theme"
             />
           </span>
-        </el-dropdown-item> -->
+        </el-dropdown-item>
         <el-dropdown-item command="logout" divided>
           <span>退出</span>
         </el-dropdown-item>

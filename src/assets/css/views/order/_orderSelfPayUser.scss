@@ -33,9 +33,9 @@
     cursor: pointer;
 
     &.active {
-      color: #f3981a;
-      border: 1px solid #f3981a;
-      background-color: #f3981a;
+      color: $primary;
+      border: 1px solid $primary;
+      background-color: $primary;
       color: #fff;
     }
   }
@@ -60,7 +60,7 @@
 
   .orderLeft {
     width: 30%;
-    background: #f3981a;
+    background: $primary;
     display: flex;
     flex-direction: column;
     color: #fff;
@@ -113,7 +113,7 @@
 
   .isCarpool {
     margin-right: auto;
-    color: #f3981a;
+    color: $primary;
   }
 
   .wheelchairType {

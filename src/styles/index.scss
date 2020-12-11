@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@import "../assets/css/basic/variable";
 @import "./mixin.scss";
 @import "./transition.scss";
 @import "./element-ui.scss";
@@ -165,7 +165,7 @@ code {
 
 .link-type,
 .link-type:focus {
-  color: #f3971a;
+  color: $primary;
   cursor: pointer;
   &:hover {
     color: #ff9c10;
@@ -441,7 +441,7 @@ table thead th {
   #app {
     .sidebar-container .nest-menu .el-submenu > .el-submenu__title,
     .sidebar-container .el-submenu .el-menu-item {
-      background-color: #fef8f0 !important;
+      background-color: $subMenuBg !important;
       &:hover {
         background-color: $menuHover !important;
       }
@@ -467,10 +467,10 @@ table thead th {
       color: #6b655c;
     }
     .avatar-container {
-      color: $orange;
+      color: $primary;
     }
     .logo {
-      color: $orange;
+      color: $primary;
     }
   }
 }

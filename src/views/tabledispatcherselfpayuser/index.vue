@@ -2,7 +2,7 @@
   <div class="flex-column dispatch" style="height: calc(100% - 20px)">
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
-        <!-- 關鍵字搜尋 -->
+        <!-- 無權限權限按鈕 -->
         <el-input
           style="width: 200px; margin-right: 0.5rem"
           size="mini"
@@ -10,6 +10,7 @@
           clearable
           placeholder="請輸入關鍵字"
         ></el-input>
+
         <!-- 權限按鈕 -->
         <permission-btn
           moduleName="builderTables"
@@ -19,12 +20,14 @@
       </div>
     </sticky>
 
+    <!-- 白牌車調度台 -->
     <div style="padding-bottom: 0px" class="app-container flex-item">
       <Title title="白牌車調度台"></Title>
       <div
         class="bg-white formContainer"
         style="height: calc(100% - 50px); padding: 0 16px"
       >
+        <!-- 新訂單 -->
         <SubTitle title="新訂單"></SubTitle>
         <div class="bg-white newOrderContainer">
           <p
@@ -38,44 +41,17 @@
             mode="out-in"
             class="newOrderContainer"
           >
-            <div v-for="item in newOrderList" :key="item.id" class="orderCard">
-              <div class="orderCardTitle" v-if="newOrderList">
-                <p>{{ item.carCategoryName }}</p>
-                <!-- <p>普通輪椅(可收拆)</p> -->
-                <p v-if="item.canShared">可共乘</p>
-                <p v-else>不可共乘</p>
-                <p>{{ item.passengerNum }}人搭乘</p>
-                <el-button
-                  @click="handleReceive(item.id)"
-                  size="mini"
-                  type="success"
-                  style="padding: 3px 8px; margin-left: auto"
-                  >接收</el-button
-                >
-              </div>
-              <div class="orderCardMain">
-                <div class="orderInfo">
-                  <p class="orderInfoName">{{ item.userName }}</p>
-                  <p>聯絡電話 : {{ item.noticePhone }}</p>
-                </div>
-                <p class="orderTime">
-                  {{ item.reserveDate | dateFilter }}
-                </p>
-                <div class="orderAddr">
-                  <i class="iconfont icon-circle"></i>
-                  <i class="iconfont icon-Vector10"></i>
-                  <p class="startAddr">
-                    {{ item.fromAddr }}
-                  </p>
-                  <p class="endAddr">{{ item.toAddr }}</p>
-                </div>
-              </div>
-            </div>
+            <OrderCard
+              v-for="item in newOrderList"
+              :key="item.id"
+              :order="item"
+              @handleReceive="handleReceive"
+            ></OrderCard>
           </transition-group>
         </div>
 
+        <!-- 調度台 -->
         <SubTitle title="調度台"></SubTitle>
-        <!-- old table -->
         <div class="bg-white formContainer" style="height: 100%">
           <el-table
             ref="mainTable"
@@ -257,10 +233,7 @@
                     type="warning"
                     size="mini"
                     v-if="scope.row.status !== 1 && scope.row.status !== 9"
-                    @click="
-                      changeDialog = true;
-                      handleChange(scope.row);
-                    "
+                    @click="handleChange(scope.row)"
                     >變更司機車輛</el-button
                   >
                   <el-button
@@ -291,6 +264,8 @@
         </div>
       </div>
     </div>
+
+    <!-- 燈箱 -->
     <!-- eidt dialog -->
     <el-dialog
       title="編輯訂單"
@@ -606,8 +581,8 @@
 </template> 
 
 <script>
-import moment from "moment";
 import { mapGetters } from "vuex";
+import moment from "moment";
 import * as signalR from "@aspnet/signalr";
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
@@ -615,13 +590,14 @@ import permissionBtn from "@/components/PermissionBtn";
 import SubTitle from "@/components/SubTitle";
 import Pagination from "@/components/Pagination";
 import OrderStatusTag from "@/components/OrderStatusTag";
+import OrderCard from "@/components/OrderCard";
 import * as orderSelfPayUser from "@/api/orderSelfPayUser";
 import * as drivers from "@/api/drivers";
 import * as cars from "@/api/cars";
 import * as categorys from "@/api/categorys";
 import * as dispatchs from "@/api/dispatchs";
 export default {
-  name: "dispatch",
+  name: "selfPaydispatch",
   components: {
     Sticky,
     Title,
@@ -629,6 +605,7 @@ export default {
     SubTitle,
     Pagination,
     OrderStatusTag,
+    OrderCard,
   },
   computed: {
     ...mapGetters(["defaultorgid"]),
@@ -642,16 +619,19 @@ export default {
   },
   data() {
     return {
-      //司機列表
+      /* 司機列表 */
       driverList: [],
-      //車輛列表
+
+      /* 車輛列表 */
       carList: [],
-      // 無組織訂單
+
+      /* 無組織訂單 */
       newOrderList: [],
-      //車輛類別
+
+      /* 車輛類別 */
       carCategorysList: [],
 
-      //table
+      /* table */
       list: [],
       pos: "",
       listLoading: false,
@@ -663,17 +643,19 @@ export default {
       },
       multipleSelection: [],
 
-      // order temp
+      /* order temp */
       orderTemp: [],
-      // 表單相關
+
+      /* 表單相關 */
       labelPosition: "top",
       passengerArr: [],
       passengerNum: 1,
       spanArr: [],
       temp: {
-        // 日期
+        /* vue.$set */
         date: "",
         time: "",
+
         id: "",
         selfPayUserId: "",
         orgId: "",
@@ -693,7 +675,7 @@ export default {
         remark: [{ name: "", birth: "" }],
       },
 
-      //car pool temp
+      /* 共乘 */
       carPoolTemp: {
         carId: null,
         carNo: "",
@@ -702,7 +684,7 @@ export default {
         id: [],
       },
 
-      // order status mapping
+      /* order status mapping */
       orderStatusMapping: [
         "newOrder",
         "ready",
@@ -715,37 +697,34 @@ export default {
         "cancel",
       ],
 
-      // dialog
+      /* dialog */
       editDialog: false,
       carPoolDialog: false,
       changeDialog: false,
 
-      // signalR
+      /* signalR */
       hubConnection: new signalR.HubConnectionBuilder()
         .withUrl("http://openauth.1966.org.tw/api/chatHub")
         .build(),
+
       value: "",
     };
   },
   watch: {
     "temp.passengerNum"(val, oldVal) {
       const vm = this;
-      let num;
       if (val > oldVal) {
-        num = val - oldVal;
-        console.log(val, oldVal, num);
         for (let index = oldVal + 1; index <= val; index++) {
           let obj = { name: "", birth: "", key: index };
           vm.passengerArr.push(obj);
         }
       } else {
-        num = oldVal - val;
         vm.passengerArr = vm.passengerArr.slice(0, val);
       }
     },
   },
   methods: {
-    // 是否為移動端
+    /* 是否為移動端 */
     isMobile() {
       const vm = this;
       if (vm.$store.state.app.device === "mobile") {
@@ -754,8 +733,10 @@ export default {
         return "right";
       }
     },
+
+    /* 權限按鈕 */
     onBtnClicked(domId) {
-      console.log(domId);
+      this.$cl(domId);
       switch (domId) {
         case "delete":
           this.handleDeleteOrders(this.multipleSelection);
@@ -767,27 +748,29 @@ export default {
           break;
       }
     },
-    handleModifyStatus() {},
-    //獲取派遣訂單
+
+    /* 獲取派遣訂單 */
     getList() {
       const vm = this;
       vm.pos = "";
       vm.listLoading = true;
       orderSelfPayUser.load(vm.listQuery).then((res) => {
         vm.spanArr = [];
+
         vm.list = res.data.map((d) => {
           d.driver = "";
           d.car = "";
           d.despatchNo = d.despatchNo ? d.despatchNo : d.orderNo;
-
           return d;
         });
+
         vm.total = res.count;
         vm.getSpanArr(vm.list);
         vm.listLoading = false;
       });
     },
-    // 合併row array
+
+    /* 合併row array */
     getSpanArr(data) {
       const vm = this;
       for (let i = 0; i < data.length; i++) {
@@ -806,9 +789,9 @@ export default {
         }
       }
     },
-    // 合併共乘欄位
+
+    /* 合併共乘欄位 */
     objectSpanMethod({ rowIndex, columnIndex }) {
-      // console.log(row, column, rowIndex, columnIndex);
       if (
         columnIndex === 11 ||
         columnIndex === 0 ||
@@ -826,28 +809,32 @@ export default {
         };
       }
     },
-    //獲取無組織訂單
+
+    /* 獲取無組織訂單 */
     async getListNoOrg() {
       const vm = this;
       await orderSelfPayUser.loadNoOrg({ key: undefined }).then((res) => {
         vm.newOrderList = res.data;
       });
     },
-    // 獲取所有司機
+
+    /* 獲取所有司機 */
     getDriverList() {
       const vm = this;
       drivers.load({ limit: 9999, page: 1 }).then((res) => {
         vm.driverList = res.data;
       });
     },
-    // 獲取所有車輛
+
+    /* 獲取所有車輛 */
     getCarList() {
       const vm = this;
       cars.load({ limit: 9999, page: 1 }).then((res) => {
         vm.carList = res.data;
       });
     },
-    // 獲取所有車輛類型
+
+    /* 獲取所有車輛類型 */
     getCarCategorys() {
       const vm = this;
       let query = {
@@ -859,7 +846,8 @@ export default {
         vm.carCategorysList = res.data;
       });
     },
-    // 獲取單筆訂單資料
+
+    /* 獲取單筆訂單資料 */
     getOrder(id) {
       const vm = this;
       orderSelfPayUser.get({ id }).then((res) => {
@@ -874,7 +862,8 @@ export default {
         });
       });
     },
-    //批次刪除訂單
+
+    /* 批次刪除訂單 */
     handleDeleteOrders(car) {
       const vm = this;
       vm.$swal({
@@ -904,7 +893,8 @@ export default {
         }
       });
     },
-    //接收訂單
+
+    /* 接收訂單 */
     handleReceive(orderId) {
       const vm = this;
       orderSelfPayUser
@@ -913,10 +903,11 @@ export default {
           orgId: vm.defaultorgid,
         })
         .then((res) => {
-          console.log(res);
+          this.$cl(res);
         });
     },
-    //排班
+
+    /* 排班 */
     handleRoster(order) {
       const vm = this;
       if (order.driverInfoId == null || order.carId == null) {
@@ -937,7 +928,6 @@ export default {
           return c.id == order.carId;
         })[0].carNo,
       };
-      console.log(data);
       dispatchs.addOrUpdate(data).then((res) => {
         vm.$alertT.fire({
           icon: "success",
@@ -946,7 +936,8 @@ export default {
         vm.getList();
       });
     },
-    // 取消排班
+
+    /* 取消排班 */
     handleCancelDispatch(id) {
       const vm = this;
       dispatchs.cancel([id]).then((res) => {
@@ -957,7 +948,8 @@ export default {
         vm.getList();
       });
     },
-    //取消訂單
+
+    /* 取消訂單 */
     handleCancelOrder(id) {
       const vm = this;
       let params = {
@@ -972,7 +964,8 @@ export default {
         vm.getList();
       });
     },
-    // 編輯訂單
+
+    /* 確認編輯訂單 */
     handleEdit() {
       const vm = this;
       let date = moment(vm.temp.date).format("yyyy-MM-DD");
@@ -981,10 +974,8 @@ export default {
         return car.dtValue === vm.temp.carCategoryId;
       })[0].name;
       vm.temp.remark = JSON.stringify(vm.passengerArr);
-      console.log(vm.temp, JSON.parse(vm.temp.remark));
 
       orderSelfPayUser.update(vm.temp).then((res) => {
-        // console.log(res);
         vm.$alertT.fire({
           icon: "success",
           title: res.message,
@@ -993,14 +984,13 @@ export default {
         vm.getList();
       });
     },
-    // 判斷是否共乘
+
+    /* 判斷可否共乘 */
     isShare() {
       const vm = this;
       let canShare = true;
       vm.multipleSelection.forEach((i) => {
-        if (!i.canShared) {
-          canShare = false;
-        }
+        if (!i.canShared) canShare = false;
       });
       if (canShare && vm.multipleSelection.length >= 2) {
         vm.carPoolTemp = {
@@ -1018,10 +1008,10 @@ export default {
         });
       }
     },
-    // 共乘
+
+    /* 確認共乘 */
     handleSetCarPool() {
       const vm = this;
-      console.log("a");
       if (vm.carPoolTemp.driverInfoId == null || vm.carPoolTemp.carId == null) {
         vm.$alertM.fire({
           icon: "error",
@@ -1052,17 +1042,16 @@ export default {
       });
     },
 
-    //變更司機車輛
+    /* 變更司機車輛 */
     handleChange(order) {
       const vm = this;
+      vm.changeDialog = true;
       vm.orderTemp = Object.assign({}, order); // copy obj
-      console.log(vm.orderTemp);
     },
 
-    //確認變更司機車輛
+    /* 確認變更司機車輛 */
     handleConfirmChange() {
       const vm = this;
-
       let data = {
         id: [vm.orderTemp.despatchNo],
         driverInfoId: vm.orderTemp.driverInfoId,
@@ -1084,28 +1073,27 @@ export default {
       });
     },
 
-    //signalR
-    //建立連線
+    /* signalR */
+    /* 建立連線 */
     connectHub() {
       const vm = this;
       vm.hubConnection
         .start()
         .then(() => {
-          console.log("signalR success connect");
+          vm.$cl("signalR success connect");
           vm.addListener();
           vm.addListenerReceive();
           vm.addToGroup();
         })
         .catch((err) => {
-          console.log(err);
+          this.$cl(err);
         });
     },
-    //建立監聽
+
+    /* 收到新訂單監聽 */
     addListener() {
       const vm = this;
       vm.hubConnection.on("ReceiveOrderMessage", function (order) {
-        console.info("update success!", order);
-        // vm.signalRMsg = `${user}`;
         vm.$alertT.fire({
           icon: "success",
           title: "有一筆新訂單",
@@ -1113,12 +1101,11 @@ export default {
         vm.newOrderList.push(order);
       });
     },
-    //建立接收成功signalR
+
+    /* 接收成功監聽 */
     addListenerReceive() {
       const vm = this;
       vm.hubConnection.on("ReceiveOrderHide", function (orderId) {
-        console.info("update success!", orderId);
-        // vm.signalRMsg = `${user}`;
         vm.$alertT.fire({
           icon: "info",
           title: `訂單(${orderId})已被接收`,
@@ -1127,29 +1114,30 @@ export default {
           return order.id != orderId;
         });
         vm.getList();
-        // vm.newOrderList.push(order);
       });
     },
-    //加入分組
+
+    /* 加入分組 */
     addToGroup() {
       const vm = this;
       vm.hubConnection
         .invoke("AddToGroup", vm.defaultorgid)
         .then(() => {
-          console.log("addToGroup success");
+          vm.$cl("addToGroup success");
         })
         .catch(function (err) {
           return console.error(err);
         });
     },
-    // 換頁
+
+    /* 換頁 */
     handleCurrentChange(val) {
-      console.log("a");
       this.listQuery.page = val.page;
       this.listQuery.limit = val.limit;
       this.getList();
     },
-    // table 功能
+
+    /* table 功能 */
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -1164,66 +1152,21 @@ export default {
   },
 
   beforeDestroy() {
-    // Make sure to cleanup SignalR event handlers when removing the component
+    /* 離開頁面時中斷signalR連線 */
     this.hubConnection.stop();
   },
 };
 </script>
-<style scoped>
+<style lang='scss' scoped>
 ::v-deep .hover-row > td {
   background-color: initial !important;
 }
-</style> 
-<style lang='scss' scoped>
 .newOrderContainer {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   justify-content: space-between;
   align-items: center;
-}
-.orderCard {
-  width: 330px;
-  margin-right: 0.5rem;
-  height: auto;
-  background: #fff;
-  border: 2px solid #fa8c16;
-  border-top: 5px solid #fa8c16;
-  border-radius: 0px 0px 8px 8px;
-  margin-bottom: 1rem;
-}
-.orderCardTitle {
-  height: 38px;
-  color: #fff;
-  background: #fa8c16;
-  padding: 0.5rem;
-  display: flex;
-  font-size: 14px;
-  font-weight: 700;
-  p {
-    margin-right: 1rem;
-  }
-}
-.orderCardMain {
-  padding: 0.5rem;
-  font-size: 14px;
-  font-weight: 700;
-}
-.orderInfo {
-  color: #fa8c16;
-  display: flex;
-  margin-bottom: 0.5rem;
-
-  p {
-    margin-right: 1rem;
-  }
-}
-.orderInfoName {
-  color: #000;
-  font-size: 1rem;
-}
-.orderTime {
-  margin-bottom: 0.5rem;
 }
 .orderAddr {
   padding-left: 0.5rem;
@@ -1232,12 +1175,12 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
   height: 45px;
-  border-left: 3px dotted #fa8c16;
+  border-left: 3px dotted $primary;
   position: relative;
 
   .icon-circle {
     font-weight: 500;
-    color: #fa8c16;
+    color: $primary;
     position: absolute;
     left: -9px;
     top: -1px;
@@ -1246,7 +1189,7 @@ export default {
 
   .icon-Vector10 {
     font-weight: 500;
-    color: #fa8c16;
+    color: $primary;
     position: absolute;
     left: -9px;
     bottom: -1px;

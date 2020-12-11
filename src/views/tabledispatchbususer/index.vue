@@ -2,7 +2,7 @@
   <div class="flex-column dispatch" style="height: calc(100% - 20px)">
     <sticky :className="'sub-navbar'">
       <div class="filter-container">
-        <!-- 關鍵字搜尋 -->
+        <!-- 非權限按鈕 -->
         <el-input
           style="width: 200px; margin-right: 0.5rem"
           size="mini"
@@ -10,6 +10,7 @@
           clearable
           placeholder="請輸入關鍵字"
         ></el-input>
+
         <!-- 權限按鈕 -->
         <permission-btn
           moduleName="builderTables"
@@ -19,6 +20,7 @@
       </div>
     </sticky>
 
+    <!-- 幸福巴士調度台 -->
     <div class="app-container flex-item">
       <Title title="幸福巴士調度台"></Title>
       <div class="bg-white" style="height: calc(100% - 50px)">
@@ -215,6 +217,9 @@
         />
       </div>
     </div>
+
+    <!-- 燈箱 -->
+
     <!-- eidt dialog -->
     <el-dialog
       title="編輯訂單"
@@ -495,26 +500,25 @@ export default {
   },
   data() {
     return {
-      //司機列表
+      /* 司機列表 */
       driverList: [],
-      //車輛列表
+      /* 車輛列表 */
       carList: [],
-      // 無組織訂單
+      /* 無組織訂單 */
       newOrderList: [],
-      //車輛類別
+      /* 車輛類別 */
       carCategorysList: [],
-      //路線
+      /* 路線 */
       lineList: [],
-      //所有站牌
+      /* 所有站牌 */
       stopList: [],
-      //起點站牌
+      /* 起點站牌 */
       lineStop: [],
-      //終點站牌
+      /* 終點站牌 */
       toLineStop: [],
 
-      //table
+      /* table */
       list: [],
-      pos: "",
       listLoading: false,
       total: 0,
       listQuery: {
@@ -524,20 +528,19 @@ export default {
       },
       multipleSelection: [],
 
-      //批次排班
+      /* 批次排班 */
       rosterDriver: "",
       rosterCar: "",
 
-      // order temp
-      // 表單相關
+      /*  order temp */
+      /* 表單相關 */
       labelPosition: "top",
       passengerArr: [],
       passengerNum: 1,
-      spanArr: [],
       temp: {
-        // 日期
         date: "",
         time: "",
+
         id: "",
         busUserId: "",
         reserveDate: "",
@@ -551,10 +554,10 @@ export default {
         remark: "",
       },
 
-      //orderTemp
+      /* orderTemp */
       orderTemp: {},
 
-      //car pool temp
+      /* 共乘 car pool temp */
       carPoolTemp: {
         carId: null,
         carNo: "",
@@ -563,7 +566,7 @@ export default {
         id: [],
       },
 
-      // order status mapping
+      /* order status mapping */
       orderStatusMapping: [
         "newOrder",
         "ready",
@@ -576,21 +579,23 @@ export default {
         "cancel",
       ],
 
-      // dialog
+      /* dialog */
       editDialog: false,
       rosterDialog: false,
       changeDialog: false,
 
-      // signalR
+      /* signalR */
       hubConnection: new signalR.HubConnectionBuilder()
         .withUrl("http://openauth.1966.org.tw/api/chatHub")
         .build(),
+
       value: "",
     };
   },
   methods: {
+    /* 權限按鈕 */
     onBtnClicked(domId) {
-      console.log(domId);
+      this.$cl(domId);
       switch (domId) {
         case "delete":
           this.handleDeleteOrders(this.multipleSelection);
@@ -603,11 +608,10 @@ export default {
           break;
       }
     },
-    //獲取派遣訂單
+
+    /* 獲取派遣訂單 */
     getList() {
       const vm = this;
-      vm.spanArr = [];
-      vm.pos = "";
       vm.listLoading = true;
       orderBusUser.load(vm.listQuery).then((res) => {
         vm.list = res.data.map((d) => {
@@ -619,7 +623,7 @@ export default {
       });
     },
 
-    // 獲取所有司機
+    /* 獲取所有司機 */
     getDriverList() {
       const vm = this;
       vm.listLoading = true;
@@ -627,7 +631,8 @@ export default {
         vm.driverList = res.data;
       });
     },
-    // 獲取所有車輛
+
+    /* 獲取所有車輛 */
     getCarList() {
       const vm = this;
       vm.listLoading = true;
@@ -636,7 +641,37 @@ export default {
       });
     },
 
-    //批次刪除訂單
+    /* 獲取巴士路線資料 */
+    getLineList() {
+      const vm = this;
+      let query = {
+        page: 1,
+        limit: 99,
+        key: undefined,
+      };
+      busStationLines.load(query).then((res) => {
+        res.data.forEach((r) => {
+          r.weekArr = r.workWeek?.split(",");
+          r.weekArr.sort();
+        });
+        vm.lineList = res.data;
+      });
+    },
+
+    /* 獲取巴士站牌資料 */
+    getStopList() {
+      const vm = this;
+      let query = {
+        page: 1,
+        limit: 999,
+        key: undefined,
+      };
+      busStations.load(query).then((res) => {
+        vm.stopList = res.data;
+      });
+    },
+
+    /* 批次刪除訂單 */
     handleDeleteOrders(car) {
       const vm = this;
       vm.$swal({
@@ -667,7 +702,7 @@ export default {
       });
     },
 
-    //排班
+    /* 排班 */
     handleRoster(order) {
       const vm = this;
       if (order.driverInfoId == null || order.carId == null) {
@@ -697,7 +732,7 @@ export default {
       });
     },
 
-    // 批量排班
+    /* 批量排班 */
     handleRosterOrders() {
       const vm = this;
       if (vm.rosterCar == "" || vm.rosterDriver == "") {
@@ -711,7 +746,6 @@ export default {
       vm.multipleSelection.forEach((o) => {
         ids.push(o.despatchNo);
       });
-      console.log(ids);
       let idLength = ids.length;
       let flag = 1;
       ids.forEach((id) => {
@@ -726,7 +760,6 @@ export default {
             return c.id == vm.rosterCar;
           })[0].carNo,
         };
-        console.log(data);
         dispatchs.addOrUpdate(data).then((res) => {
           if (flag < idLength) {
             flag++;
@@ -741,9 +774,9 @@ export default {
         });
       });
     },
-    // 取消排班
+
+    /* 取消排班 */
     handleCancelDispatch(id) {
-      // let a = { idx: id };
       const vm = this;
       dispatchs.cancel([id]).then((res) => {
         vm.$alertT.fire({
@@ -753,7 +786,8 @@ export default {
         vm.getList();
       });
     },
-    //取消訂單
+
+    /* 取消訂單 */
     handleCancelOrder(id) {
       const vm = this;
       let params = {
@@ -768,7 +802,8 @@ export default {
         vm.getList();
       });
     },
-    // 編輯訂單
+
+    /* 編輯訂單 */
     handleEdit() {
       const vm = this;
       let date = moment(vm.temp.date).format("yyyy-MM-DD");
@@ -782,10 +817,8 @@ export default {
       vm.temp.toStationName = vm.toLineStop.filter((s) => {
         return s.id === vm.temp.toStationId;
       })[0].stationName;
-      console.log(vm.temp);
 
       orderBusUser.update(vm.temp).then((res) => {
-        console.log(res);
         vm.editDialog = false;
         vm.getList();
         vm.$alertT.fire({
@@ -795,7 +828,7 @@ export default {
       });
     },
 
-    //檢查是否可排班
+    /* 檢查是否可排班 */
     handleCanRoster() {
       const vm = this;
       if (vm.multipleSelection.length < 1) {
@@ -820,7 +853,7 @@ export default {
       }
     },
 
-    // 獲取單筆訂單資料
+    /* 獲取單筆訂單資料 */
     getOrder(id) {
       const vm = this;
       vm.toLineStop = [];
@@ -833,7 +866,6 @@ export default {
         vm.$set(vm.temp, "time", time);
         vm.$nextTick(() => {
           busStationLines.get({ id: vm.temp.stationLineId }).then((res) => {
-            console.log(res);
             vm.stopList.forEach((s) => {
               if (res.result.assignLineStations.includes(s.id)) {
                 s.disabled = false;
@@ -852,8 +884,6 @@ export default {
                   obj.disabled = true;
                 }
               });
-              // console.log(cloneObj);
-              // cloneObj.splice(0, idFlag + 1, ...[]);
               vm.toLineStop = cloneObj;
             });
           });
@@ -861,53 +891,23 @@ export default {
       });
     },
 
-    // 獲取巴士路線資料
-    getLineList() {
-      const vm = this;
-      let query = {
-        page: 1,
-        limit: 99,
-        key: undefined,
-      };
-      busStationLines.load(query).then((res) => {
-        res.data.forEach((r) => {
-          r.weekArr = r.workWeek?.split(",");
-          r.weekArr.sort();
-        });
-        vm.lineList = res.data;
-      });
-    },
-    // 獲取巴士站牌資料
-    getStopList() {
-      const vm = this;
-      let query = {
-        page: 1,
-        limit: 999,
-        key: undefined,
-      };
-      busStations.load(query).then((res) => {
-        vm.stopList = res.data;
-      });
-    },
-    // 選擇路線
+    /* 選擇路線 */
     handleLineChange() {
       const vm = this;
       vm.lineStop = [];
       vm.temp.fromStationId = "";
       vm.temp.toStationId = "";
-      console.log(vm.temp.stationLineId);
       busStationLines.get({ id: vm.temp.stationLineId }).then((res) => {
-        console.log(res);
         vm.stopList.forEach((s) => {
           if (res.result.assignLineStations.includes(s.id)) {
             s.disabled = false;
             vm.lineStop.push(s);
           }
         });
-        console.log(vm.lineStop);
       });
     },
-    //選擇起點站
+
+    /* 選擇起點站 */
     handleFromChange() {
       const vm = this;
       vm.temp.toStationId = "";
@@ -926,8 +926,6 @@ export default {
           obj.disabled = false;
         }
       });
-      // console.log(cloneObj);
-      // cloneObj.splice(0, idFlag + 1, ...[]);
       vm.toLineStop = cloneObj;
     },
 
@@ -935,7 +933,6 @@ export default {
     handleChange(order) {
       const vm = this;
       vm.orderTemp = Object.assign({}, order); // copy obj
-      console.log(vm.orderTemp);
     },
 
     //確認變更司機車輛
@@ -965,7 +962,6 @@ export default {
 
     // 換頁
     handleCurrentChange(val) {
-      console.log("a");
       this.listQuery.page = val.page;
       this.listQuery.limit = val.limit;
       this.getList();

@@ -1,6 +1,6 @@
 <template>
   <div class="consoleTableTitle">
-    <h2 style="font-size:22px">{{ title }}</h2>
+    <h2 style="font-size: 22px">{{ title }}</h2>
     <div class="baseline"></div>
   </div>
 </template>
@@ -33,7 +33,7 @@ export default {
       position: absolute;
       width: 100px;
       height: 3px;
-      background: #fd8115;
+      background: $primary;
       top: -1.5px;
     }
   }

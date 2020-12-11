@@ -4,9 +4,14 @@ import layer from "vue-layer";
 import "normalize.css/normalize.css"; // A modern alternative to CSS resets
 
 import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
 // import "@/assets/custom-theme/index.css";
-import "@/assets/custom-theme/custom.scss";
+
+//theme1 基本style
+import "element-ui/lib/theme-chalk/index.css";
+//theme2
+// import "@/assets/custom-theme/custom.scss";
+import "@/assets/custom-theme/custom2.scss";
+
 import locale from "element-ui/lib/locale/lang/zh-TW";
 import VueSweetalert2 from "vue-sweetalert2";
 import VueContextMenu from "vue-contextmenu";
@@ -71,8 +76,13 @@ const alertM = Vue.prototype.$swal.mixin({
   },
 });
 
+let globalConsole = function(data) {
+  if (process.env.NODE_ENV === "development") console.log(data);
+};
+
 Vue.config.productionTip = false;
 Vue.prototype.$api = api;
+Vue.prototype.$cl = globalConsole;
 Vue.prototype.$alertT = alertT;
 Vue.prototype.$alertM = alertM;
 Vue.prototype.$layer = layer(Vue, {

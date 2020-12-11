@@ -281,7 +281,7 @@ export default {
   height: 95%;
   box-sizing: border-box;
   flex-direction: column;
-  background: #fd8115;
+  background: $primary;
   border-radius: 8px;
   color: #fff;
   font-weight: 700;

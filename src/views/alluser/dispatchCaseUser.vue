@@ -77,10 +77,17 @@
                 </el-col>
                 <el-col :sm="24" :md="18">
                   <el-form-item label="起點" prop="Id">
-                    <el-input
-                      v-model="temp.Id"
+                    <el-autocomplete
+                      filterable
+                      :debounce="2000"
+                      :trigger-on-focus="false"
+                      v-model="temp.fromAddr"
+                      :fetch-suggestions="querySearch"
+                      @select="handleSelectFrom"
                       placeholder="請輸入起點"
-                    ></el-input>
+                      style="width: 100%"
+                    >
+                    </el-autocomplete>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="6">
@@ -106,10 +113,17 @@
                 </el-col>
                 <el-col :sm="24" :md="18">
                   <el-form-item label="訖點" prop="Id">
-                    <el-input
-                      v-model="temp.Id"
+                    <el-autocomplete
+                      filterable
+                      :debounce="2000"
+                      :trigger-on-focus="false"
+                      v-model="temp.toAddr"
+                      :fetch-suggestions="querySearch"
+                      @select="handleSelectTo"
                       placeholder="請輸入訖點"
-                    ></el-input>
+                      style="width: 100%"
+                    >
+                    </el-autocomplete>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="6">
@@ -210,6 +224,7 @@
             </el-form>
           </div>
           <div class="dispatchFooter">
+            <el-button style="height: 40px" type="info">draw</el-button>
             <el-button style="height: 40px" type="info">立即預約</el-button>
             <el-button style="height: 40px" type="info">新增下個地點</el-button>
           </div>
@@ -225,6 +240,7 @@
 ></script>
 <script>
 import Sticky from "@/components/Sticky";
+import * as map from "@/api/map";
 export default {
   components: {
     Sticky,
@@ -233,6 +249,10 @@ export default {
     return {
       // map
       map: null,
+      autocomplete: null,
+      place: null, // 存place確定後回傳的資料
+      toGeo: {},
+      fromGeo: {},
       mapCenter: {
         lat: 25.0374865, // 經度
         lng: 121.5647688, // 緯度
@@ -241,12 +261,17 @@ export default {
         lat: 25.1374865, // 經度
         lng: 121.4247688, // 緯度
       },
+      fromAddrOptions: [],
+      toAddrOptions: [],
+      state: "",
       // 表單相關
       labelPosition: "top",
       temp: {
         Id: "",
         Id2: "",
         cuty: "",
+        fromAddr: "",
+        toAddr: "",
         lun: [
           {
             value1: "",
@@ -258,18 +283,21 @@ export default {
         ],
       },
       rules: {
-        Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
+        /*  Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
         city: [
           { required: true, message: "請輸入個案編號", trigger: "change" },
-        ],
+        ], */
       },
     };
   },
   methods: {
     initMap() {
-      let ds = new google.maps.DirectionsService();
+      const vm = this;
       let dD = new google.maps.DirectionsRenderer();
-      console.log(ds);
+      let ds = new google.maps.DirectionsService();
+      let bounds = new google.maps.LatLngBounds();
+
+      this.$cl(dD);
 
       // 建立地圖
       this.map = new google.maps.Map(document.getElementById("map"), {
@@ -291,33 +319,167 @@ export default {
       });
 
       let request = {
-        origin: { lat: 25.03401, lng: 121.562428 },
+        origin: { lat: 25.05426831970851, lng: 121.5481644697085 },
         destination: { lat: 25.037906, lng: 121.549781 },
         travelMode: "DRIVING",
       };
 
-      //   dD.setMap(this.map);
+      dD.setMap(this.map);
 
-      //   ds.route(request, function (result, status) {
-      //     console.log(result, status);
+      ds.route(request, function (result, status) {
+        if (status == "OK") {
+          vm.$cl("steps", steps);
+          let steps = result.routes[0].legs[0].steps;
+          // steps.forEach((res, key) => {
+          //   const markers = new google.maps.Marker({
+          //     position: {
+          //       lat: res.start_location.lat(),
+          //       lng: res.start_location.lng(),
+          //     },
+          //     map: vm.map,
+          //     label: {
+          //       text: "",
+          //       color: "#fff",
+          //     },
+          //   });
+          // });
 
-      //     if (status == "OK") {
-      //       ds.setDirections(result);
-      //     } else {
-      //       console.log(status);
-      //     }
-      //   });
+          // dD.setDirections(result);
 
-      //   放置marker;
-      //   let marker = new google.maps.Marker({
-      //     position: location,
-      //     map: this.map,
-      //   });
+          // let jsonData = {
+          //   overview_polyline: {
+          //     points:
+          //       "e`miGhmocNaN~DiBiNe@gEkEek@kNez@cJqq@sk@pGos@v]_}@aF_y@qm@qDe~@w]g~@gZ_Jo_@m_@yNsFgUpMov@~QebBrJq`BjTsx@w@kOqbEq_@qkCcf@}}Dej@yzCuf@o{Ba]m~EtVewAnBa`@sNmm@}dDufGqwA_|D_z@g~CmtBkuOrBmtCyG_yCam@{`Ee]qkB}d@ucDmDe|Aha@e}At]{v@xD}e@yf@aeIm^{rEgp@ahBiZu`BkVueH}gDwuXu`Fi__@yZecHgoAgyIl[ybCo^sgD_n@akBaJmeBog@yyAe`@ayB~FifCjNkmAzTwpAgf@cpFy~@{lJsg@ojHyi@e_Fq}@o`Dog@}tBoYmz@y`@sf@qf@ohCkLugBuv@seAg[ul@mMowBqc@iiC}eAcwCqm@_fBmuAypFyIiqA}BwyBy`@ogAwt@ypBezC{dIahBwxJgb@ytCw~AwvJkQwu@{t@yrCg{@s{Fgb@ehDzKsdAxO}vAiRmpCwcAorNuwAgdS_r@imJq[orAk]wrA_TyzAnFefAa\\guB_OmwAwF{tCwMcbDcr@m}_@}Qo_RgMo|A|d@kpAne@u{Brb@wnDzNkuB_D{v@eSgf@w\\ieAyb@guCii@ifCga@i_Amc@m]urAyoD}o@kiIsr@opQuLkhAc_@q`Bq\\}bEeEyi@iE}t@pHi|@tBmlBebB{qHq_BinFoWgpBoDuqEob@k{ConAedC}L}h@yd@yfAgz@}gAaZi_@m}@mcBwyAaj@_bBg|@csBm_Bo|BkaC{iBqsB_YqyBxEmtBks@aoB{RgLa~@bCcr@cLyoAemBeg@gt@_}@e`@on@uu@etA}vCqp@ubAklDgeGmxFiqHaqFoeHa[wbBu]}gAuoDeeG{uAooB_uAsy@om@ugAu_L{xSshEe_KieDm|KcfIcuWeUcOwy@aP{QuUg`BipF{P_l@klAgaEmjEs}NsvAiyFs}@izFjwAqrGtHkbCeB{cEql@g~CgSk|@mB}oAqNekEgw@cmDo_BgjFqqC}gH}`CwvG}cA{cB}nFowQ_t@an@efBmpE_oAsvCka@mwBk_CqbGuu@qfB{uAmrDivDw|E{nAqbDmpCyaJgdCejHk~@owAsw@adAm_@abA}Ven@qCou@cKeiBca@_cBmlAyjAsn@_kCk}@smDkVg{Bk}@gcHox@_sEaPwdC~KazF{EcpCrEmeGl]auBeEi~@yiAovCwwAgsC{i@oSsbAu~Ay_AmaBk_@iKak@mh@_BmBk@wHvG@dBvA",
+          //   },
+          // };
+
+          // var path = google.maps.geometry.encoding.decodePath(
+          //   jsonData.overview_polyline.points
+          // );
+          // console.log(path);
+          // for (var i = 0; i < path.length; i++) {
+          //   bounds.extend(path[i]);
+          // }
+
+          // var polyline = new google.maps.Polyline({
+          //   path: path,
+          //   strokeColor: "#FF0000",
+          //   strokeOpacity: 0.8,
+          //   strokeWeight: 2,
+          //   fillColor: "#FF0000",
+          //   fillOpacity: 0.35,
+          //   map: vm.map,
+          //   // strokeColor: "#0000FF",
+          //   // strokeOpacity: 1.0,
+          //   // strokeWeight: 2
+          // });
+          // polyline.setMap(vm.map);
+          // vm.map.fitBounds(bounds);
+        } else {
+        }
+      });
+    },
+
+    /* 拿取autoComplete資料 */
+    querySearch(queryString, cb) {
+      const vm = this;
+      let params = {
+        input: queryString,
+        sessiontoken: "asd",
+      };
+      map.autoComplete(params).then((res) => {
+        vm.$cl(res);
+        res.result = res.result.map((i) => {
+          i.value = i.addr;
+          return i;
+        });
+        cb(res.result);
+      });
+    },
+
+    /* 獲取所選地址資訊並標記(from) */
+    handleSelectFrom(item) {
+      const vm = this;
+      vm.$cl(item);
+      let params = {
+        _addr: item.addr,
+      };
+      map.geocode(params).then((res) => {
+        vm.$cl(res.result);
+        let position = {
+          lat: res.result.lat,
+          lon: res.result.lon,
+        };
+        vm.fromGeo = position;
+        if (vm.fromGeo.lat && vm.toGeo.lat) {
+          vm.handleDrawRoute();
+        }
+      });
+    },
+
+    /* 獲取所選地址資訊並標記(to) */
+    handleSelectTo(item) {
+      const vm = this;
+      vm.$cl(item);
+      let params = {
+        _addr: item.addr,
+      };
+      map.geocode(params).then((res) => {
+        vm.$cl(res.result);
+        let position = {
+          lat: res.result.lat,
+          lon: res.result.lon,
+        };
+        vm.toGeo = position;
+        if (vm.fromGeo.lat && vm.toGeo.lat) {
+          vm.handleDrawRoute();
+        }
+      });
+    },
+
+    /* 畫路徑線 */
+    handleDrawRoute() {
+      const vm = this;
+      let params = {
+        fromAddr: vm.temp.fromAddr,
+        fromLon: vm.fromGeo.lon,
+        fromLat: vm.fromGeo.lat,
+        toAddr: vm.temp.toAddr,
+        toLon: vm.toGeo.lon,
+        toLat: vm.toGeo.lon,
+      };
+      map.route(params).then((res) => {
+        vm.$cl(res);
+      });
+      vm.$cl(vm.temp.fromAddr, vm.temp.toAddr);
+    },
+    siteAuto() {
+      let options = {
+        componentRestrictions: { country: "tw" }, // 限制在台灣範圍
+      };
+      this.autocomplete = new google.maps.places.Autocomplete(
+        this.$refs.site.$refs.input,
+        options
+      );
+      this.autocomplete.addListener("place_changed", () => {
+        setTimeout(() => {
+          console.log("a");
+          this.place = this.autocomplete.getPlace();
+          if (this.place.geometry) {
+            this.$cl(this.place.geometry);
+            // info window
+            // let infowindow = new google.maps.InfoWindow({
+            //   content: this.place.formatted_address,
+            // });
+            // infowindow.open(this.map, marker);
+          }
+        }, 2000);
+      });
     },
   },
   mounted() {
-    // console.log(this.$options);
-    // this.initMap();
+    this.initMap();
+    // this.siteAuto();
   },
 };
 </script>
@@ -355,7 +517,7 @@ export default {
     font-weight: 700;
     align-items: center;
     font-size: 2rem;
-    color: #fd8115;
+    color: $primary;
   }
 
   .dispatchDetail {

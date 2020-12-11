@@ -10,3 +10,25 @@ $colorWhite: #ffffff;
 $colorBlack: #232323;
 $colorGray: #f5f5f5;
 $colorOrange: #f2961a;
+
+/* color var f2961a */
+$primary: #f2961a;
+$primaryHover: #f4ac28;
+$primaryActive: #e79600;
+$primaryPlain: #e9cd99;
+$success: #409167;
+$successHover: #66a785;
+$warning: #13c2c2;
+$warningHover: #31c9c9;
+$danger: #d63737;
+$dangerHover: #de5f5f;
+$info: #227294;
+$infoHover: #3b91b6;
+$disableGray: #949494;
+
+//sidebar
+$subMenuBg: lighten($primary, 44%);
+$menuHover: lighten($primary, 40%);
+
+/* lightMain */
+$lightMain: lighten($primary, 44%);

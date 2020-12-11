@@ -17,13 +17,13 @@ export default {
 <style lang='scss' scoped>
 .subTitle {
   font-size: 18px;
-  color: #fd8115;
+  color: $primary;
   font-weight: 700;
   margin-bottom: 1rem;
   margin-top: 2.5rem;
   // transform: translateX(-8px);
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #fd8115;
+  border-bottom: 1px solid $primary;
 
   &:nth-child(1) {
     margin-top: 1rem;

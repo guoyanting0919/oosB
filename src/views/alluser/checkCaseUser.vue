@@ -765,20 +765,18 @@ export default {
 }
 .formTitle {
   font-size: 18px;
-  color: #fd8115;
+  color: $primary;
   font-weight: 700;
   margin-bottom: 1rem;
   margin-top: 1rem;
-  // transform: translateX(-8px);
   padding-bottom: 0.5rem;
-  // border-bottom: 1px solid #fd8115;
   display: flex;
 
   .timeSelect {
     margin-right: 1rem;
     font-size: 16px;
     padding: 0px 16px;
-    border: 1px solid #fd8115;
+    border: 1px solid $primary;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -798,7 +796,7 @@ export default {
   align-items: center;
   font-size: 14px;
   color: #606266;
-  border-bottom: 1px dashed #fd8115;
+  border-bottom: 1px dashed $primary;
   margin-bottom: 1rem;
 }
 </style>

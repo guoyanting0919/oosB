@@ -141,9 +141,9 @@
       </div>
 
       <!-- 違規紀錄 -->
-      <div class="formContainer bg-white" style="margin-top:1rem">
+      <div class="formContainer bg-white" style="margin-top: 1rem">
         <div class="formTitle">
-          <div style="margin-right:auto">個案違規紀錄</div>
+          <div style="margin-right: auto">個案違規紀錄</div>
           <div class="timeSelect">今天</div>
           <div class="timeSelect">近一週</div>
           <div class="timeSelect">近一個月</div>
@@ -158,14 +158,14 @@
             end-placeholder="结束日期"
           ></el-date-picker>
         </div>
-        <div class="bg-white" style="height:500px;">
+        <div class="bg-white" style="height: 500px">
           <el-table
             ref="mainTable"
             height="calc(100% - 52px)"
             :data="gridData"
             border
             highlight-current-row
-            style="width: 100%;"
+            style="width: 100%"
           >
             <el-table-column
               type="selection"
@@ -230,9 +230,9 @@
       </div>
 
       <!-- 搭乘紀錄 -->
-      <div class="formContainer bg-white" style="margin-top:1rem">
+      <div class="formContainer bg-white" style="margin-top: 1rem">
         <div class="formTitle">
-          <div style="margin-right:auto">個案搭乘紀錄</div>
+          <div style="margin-right: auto">個案搭乘紀錄</div>
           <div class="timeSelect">今天</div>
           <div class="timeSelect">近一週</div>
           <div class="timeSelect">近一個月</div>
@@ -247,14 +247,14 @@
             end-placeholder="结束日期"
           ></el-date-picker>
         </div>
-        <div class="bg-white" style="height:500px;">
+        <div class="bg-white" style="height: 500px">
           <el-table
             ref="mainTable"
             height="calc(100% - 52px)"
             :data="gridData"
             border
             highlight-current-row
-            style="width: 100%;"
+            style="width: 100%"
           >
             <el-table-column
               type="selection"
@@ -430,20 +430,20 @@ export default {
 <style lang="scss" scoped>
 .formTitle {
   font-size: 18px;
-  color: #fd8115;
+  color: $primary;
   font-weight: 700;
   margin-bottom: 1rem;
   margin-top: 1rem;
   // transform: translateX(-8px);
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #fd8115;
+  border-bottom: 1px solid $primary;
   display: flex;
 
   .timeSelect {
     margin-right: 1rem;
     font-size: 16px;
     padding: 0px 16px;
-    border: 1px solid #fd8115;
+    border: 1px solid $primary;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -463,7 +463,7 @@ export default {
   align-items: center;
   font-size: 14px;
   color: #606266;
-  border-bottom: 1px dashed #fd8115;
+  border-bottom: 1px dashed $primary;
   margin-bottom: 1rem;
 }
 .userPicBox {

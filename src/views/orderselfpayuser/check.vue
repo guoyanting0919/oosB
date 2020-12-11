@@ -1,10 +1,18 @@
 <template>
   <div class="flex-column allOrderDetail">
     <sticky :className="'sub-navbar'">
-      <el-button type="info" plain size="mini">回列表</el-button>
+      <el-button
+        type="info"
+        plain
+        size="mini"
+        @click="$router.push('/orderselfpayuser')"
+        >回列表</el-button
+      >
     </sticky>
     <div class="app-container flex-item" style="display: flex; flex-wrap: wrap">
       <Title title="查看訂單" style="width: 100%"></Title>
+
+      <!-- 訂單資訊卡片 -->
       <div
         class="formContainer bg-white customScrollBar"
         style="height: calc(100% - 80px); width: 49%; margin-right: 2%"
@@ -101,6 +109,7 @@
         </div>
       </div>
 
+      <!-- 訂單歷程卡片 -->
       <div
         class="formContainer bg-white"
         style="height: calc(100% - 80px); width: 49%"
@@ -150,10 +159,8 @@ import moment from "moment";
 import Sticky from "@/components/Sticky";
 import Title from "@/components/ConsoleTableTitle";
 import SubTitle from "@/components/SubTitle";
-import * as orderSelfPayUser from "@/api/orderSelfPayUser";
 import OrderStatusTag from "@/components/OrderStatusTag";
-import * as selfPayUsers from "@/api/selfPayUsers";
-import * as users from "@/api/users";
+import * as orderSelfPayUser from "@/api/orderSelfPayUser";
 export default {
   name: "allOrderDetail",
   components: {
@@ -171,12 +178,11 @@ export default {
   },
   data() {
     return {
+      /* user 資訊 */
       selfPayUserId: "",
-      userId: "",
 
+      /* 訂單資訊 */
       order: "",
-      selfPayUser: "",
-      user: "",
 
       // order status mapping
       orderStatusMapping: [
@@ -195,33 +201,15 @@ export default {
   computed: {
     passengerList() {
       return JSON.parse(this.order.remark);
-      // return this.order.remark;
     },
   },
   methods: {
-    //獲取訂單
+    /* 獲取訂單 */
     getOrderList() {
       const vm = this;
       orderSelfPayUser.get({ id: vm.$route.params.id }).then((res) => {
         vm.order = res.result;
         vm.selfPayUserId = res.result.selfPayUserId;
-        // vm.getSelfPayUser();
-      });
-    },
-    //獲取身份資料
-    getSelfPayUser() {
-      const vm = this;
-      selfPayUsers.get({ id: vm.selfPayUserId }).then((res) => {
-        vm.selfPayUser = res.result;
-        vm.userId = res.result.userId;
-        // vm.getUser();
-      });
-    },
-    //獲取用戶資料
-    getUser() {
-      const vm = this;
-      users.get({ id: vm.userId }).then((res) => {
-        vm.user = res.result;
       });
     },
   },

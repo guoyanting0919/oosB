@@ -6,6 +6,8 @@ function resolve(dir) {
 module.exports = {
   publicPath: "/dist/",
   lintOnSave: process.env.NODE_ENV !== "production",
+
+  /* 設定本機port */
   devServer: {
     port: 1803, // 端口
     overlay: {
@@ -13,12 +15,21 @@ module.exports = {
       errors: false,
     },
   },
+
+  /* css */
+  css: {
+    loaderOptions: {
+      sass: {
+        prependData: `@import "@/assets/css/basic/_variable.scss";`,
+      },
+    },
+  },
+
   configureWebpack: {
     devtool: "source-map",
   },
   // svg配置
   chainWebpack(config) {
-    
     config.module
       .rule("svg")
       .exclude.add(resolve("src/icons"))

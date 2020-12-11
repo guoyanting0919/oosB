@@ -34,7 +34,9 @@
               </div>
               <div class="routeBox">
                 <div class="routeTitle">
-                  <h3 style="margin-right: auto; color: #fd8115">不可共乘</h3>
+                  <h3 class="colorPrimary" style="margin-right: auto">
+                    不可共乘
+                  </h3>
                   <h3 style="margin-right: 1rem; color: #343434">
                     輪椅類型：電動
                   </h3>
@@ -296,4 +298,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.colorPrimary {
+  color: $primary;
+}
+</style>

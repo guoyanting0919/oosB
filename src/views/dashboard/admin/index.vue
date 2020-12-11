@@ -6,6 +6,7 @@
         style="width: 200px"
         v-model="input"
         placeholder="dashBoard"
+        @input="debounceUpdate"
         @keydown.native.enter="handleKeydown"
       ></el-input>
     </div>
@@ -64,6 +65,7 @@
 <script>
 import * as signalR from "@aspnet/signalr";
 import { mapGetters } from "vuex";
+import _ from "lodash";
 export default {
   data() {
     return {
@@ -235,9 +237,18 @@ export default {
     handleIconClick(ev) {
       console.log(ev);
     },
+    debounceUpdate() {},
+    getData() {
+      console.log(this.input);
+    },
+    // debounceUpdate() {
+    //   console.log("1");
+    //   _.debounce(function () {}, 1000);
+    // },
   },
-  mounted() {
+  created() {
     // this.connectHub();
+    this.debounceUpdate = _.debounce(this.getData, 1000);
   },
 };
 </script>
@@ -292,7 +303,7 @@ export default {
   height: 95%;
   box-sizing: border-box;
   // flex-direction: column;
-  background: #fd8115;
+  background: $primary;
   border-radius: 8px;
   color: #fff;
   font-weight: 700;
