@@ -79,7 +79,7 @@
                   <el-form-item label="起點" prop="Id">
                     <el-autocomplete
                       filterable
-                      :debounce="2000"
+                      :debounce="1000"
                       :trigger-on-focus="false"
                       v-model="temp.fromAddr"
                       :fetch-suggestions="querySearch"
@@ -115,7 +115,7 @@
                   <el-form-item label="訖點" prop="Id">
                     <el-autocomplete
                       filterable
-                      :debounce="2000"
+                      :debounce="1000"
                       :trigger-on-focus="false"
                       v-model="temp.toAddr"
                       :fetch-suggestions="querySearch"
@@ -249,21 +249,12 @@ export default {
     return {
       // map
       map: null,
-      autocomplete: null,
-      place: null, // 存place確定後回傳的資料
       toGeo: {},
       fromGeo: {},
       mapCenter: {
         lat: 25.0374865, // 經度
         lng: 121.5647688, // 緯度
       },
-      location: {
-        lat: 25.1374865, // 經度
-        lng: 121.4247688, // 緯度
-      },
-      fromAddrOptions: [],
-      toAddrOptions: [],
-      state: "",
       // 表單相關
       labelPosition: "top",
       temp: {
@@ -291,6 +282,7 @@ export default {
     };
   },
   methods: {
+    /* 初始化google map */
     initMap() {
       const vm = this;
       let dD = new google.maps.DirectionsRenderer();
@@ -318,66 +310,7 @@ export default {
         mapTypeId: "roadmap",
       });
 
-      let request = {
-        origin: { lat: 25.05426831970851, lng: 121.5481644697085 },
-        destination: { lat: 25.037906, lng: 121.549781 },
-        travelMode: "DRIVING",
-      };
-
       dD.setMap(this.map);
-
-      ds.route(request, function (result, status) {
-        if (status == "OK") {
-          vm.$cl("steps", steps);
-          let steps = result.routes[0].legs[0].steps;
-          // steps.forEach((res, key) => {
-          //   const markers = new google.maps.Marker({
-          //     position: {
-          //       lat: res.start_location.lat(),
-          //       lng: res.start_location.lng(),
-          //     },
-          //     map: vm.map,
-          //     label: {
-          //       text: "",
-          //       color: "#fff",
-          //     },
-          //   });
-          // });
-
-          // dD.setDirections(result);
-
-          // let jsonData = {
-          //   overview_polyline: {
-          //     points:
-          //       "e`miGhmocNaN~DiBiNe@gEkEek@kNez@cJqq@sk@pGos@v]_}@aF_y@qm@qDe~@w]g~@gZ_Jo_@m_@yNsFgUpMov@~QebBrJq`BjTsx@w@kOqbEq_@qkCcf@}}Dej@yzCuf@o{Ba]m~EtVewAnBa`@sNmm@}dDufGqwA_|D_z@g~CmtBkuOrBmtCyG_yCam@{`Ee]qkB}d@ucDmDe|Aha@e}At]{v@xD}e@yf@aeIm^{rEgp@ahBiZu`BkVueH}gDwuXu`Fi__@yZecHgoAgyIl[ybCo^sgD_n@akBaJmeBog@yyAe`@ayB~FifCjNkmAzTwpAgf@cpFy~@{lJsg@ojHyi@e_Fq}@o`Dog@}tBoYmz@y`@sf@qf@ohCkLugBuv@seAg[ul@mMowBqc@iiC}eAcwCqm@_fBmuAypFyIiqA}BwyBy`@ogAwt@ypBezC{dIahBwxJgb@ytCw~AwvJkQwu@{t@yrCg{@s{Fgb@ehDzKsdAxO}vAiRmpCwcAorNuwAgdS_r@imJq[orAk]wrA_TyzAnFefAa\\guB_OmwAwF{tCwMcbDcr@m}_@}Qo_RgMo|A|d@kpAne@u{Brb@wnDzNkuB_D{v@eSgf@w\\ieAyb@guCii@ifCga@i_Amc@m]urAyoD}o@kiIsr@opQuLkhAc_@q`Bq\\}bEeEyi@iE}t@pHi|@tBmlBebB{qHq_BinFoWgpBoDuqEob@k{ConAedC}L}h@yd@yfAgz@}gAaZi_@m}@mcBwyAaj@_bBg|@csBm_Bo|BkaC{iBqsB_YqyBxEmtBks@aoB{RgLa~@bCcr@cLyoAemBeg@gt@_}@e`@on@uu@etA}vCqp@ubAklDgeGmxFiqHaqFoeHa[wbBu]}gAuoDeeG{uAooB_uAsy@om@ugAu_L{xSshEe_KieDm|KcfIcuWeUcOwy@aP{QuUg`BipF{P_l@klAgaEmjEs}NsvAiyFs}@izFjwAqrGtHkbCeB{cEql@g~CgSk|@mB}oAqNekEgw@cmDo_BgjFqqC}gH}`CwvG}cA{cB}nFowQ_t@an@efBmpE_oAsvCka@mwBk_CqbGuu@qfB{uAmrDivDw|E{nAqbDmpCyaJgdCejHk~@owAsw@adAm_@abA}Ven@qCou@cKeiBca@_cBmlAyjAsn@_kCk}@smDkVg{Bk}@gcHox@_sEaPwdC~KazF{EcpCrEmeGl]auBeEi~@yiAovCwwAgsC{i@oSsbAu~Ay_AmaBk_@iKak@mh@_BmBk@wHvG@dBvA",
-          //   },
-          // };
-
-          // var path = google.maps.geometry.encoding.decodePath(
-          //   jsonData.overview_polyline.points
-          // );
-          // console.log(path);
-          // for (var i = 0; i < path.length; i++) {
-          //   bounds.extend(path[i]);
-          // }
-
-          // var polyline = new google.maps.Polyline({
-          //   path: path,
-          //   strokeColor: "#FF0000",
-          //   strokeOpacity: 0.8,
-          //   strokeWeight: 2,
-          //   fillColor: "#FF0000",
-          //   fillOpacity: 0.35,
-          //   map: vm.map,
-          //   // strokeColor: "#0000FF",
-          //   // strokeOpacity: 1.0,
-          //   // strokeWeight: 2
-          // });
-          // polyline.setMap(vm.map);
-          // vm.map.fitBounds(bounds);
-        } else {
-        }
-      });
     },
 
     /* 拿取autoComplete資料 */
@@ -406,11 +339,25 @@ export default {
       };
       map.geocode(params).then((res) => {
         vm.$cl(res.result);
+
+        /*  放置標記vm.fromGeo */
         let position = {
+          lat: res.result.lat, // 經度
+          lng: res.result.lon, // 緯度
+        };
+        let marker = new google.maps.Marker({
+          position,
+          map: this.map,
+        });
+        this.map.panTo(position);
+
+        /* 寫入經緯度 */
+        let position2 = {
           lat: res.result.lat,
           lon: res.result.lon,
         };
-        vm.fromGeo = position;
+        vm.fromGeo = position2;
+
         if (vm.fromGeo.lat && vm.toGeo.lat) {
           vm.handleDrawRoute();
         }
@@ -421,16 +368,30 @@ export default {
     handleSelectTo(item) {
       const vm = this;
       vm.$cl(item);
+
       let params = {
         _addr: item.addr,
       };
       map.geocode(params).then((res) => {
         vm.$cl(res.result);
+
+        // 放置標記vm.toGeo
         let position = {
+          lat: res.result.lat,
+          lng: res.result.lon,
+        };
+        let marker = new google.maps.Marker({
+          position,
+          map: this.map,
+        });
+        this.map.panTo(position);
+
+        // 寫入經緯度
+        let position2 = {
           lat: res.result.lat,
           lon: res.result.lon,
         };
-        vm.toGeo = position;
+        vm.toGeo = position2;
         if (vm.fromGeo.lat && vm.toGeo.lat) {
           vm.handleDrawRoute();
         }
@@ -439,6 +400,7 @@ export default {
 
     /* 畫路徑線 */
     handleDrawRoute() {
+      let bounds = new google.maps.LatLngBounds();
       const vm = this;
       let params = {
         fromAddr: vm.temp.fromAddr,
@@ -449,37 +411,34 @@ export default {
         toLat: vm.toGeo.lon,
       };
       map.route(params).then((res) => {
+        let jsonData = {
+          overview_polyline: {
+            points: res.result.polyLine,
+          },
+        };
+        let path = google.maps.geometry.encoding.decodePath(
+          jsonData.overview_polyline.points
+        );
+        for (let i = 0; i < path.length; i++) {
+          bounds.extend(path[i]);
+        }
+        let polyline = new google.maps.Polyline({
+          path: path,
+          strokeColor: "#FF0000",
+          strokeOpacity: 0.8,
+          strokeWeight: 5,
+          fillColor: "#FF0000",
+          fillOpacity: 0.35,
+          map: vm.map,
+        });
+        polyline.setMap(vm.map);
+        vm.map.fitBounds(bounds);
         vm.$cl(res);
-      });
-      vm.$cl(vm.temp.fromAddr, vm.temp.toAddr);
-    },
-    siteAuto() {
-      let options = {
-        componentRestrictions: { country: "tw" }, // 限制在台灣範圍
-      };
-      this.autocomplete = new google.maps.places.Autocomplete(
-        this.$refs.site.$refs.input,
-        options
-      );
-      this.autocomplete.addListener("place_changed", () => {
-        setTimeout(() => {
-          console.log("a");
-          this.place = this.autocomplete.getPlace();
-          if (this.place.geometry) {
-            this.$cl(this.place.geometry);
-            // info window
-            // let infowindow = new google.maps.InfoWindow({
-            //   content: this.place.formatted_address,
-            // });
-            // infowindow.open(this.map, marker);
-          }
-        }, 2000);
       });
     },
   },
   mounted() {
     this.initMap();
-    // this.siteAuto();
   },
 };
 </script>
@@ -487,7 +446,6 @@ export default {
 <style lang="scss" scoped>
 .allUserDispatch {
   .mainContainer {
-    // background: lightblue;
     height: 100%;
     display: flex;
     justify-content: space-between;
