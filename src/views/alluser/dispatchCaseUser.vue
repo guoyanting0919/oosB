@@ -77,17 +77,26 @@
                 </el-col>
                 <el-col :sm="24" :md="18">
                   <el-form-item label="起點" prop="Id">
-                    <el-autocomplete
+                    <el-select
                       filterable
-                      :debounce="1000"
+                      :default-first-option="false"
+                      remote
+                      :remote-method="remoteMethod"
+                      @change="handleChange"
+                      @visible-change="handleVisibleChange"
+                      ref="atc"
                       :trigger-on-focus="false"
                       v-model="temp.fromAddr"
-                      :fetch-suggestions="querySearch"
-                      @select="handleSelectFrom"
                       placeholder="請輸入起點"
                       style="width: 100%"
                     >
-                    </el-autocomplete>
+                      <el-option
+                        v-for="item in searchResults"
+                        :key="item.place_id"
+                        :value="item.place_id"
+                        :label="item.description"
+                      ></el-option>
+                    </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="6">
@@ -115,11 +124,7 @@
                   <el-form-item label="訖點" prop="Id">
                     <el-autocomplete
                       filterable
-                      :debounce="1000"
-                      :trigger-on-focus="false"
                       v-model="temp.toAddr"
-                      :fetch-suggestions="querySearch"
-                      @select="handleSelectTo"
                       placeholder="請輸入訖點"
                       style="width: 100%"
                     >
@@ -224,6 +229,7 @@
             </el-form>
           </div>
           <div class="dispatchFooter">
+            <input type="text" id="auto" />
             <el-button style="height: 40px" type="info">draw</el-button>
             <el-button style="height: 40px" type="info">立即預約</el-button>
             <el-button style="height: 40px" type="info">新增下個地點</el-button>
@@ -249,6 +255,9 @@ export default {
     return {
       // map
       map: null,
+      service: null,
+      searchResults: [],
+      sessionToken: null,
       toGeo: {},
       fromGeo: {},
       mapCenter: {
@@ -273,23 +282,68 @@ export default {
           },
         ],
       },
-      rules: {
-        /*  Id: [{ required: true, message: "請輸入個案編號", trigger: "blur" }],
-        city: [
-          { required: true, message: "請輸入個案編號", trigger: "change" },
-        ], */
-      },
+      rules: {},
     };
   },
+  watch: {
+    // "temp.fromAddr"(newValue) {
+    //   const vm = this;
+    //   vm.$cl(vm.sessionToken);
+    //   if (newValue) {
+    //     this.service.getPlacePredictions(
+    //       {
+    //         input: vm.temp.fromAddr,
+    //         sessionToken: vm.sessionToken,
+    //       },
+    //       vm.displaySuggestions
+    //     );
+    //   }
+    // },
+  },
   methods: {
+    /* remoteMethod  */
+    remoteMethod(query) {
+      const vm = this;
+      vm.$cl(query);
+      if (!query) return;
+      vm.$cl(vm.sessionToken);
+      this.service.getPlacePredictions(
+        {
+          input: query,
+          sessionToken: vm.sessionToken,
+        },
+        vm.displaySuggestions
+      );
+    },
+    handleChange() {
+      const vm = this;
+      if (vm.temp.fromAddr == "") return;
+      const request = {
+        placeId: vm.temp.fromAddr,
+        fields: ["name", "formatted_address", "place_id", "geometry"],
+        sessionToken: vm.sessionToken,
+      };
+
+      const service = new google.maps.places.PlacesService(vm.map);
+      service.getDetails(request, (place, status) => {
+        console.log(place, status);
+        vm.sessionToken = new google.maps.places.AutocompleteSessionToken();
+      });
+    },
+    handleVisibleChange(query) {
+      this.$cl(query);
+      this.searchResults = [];
+    },
     /* 初始化google map */
     initMap() {
       const vm = this;
+
       let dD = new google.maps.DirectionsRenderer();
       let ds = new google.maps.DirectionsService();
       let bounds = new google.maps.LatLngBounds();
-
-      this.$cl(dD);
+      vm.sessionToken = new google.maps.places.AutocompleteSessionToken();
+      vm.service = new window.google.maps.places.AutocompleteService();
+      // this.$cl(vm.service.getQueryPredictions);
 
       // 建立地圖
       this.map = new google.maps.Map(document.getElementById("map"), {
@@ -313,12 +367,24 @@ export default {
       dD.setMap(this.map);
     },
 
+    // 獲取autocomplete資料
+    displaySuggestions(predictions, status) {
+      console.log(predictions, status);
+      if (status !== window.google.maps.places.PlacesServiceStatus.OK) {
+        this.searchResults = [];
+        return;
+      }
+      this.searchResults = predictions;
+    },
+
     /* 拿取autoComplete資料 */
     querySearch(queryString, cb) {
       const vm = this;
+
+      vm.$cl(vm.sessionToken);
       let params = {
         input: queryString,
-        sessiontoken: "asd",
+        sessiontoken: vm.sessionToken,
       };
       map.autoComplete(params).then((res) => {
         vm.$cl(res);
@@ -439,6 +505,14 @@ export default {
   },
   mounted() {
     this.initMap();
+    // this.initMap();
+    // let value = this.$refs.atc.$refs.input;
+    // let autocomplete = new google.maps.places.Autocomplete(value, {
+    //   types: ["geocode"],
+    // });
+    // Create a new session token.
+    // Pass the token to the autocomplete service.
+    // let autocompleteService = new google.maps.places.AutocompleteService();
   },
 };
 </script>
