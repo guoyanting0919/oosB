@@ -1,8 +1,8 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
     <div class="logo" style="height: 50px">
-      <img class="user-avatar" :src="logo" />
-      <!-- <div class="user-avatar-text">LOGO</div> -->
+      <!-- <img class="user-avatar" :src="logo" /> -->
+      <div class="user-avatar-text">LOGO</div>
     </div>
     <hamburger
       class="hamburger-container"

@@ -27,7 +27,7 @@ export const constantRouterMap = [
   {
     path: "/login",
     name: "Login",
-    component: () => import("@/views/login/index2"),
+    component: () => import("@/views/login/index"),
     meta: { sortNo: 0 },
     hidden: true,
   },
@@ -82,7 +82,11 @@ export const constantRouterMap = [
       {
         path: "/dashboard",
         name: "主頁",
-        meta: { title: "主頁", icon: "iconfont icon-home", sortNo: 0 },
+        meta: {
+          title: "主頁",
+          icon: "iconfont icon-Homehomepagemenu",
+          sortNo: 0,
+        },
         component: () => import("@/views/dashboard/index"),
       },
       // {

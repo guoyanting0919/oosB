@@ -12,70 +12,8 @@ let routerMappingList = [
     path: "/allorder/index",
     title: "預約訂單 / 全部資料",
   },
-  {
-    path: "/todayorder/index",
-    title: "預約訂單 / 本日任務",
-  },
-  {
-    path: "/alluser/index",
-    title: "個案資料 / 全部個案",
-  },
-  {
-    path: "/caseuser/index",
-    title: "個案資料 / 長照個案",
-  },
-  {
-    path: "/selfpayuser/index",
-    title: "個案資料 / 自費個案",
-  },
-  {
-    path: "/bususer/index",
-    title: "個案資料 / 巴士個案",
-  },
-  {
-    path: "/driver/index",
-    title: "司機車輛管理 / 司機資料",
-  },
-  {
-    path: "/car/index",
-    title: "司機車輛管理 / 車輛資料",
-  },
-  {
-    path: "/busstop/index",
-    title: "路線及站點管理 / 站點管理",
-  },
-  {
-    path: "/busroute/index",
-    title: "路線及站點管理 / 路線管理",
-  },
-  {
-    path: "/orderselfpayuser/index",
-    title: "預約訂單 / 白牌車訂單",
-  },
-  {
-    path: "/news/index",
-    title: "前台頁面管理 / 最新消息管理",
-  },
 ];
-let elementMappingList = [
-  "add",
-  "edit",
-  "detail",
-  "check",
-  "dispatch",
-  "addCaseUser",
-  "editCaseUser",
-  "checkCaseUser",
-  "dispatchCaseUser",
-  "addBusUser",
-  "editBusUser",
-  "checkBusUser",
-  "dispatchBusUser",
-  "addSelfPayUser",
-  "editSelfPayUser",
-  "checkSelfPayUser",
-  "dispatchSelfPayUser",
-];
+let elementMappingList = ["add", "edit", "detail", "check"];
 
 const whiteList = [
   "/login",
@@ -87,7 +25,6 @@ const whiteList = [
 ]; // 不重定向白名單
 
 router.beforeEach((to, from, next) => {
-  console.log("router before each");
   NProgress.start();
 
   store

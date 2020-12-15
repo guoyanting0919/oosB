@@ -5,15 +5,21 @@
 </template>
 
 <script>
-import adminDashboard from './admin'
+import adminDashboard from "./admin";
 
 export default {
-  name: 'dashboard',
+  name: "dashboard",
   components: { adminDashboard },
   data() {
     return {
-      currentRole: 'adminDashboard'
-    }
-  }
-}
+      currentRole: "adminDashboard",
+    };
+  },
+};
 </script>
+<style lang="scss" scoped>
+.dashboard-container {
+  width: 100%;
+  height: 100%;
+}
+</style>

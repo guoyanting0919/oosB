@@ -6,26 +6,35 @@
           @keyup.enter.native="handleFilter"
           size="mini"
           prefix-icon="el-icon-search"
-          style="width: 200px;margin-bottom: 0;"
+          style="width: 200px; margin-bottom: 0"
           class="filter-item"
           :placeholder="'關鍵字'"
           v-model="listQuery.key"
         ></el-input>
 
-        <permission-btn moduleName="modulemanager" :size="'mini'" v-on:btn-event="onBtnClicked"></permission-btn>
+        <permission-btn
+          moduleName="modulemanager"
+          :size="'mini'"
+          v-on:btn-event="onBtnClicked"
+        ></permission-btn>
 
         <el-checkbox
           size="mini"
           class="m-l-15"
           @change="tableKey = tableKey + 1"
           v-model="showDescription"
-        >Id/描述</el-checkbox>
+          >Id/描述</el-checkbox
+        >
       </div>
     </sticky>
     <div class="app-container flex-item">
       <el-row class="fh">
         <el-col :span="10" class="fh ls-border">
-          <el-card shadow="never" class="card-body-none fh" style="overflow-y: auto;height:100%">
+          <el-card
+            shadow="never"
+            class="card-body-none fh"
+            style="overflow-y: auto; height: 100%"
+          >
             <!-- <div slot="header" class="clearfix">
               <el-button type="text" style="padding: 0 11px" @click="getAllMenus">所有菜單>></el-button>
             </div>-->
@@ -48,14 +57,22 @@
               border
               fit
               highlight-current-row
-              style="width: 100%;"
+              style="width: 100%"
               height="calc(100% - 52px)"
               @row-click="rowClick"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column type="selection" align="center" width="55"></el-table-column>
+              <el-table-column
+                type="selection"
+                align="center"
+                width="55"
+              ></el-table-column>
 
-              <el-table-column :label="'Id'" v-if="showDescription" min-width="120px">
+              <el-table-column
+                :label="'Id'"
+                v-if="showDescription"
+                min-width="120px"
+              >
                 <template slot-scope="scope">
                   <span>{{ scope.row.id }}</span>
                 </template>
@@ -64,9 +81,7 @@
               <el-table-column min-width="80px" :label="'DOM ID'">
                 <template slot-scope="scope">
                   <span class="link-type" @click="handleEditMenu(scope.row)">
-                    {{
-                    scope.row.domId
-                    }}
+                    {{ scope.row.domId }}
                   </span>
                 </template>
               </el-table-column>
@@ -94,7 +109,11 @@
                 </template>
               </el-table-column>
 
-              <el-table-column :label="'描述'" v-if="showDescription" min-width="120px">
+              <el-table-column
+                :label="'描述'"
+                v-if="showDescription"
+                min-width="120px"
+              >
                 <template slot-scope="scope">
                   <span>{{ scope.row.remark }}</span>
                 </template>
@@ -126,20 +145,37 @@
           label-position="right"
           label-width="100px"
         >
-          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogStatus == 'update'">
+          <el-form-item
+            size="small"
+            :label="'Id'"
+            prop="id"
+            v-show="dialogStatus == 'update'"
+          >
             <span>{{ temp.id }}</span>
           </el-form-item>
-          <el-form-item size="small" :label="'層級ID'" v-show="dialogStatus == 'update'">
+          <el-form-item
+            size="small"
+            :label="'層級ID'"
+            v-show="dialogStatus == 'update'"
+          >
             <span>{{ temp.cascadeId }}</span>
           </el-form-item>
           <el-form-item size="small" :label="'名稱'" prop="name">
             <el-input v-model="temp.name"></el-input>
           </el-form-item>
           <el-form-item size="small" :label="'排序'">
-            <el-input-number v-model="temp.sortNo" :min="1" :max="20"></el-input-number>
+            <el-input-number
+              v-model="temp.sortNo"
+              :min="1"
+              :max="20"
+            ></el-input-number>
           </el-form-item>
           <el-form-item size="small" :label="'是否系統'" prop="isSys">
-            <el-switch v-model="temp.isSys" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            <el-switch
+              v-model="temp.isSys"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            ></el-switch>
           </el-form-item>
           <el-form-item size="small" :label="'模塊標識'">
             <el-input v-model="temp.code"></el-input>
@@ -162,13 +198,15 @@
                 v-model="temp.iconName"
               >
                 <i
-                  style="margin-left:0.5rem;margin-right:1rem;color:#3d3d3d"
+                  style="
+                    margin-left: 0.5rem;
+                    margin-right: 1rem;
+                    color: #3d3d3d;
+                  "
                   slot="prefix"
                   :class="
-                  temp.iconName
-                    ? `iconfont icon-${temp.iconName} `
-                    : ''
-                "
+                    temp.iconName ? `iconfont icon-${temp.iconName} ` : ''
+                  "
                 ></i>
               </el-input>
               <el-row class="selectIcon-box">
@@ -179,9 +217,7 @@
                   :key="index"
                 >
                   <i
-                    :class="
-                      `${iconData.font_family} ${iconData.css_prefix_text}${item.font_class}`
-                    "
+                    :class="`${iconData.font_family} ${iconData.css_prefix_text}${item.font_class}`"
                     @click="handleChangeTempIcon(item)"
                   ></i>
                 </el-col>
@@ -209,14 +245,19 @@
           </el-form-item>
         </el-form>
         <div slot="footer">
-          <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
+          <el-button size="mini" @click="dialogFormVisible = false"
+            >取消</el-button
+          >
           <el-button
             size="mini"
             v-if="dialogStatus == 'create'"
             type="primary"
             @click="createData"
-          >確認</el-button>
-          <el-button size="mini" v-else type="primary" @click="updateData">確認</el-button>
+            >確認</el-button
+          >
+          <el-button size="mini" v-else type="primary" @click="updateData"
+            >確認</el-button
+          >
         </div>
       </el-dialog>
       <!--菜單編輯對話框-->
@@ -234,7 +275,12 @@
           label-position="right"
           label-width="100px"
         >
-          <el-form-item size="small" :label="'Id'" prop="id" v-show="dialogMenuStatus == 'update'">
+          <el-form-item
+            size="small"
+            :label="'Id'"
+            prop="id"
+            v-show="dialogMenuStatus == 'update'"
+          >
             <span>{{ menuTemp.id }}</span>
           </el-form-item>
 
@@ -245,28 +291,46 @@
             <el-input v-model="menuTemp.domId"></el-input>
           </el-form-item>
           <el-form-item size="small" :label="'隱藏於權限組件'">
-            <el-switch v-model="menuTemp.attr" active-value="true" inactive-value="false"></el-switch>
+            <el-switch
+              v-model="menuTemp.attr"
+              active-value="true"
+              inactive-value="false"
+            ></el-switch>
           </el-form-item>
           <el-form-item size="small" :label="'樣式'">
             <!-- <el-input v-model="menuTemp.class"></el-input> -->
-            <el-select style="width:100%" v-model="menuTemp.class" placeholder="按鈕樣式">
+            <el-select
+              style="width: 100%"
+              v-model="menuTemp.class"
+              placeholder="按鈕樣式"
+            >
               <el-option label="主色" value="primary">
-                <el-button plain style="width:100px" type="primary">primary</el-button>
+                <el-button plain style="width: 100px" type="primary"
+                  >primary</el-button
+                >
               </el-option>
               <el-option label="藍色" value="info">
-                <el-button plain style="width:100px" type="info">info</el-button>
+                <el-button plain style="width: 100px" type="info"
+                  >info</el-button
+                >
               </el-option>
               <el-option label="紅色" value="danger">
-                <el-button plain style="width:100px" type="danger">danger</el-button>
+                <el-button plain style="width: 100px" type="danger"
+                  >danger</el-button
+                >
               </el-option>
               <el-option label="綠色" value="success">
-                <el-button plain style="width:100px" type="success">success</el-button>
+                <el-button plain style="width: 100px" type="success"
+                  >success</el-button
+                >
               </el-option>
               <el-option label="淡藍色" value="warning">
-                <el-button plain style="width:100px" type="warning">warning</el-button>
+                <el-button plain style="width: 100px" type="warning"
+                  >warning</el-button
+                >
               </el-option>
               <el-option label="白色" value>
-                <el-button plain style="width:100px">noneType</el-button>
+                <el-button plain style="width: 100px">noneType</el-button>
               </el-option>
             </el-select>
           </el-form-item>
@@ -287,13 +351,15 @@
                 v-model="menuTemp.icon"
               >
                 <i
-                  style="margin-left:0.5rem;margin-right:1rem;color:#3d3d3d"
+                  style="
+                    margin-left: 0.5rem;
+                    margin-right: 1rem;
+                    color: #3d3d3d;
+                  "
                   slot="prefix"
                   :class="
-                  menuTemp.icon
-                    ? `iconfont icon-${menuTemp.icon} `
-                    : ''
-                "
+                    menuTemp.icon ? `iconfont icon-${menuTemp.icon} ` : ''
+                  "
                 ></i>
               </el-input>
               <el-row class="selectIcon-box">
@@ -304,9 +370,7 @@
                   :key="index"
                 >
                   <i
-                    :class="
-                      `${iconData.font_family} ${iconData.css_prefix_text}${item.font_class}`
-                    "
+                    :class="`${iconData.font_family} ${iconData.css_prefix_text}${item.font_class}`"
                     @click="menuTemp.icon = item.font_class"
                   ></i>
                 </el-col>
@@ -314,7 +378,11 @@
             </el-popover>
           </el-form-item>
           <el-form-item size="small" :label="'排序'">
-            <el-input-number v-model="menuTemp.sort" :min="0" :max="10"></el-input-number>
+            <el-input-number
+              v-model="menuTemp.sort"
+              :min="0"
+              :max="10"
+            ></el-input-number>
           </el-form-item>
           <el-form-item size="small" :label="'備註'">
             <el-input v-model="menuTemp.remark"></el-input>
@@ -334,14 +402,19 @@
           </el-form-item>
         </el-form>
         <div slot="footer">
-          <el-button size="mini" @click="dialogMenuVisible = false">取消</el-button>
+          <el-button size="mini" @click="dialogMenuVisible = false"
+            >取消</el-button
+          >
           <el-button
             size="mini"
             v-if="dialogMenuStatus == 'create'"
             type="primary"
             @click="addMenu"
-          >確認</el-button>
-          <el-button size="mini" v-else type="primary" @click="updateMenu">確認</el-button>
+            >確認</el-button
+          >
+          <el-button size="mini" v-else type="primary" @click="updateMenu"
+            >確認</el-button
+          >
         </div>
       </el-dialog>
     </div>
@@ -360,7 +433,7 @@ import waves from "@/directive/waves"; // 水波紋指令
 import Sticky from "@/components/Sticky";
 import permissionBtn from "@/components/PermissionBtn";
 import elDragDialog from "@/directive/el-dragDialog";
-import iconData from "@/assets/public/css/comIconfont/iconfont/iconfont.json";
+import iconData from "@/assets/iconfont/iconfont.json";
 export default {
   name: "module",
   components: {

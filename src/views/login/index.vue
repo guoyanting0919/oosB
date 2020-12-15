@@ -1,300 +1,414 @@
 <template>
-  <div class="login-container">
-    <div class="content">
-      <img class="leftImg" src="~@/assets/login/left.png" alt />
-      <el-form
-        class="login-form"
-        autocomplete="on"
-        :model="loginForm"
-        :rules="loginRules"
-        ref="loginForm"
-        label-position="left"
-      >
-        <h3 class="title">OpenAuth.Pro</h3>
-        <p class="tips">OpenAuth.Core企業版</p>
-        <el-form-item prop="username">
-          <span class="svg-container svg-container_login">
-            <svg-icon icon-class="user" />
-          </span>
-          <el-input
-            name="username"
-            type="text"
-            v-model="loginForm.username"
-            autocomplete="on"
-            placeholder="請輸入登錄帳號"
-          />
-        </el-form-item>
-        <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password"></svg-icon>
-          </span>
-          <el-input
-            name="password"
-            :type="pwdType"
-            @keyup.enter.native="handleLogin"
-            v-model="loginForm.password"
-            autocomplete="on"
-            placeholder="請輸入密碼"
-          ></el-input>
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon
-              :icon-class="pwdType === 'password' ? 'eye' : 'eye-open'"
-            />
-          </span>
-        </el-form-item>
-        <div class="tips" v-if="isIdentityAuth">
-          <router-link to="/oidcRedirect">
-            <el-badge is-dot
-              >接口服務器啟用了Oauth認證，請點擊這裡登錄</el-badge
-            >
-          </router-link>
-        </div>
-        <el-form-item v-else>
-          <el-button
-            v-waves
-            type="primary"
-            style="width:100%;background:#4452D5;font-size: 24px;height: 50px;"
-            :loading="loading"
-            @click.native.prevent="handleLogin"
-            >登 錄</el-button
+  <div id="login">
+    <div class="loginContainer">
+      <!-- loginTitle -->
+      <div class="loginTitle">
+        <h1 class="cityTitle" @click="loginBy('System', '123456')">
+          尖石鄉公所
+        </h1>
+        <h5 class="cityDescrip" @click="loginBy('r')">
+          長照交通接送統一預約服務及管理系統
+        </h5>
+      </div>
+      <!-- adminLogin -->
+      <div class="adminLogin" v-if="isForget == 1">
+        <h2 class="adminLoginTitle">管理者Login</h2>
+        <h5 class="adminLoginDescrip">
+          為了保障您的帳號安全，建議您最少於三個月變更一次密碼
+        </h5>
+      </div>
+      <!-- forgetBox -->
+      <div class="forgetBox" v-if="isForget == 2">
+        <h2 class="forgetTitle">忘記密碼</h2>
+        <h5 class="forgetDescrip">請準備好您的手機</h5>
+      </div>
+      <!-- letterBox -->
+      <div class="letterBox" v-if="isForget == 3">
+        <h2 class="letterTitle">已發送簡訊驗證碼到您的手機</h2>
+        <h5 class="letterDescrip">手機號碼：0987-087-334</h5>
+      </div>
+      <!-- newPwBox -->
+      <div class="newPwBox" v-if="isForget == 4">
+        <h2 class="newPwTitle">設定登入密碼</h2>
+        <div class="pwRoles">
+          <p :class="{ OkRole: auth.minLength }" class="pwRole">
+            <i class="fas fa-check"></i>8碼以上(必要)
+          </p>
+          <p :class="{ OkRole: auth.upperCase }" class="pwRole">
+            <i class="fas fa-check"></i>大寫英文
+          </p>
+          <p :class="{ OkRole: auth.lowerCase }" class="pwRole">
+            <i class="fas fa-check"></i>小寫英文
+          </p>
+          <p :class="{ OkRole: auth.number }" class="pwRole">
+            <i class="fas fa-check"></i>數字
+          </p>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="特殊符號包含 ~!@#$%^&*()"
+            placement="bottom-end"
           >
-        </el-form-item>
-        <p class="tips">默認System登錄後，你可以無法無天</p>
-        <p class="tips">
-          admin/admin登錄後，會少一點權限，資源管理/分類管理的字段會少一點
-        </p>
-        <p class="tips">
-          test/test登錄後，權限會更少,資源管理/分類管理的字段也更少
-        </p>
-      </el-form>
+            <p :class="{ OkRole: auth.mark }" class="pwRole">
+              <i class="fas fa-check"></i>特殊符號
+            </p>
+          </el-tooltip>
+          <p :class="{ OkRole: num >= 3 }" class="pwRole">
+            <i class="fas fa-check"></i>4選3
+          </p>
+        </div>
+      </div>
+      <!-- loginBox -->
+      <div class="loginBox" v-if="isForget == 1">
+        <el-input
+          placeholder="請輸入您的帳號"
+          v-model="accountInput"
+          clearable
+        ></el-input>
+        <el-input
+          placeholder="請輸入您的密碼"
+          @keyup.enter.native="handleLogin"
+          v-model="passwordInput"
+          show-password
+        ></el-input>
+        <el-button
+          type="warning"
+          :loading="btnLoading"
+          @click="handleLogin"
+          round
+          >登入</el-button
+        >
+        <div @click="isForget = 2" class="forgetPw">忘記密碼?</div>
+      </div>
+      <!-- forgetInput -->
+      <div class="forgetInput" v-if="isForget == 2">
+        <el-input
+          placeholder="請輸入您的帳號"
+          v-model="accountForgetInput"
+          clearable
+        ></el-input>
+        <el-button :loading="btnLoading" @click="sendCode" type="warning" round
+          >下一步</el-button
+        >
+        <p class="fogetPwDesc">點選下一步，發送簡訊驗證碼到您的手機</p>
+        <div @click="isForget = 1" class="backToLogin">返回登入</div>
+      </div>
+      <!-- letterInput -->
+      <div class="letterInput" v-if="isForget == 3">
+        <div class="codeBox">
+          <el-input
+            class="codeBoxInput"
+            placeholder="請輸入驗證碼"
+            v-model="codeInput"
+            clearable
+          ></el-input>
+          <el-button
+            :loading="btnLoading"
+            :disabled="resendCount !== 0"
+            class="resendBtn"
+            @click="sendCode"
+            type="warning"
+            round
+          >
+            重新送出
+            <span v-if="resendCount !== 0">({{ resendCount }})</span>
+          </el-button>
+        </div>
+        <el-button :loading="btnLoading" @click="valiCode" type="warning" round
+          >下一步</el-button
+        >
+        <p class="fogetPwDesc">驗證碼輸入完成後點選下一步並設定新密碼</p>
+        <div @click="isForget = 1" class="backToLogin">返回登入</div>
+      </div>
+      <!-- newPwInput -->
+      <div class="newPwInput" v-if="isForget == 4">
+        <el-input
+          placeholder="請輸入您的新密碼"
+          v-model="newPwInput"
+          show-password
+        ></el-input>
+        <el-input
+          placeholder="請確認您的新密碼"
+          v-model="newPwInputCheck"
+          show-password
+        ></el-input>
+        <el-button
+          :loading="btnLoading"
+          @click="newPwConfirm"
+          type="warning"
+          round
+          >完成</el-button
+        >
+        <p class="fogetPwDesc">請依照步驟完成新密碼認證</p>
+        <div @click="isForget = 1" class="backToLogin">返回登入</div>
+      </div>
     </div>
 
-    <!-- <div class="tips">
-        -----------------------------------------------------------------------------------------------
-    </div>-->
-
-    <!-- <div class="tips">
-        默認System登錄後，你可以無法無天
+    <!-- announcement -->
+    <el-dialog
+      v-if="annDataFilter"
+      custom-class="annDialog"
+      title="公告"
+      :visible.sync="dialogAnnVisible"
+      center
+    >
+      <div class="annCategory">
+        <button
+          @click="annCategory = '行車公告'"
+          :class="{ activeAnn: annCategory === '行車公告' }"
+          class="annCategoryBtn"
+        >
+          行車公告
+        </button>
+        <button
+          @click="annCategory = 'A單位公告'"
+          :class="{ activeAnn: annCategory === 'A單位公告' }"
+          class="annCategoryBtn"
+        >
+          A單位公告
+        </button>
       </div>
-      <div class="tips">
-        admin/admin登錄後，會少一點權限，資源管理/分類管理的字段會少一點
-      </div>
-      <div class="tips">
-        test/test登錄後，權限會更少,資源管理/分類管理的字段也更少
-    </div>-->
+      <el-table :data="annDataFilter" style="margin-top: 1rem">
+        <el-table-column property="title" label="公告事項"></el-table-column>
+        <el-table-column
+          property="date"
+          label="公告日期"
+          width="120"
+        ></el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import waves from "@/directive/waves"; // 水波紋指令
-import { mapGetters } from "vuex";
 export default {
-  name: "login",
-  directives: {
-    waves,
-  },
+  name: "Login",
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (value.length <= 0) {
-        callback(new Error("用戶名不能為空"));
-      } else {
-        callback();
-      }
-    };
-    const validatePass = (rule, value, callback) => {
-      if (value.length <= 0) {
-        callback(new Error("密碼不能為空"));
-      } else {
-        callback();
-      }
-    };
     return {
-      loginForm: {
-        username: "System",
-        password: "123456",
+      // announcement
+      dialogAnnVisible: false,
+      annCategory: "行車公告",
+      annData: [
+        {
+          date: "2020-07-10",
+          title: "109-07-10【額度控管留用首月】及【轉單功能啟用】",
+          category: "A單位公告",
+        },
+        {
+          date: "2020-04-30",
+          title: "網頁及APP清除快取步驟說明",
+          category: "行車公告",
+        },
+        {
+          date: "2020-07-10",
+          title: "109-07-10【轉單功能啟用】",
+          category: "行車公告",
+        },
+        {
+          date: "2020-07-13",
+          title: "系統進行資安升級，調整期間(7/13 22:30-23:00)暫停使用",
+          category: "行車公告",
+        },
+      ],
+
+      // input
+      isForget: 1,
+      accountInput: "CBSD_Admin",
+      passwordInput: "CBSD_Admin",
+      accountForgetInput: "test",
+      codeInput: "",
+      newPwInput: "",
+      newPwInputCheck: "",
+      resendCount: 60,
+      timmer: null,
+      btnLoading: false,
+
+      // 密碼驗證
+      passwordOK: false,
+      num: 0,
+      auth: {
+        minLength: false,
+        lowerCase: false,
+        upperCase: false,
+        number: false,
+        mark: false,
       },
-      loginRules: {
-        username: [
-          {
-            required: true,
-            trigger: "blur",
-            validator: validateUsername,
-          },
-        ],
-        password: [
-          {
-            required: true,
-            trigger: "blur",
-            validator: validatePass,
-          },
-        ],
-      },
-      loading: false,
-      pwdType: "password",
     };
   },
   computed: {
-    ...mapGetters(["isIdentityAuth"]),
+    annDataFilter() {
+      const vm = this;
+      return vm.annData.filter((data) => {
+        return data.category === vm.annCategory;
+      });
+    },
+  },
+  watch: {
+    newPwInput(val) {
+      this.num = 0;
+      this.auth.minLength = this.checkMinLength(val);
+      this.auth.lowerCase = this.checkLowerCase(val);
+      this.auth.upperCase = this.checkUpperCase(val);
+      this.auth.number = this.checkNumber(val);
+      this.auth.mark = this.checkMark(val);
+      if (this.auth.lowerCase) this.num++;
+      if (this.auth.upperCase) this.num++;
+      if (this.auth.number) this.num++;
+      if (this.auth.mark) this.num++;
+      if (this.auth.minLength && this.num >= 3) this.passwordOK = true;
+      else this.passwordOK = false;
+    },
   },
   methods: {
-    showPwd() {
-      if (this.pwdType === "password") {
-        this.pwdType = "";
-      } else {
-        this.pwdType = "password";
-      }
+    loginBy(str, pas) {
+      pas ? (this.passwordInput = pas) : (this.passwordInput = str);
+      this.accountInput = str;
+      this.handleLogin();
     },
     handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          this.loading = true;
-          this.$store
-            .dispatch("Login", this.loginForm)
-            .then(() => {
-              this.loading = false;
-              this.$router.push({
-                path: "/",
-              });
-            })
-            .catch(() => {
-              this.loading = false;
+      const vm = this;
+
+      vm.btnLoading = true;
+      vm.$store
+        .dispatch("Login", {
+          username: vm.accountInput,
+          password: vm.passwordInput,
+        })
+        .then(() => {
+          vm.btnLoading = false;
+          vm.$router.push({
+            path: "/",
+          });
+        })
+        .catch(() => {
+          vm.btnLoading = false;
+        });
+    },
+
+    // 傳送驗證碼
+    sendCode() {
+      clearInterval(this.timmer);
+      const vm = this;
+      //   vm.$store.dispatch("loadingHandler", true);
+      vm.btnLoading = true;
+      vm.$api
+        .ForgetPw({
+          step: 1,
+          account: vm.accountForgetInput,
+        })
+        .then(() => {
+          vm.isForget = 3;
+          vm.resendCount = 60;
+          vm.timmer = setInterval(() => {
+            vm.resendCount--;
+            if (vm.resendCount == 0) {
+              clearInterval(vm.timmer);
+            }
+          }, 1000);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          vm.btnLoading = false;
+        });
+    },
+
+    //認證驗證碼是否正確
+    valiCode() {
+      const vm = this;
+      vm.btnLoading = true;
+      vm.$api
+        .ForgetPw({
+          step: 2,
+          account: vm.accountForgetInput,
+          checkCode: vm.codeInput,
+        })
+        .then(() => {
+          this.isForget = 4;
+          clearInterval(this.timmer);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          vm.btnLoading = false;
+        });
+    },
+
+    // 修改密碼
+    newPwConfirm() {
+      const vm = this;
+      if (vm.passwordOK && vm.newPwInput === vm.newPwInputCheck) {
+        vm.btnLoading = true;
+        vm.$api
+          .ForgetPw({
+            step: 3,
+            account: vm.accountForgetInput,
+            checkCode: vm.codeInput,
+            newPassword: vm.newPwInput,
+          })
+          .then(() => {
+            vm.$alertM.fire({
+              icon: "success",
+              title: `修改密碼成功!請重新登入!`,
             });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+            vm.reset();
+            vm.isForget = 1;
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            vm.btnLoading = false;
+          });
+      } else if (!vm.passwordOK) {
+        vm.$alertM.fire({
+          icon: "error",
+          title: `請確認密碼格式是否正確`,
+        });
+      } else {
+        vm.$alertM.fire({
+          icon: "error",
+          title: `密碼欄位不相等`,
+        });
+      }
+    },
+
+    // 欄位清空
+    reset() {
+      const vm = this;
+      vm.accountInput = "";
+      vm.passwordInput = "";
+      vm.accountForgetInput = "";
+      vm.codeInput = "";
+      vm.newPwInput = "";
+      vm.newPwInputCheck = "";
+    },
+
+    // 密碼格式REG驗證
+    checkMinLength(val) {
+      //8碼以上
+      return val.length >= 8;
+    },
+    checkLowerCase(val) {
+      //小寫英文
+      return /[a-z]/.test(val);
+    },
+    checkUpperCase(val) {
+      //大寫英文
+      return /[A-Z]/.test(val);
+    },
+    checkNumber(val) {
+      //數字
+      return /[0-9]/.test(val);
+    },
+    checkMark(val) {
+      //特殊符號
+      return /[~!@#$%^&*()]/.test(val);
     },
   },
 };
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
-$bg: #2d3a4b;
-$light_gray: #eee;
-$color_balck: #333;
-
-/* reset element-ui css */
-.login-container {
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $color_balck;
-      height: 47px;
-
-      &:-webkit-autofill {
-        transition: background-color 5000s ease-in-out 0s;
-      }
-    }
-  }
-  .el-form-item {
-    margin-bottom: 35px;
-    border-radius: 5px;
-    color: #454545;
-    .el-form-item__content {
-      background: #fff;
-      border: 1px solid rgba(223, 223, 223, 1);
-    }
-    &:last-child {
-      padding-top: 20px;
-      .el-form-item__content {
-        border: none;
-      }
-    }
-  }
-}
-</style>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-@media screen and (max-width: 1150px) {
-  .leftImg {
-    width: 450px !important;
-  }
-}
-@media screen and (max-width: 1010px) {
-  .leftImg {
-    width: 380px !important;
-  }
-}
-@media screen and (max-width: 940px) {
-  .leftImg {
-    display: block;
-    width: 260px !important;
-    margin: 0 auto !important;
-  }
-}
-$dark_gray: #d1dfe8;
-
-.login-container {
-  height: 100%;
-  background: url("~@/assets/login/bg.png") no-repeat;
-  background-color: #ebebea;
-  background-position: 0 0;
-  background-size: 62% 100%;
-  text-align: center;
-  &:before {
-    content: "";
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-  }
-  .content {
-    display: inline-block;
-    vertical-align: middle;
-    > img {
-      width: 568px;
-      margin-right: 150px;
-      vertical-align: middle;
-    }
-    .login-form {
-      display: inline-block;
-      width: 400px;
-      vertical-align: middle;
-    }
-  }
-
-  .svg-container {
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 33px;
-    display: inline-block;
-    font-size: 22px;
-    &_login {
-      font-size: 31px;
-    }
-  }
-
-  .title {
-    font-size: 26px;
-    font-weight: 400;
-    color: #4452d5;
-    margin: 0;
-    text-align: left;
-  }
-  .tips {
-    color: #959595;
-    font-size: 14px;
-    margin-top: 0;
-    margin-bottom: 40px;
-    text-align: left;
-  }
-
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
-    font-size: 24px;
-  }
-}
-</style>
+<style lang="scss"></style>

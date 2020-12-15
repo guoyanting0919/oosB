@@ -1,53 +1,51 @@
 import Vue from "vue";
 import layer from "vue-layer";
 
-import "normalize.css/normalize.css"; // A modern alternative to CSS resets
+/* css reset */
+import "normalize.css/normalize.css";
 
+/* elementUI */
 import ElementUI from "element-ui";
-// import "@/assets/custom-theme/index.css";
+import locale from "element-ui/lib/locale/lang/zh-TW";
 
-//theme1 基本style
+/* VCharts */
+import VCharts from "v-charts";
+
+/* 基本style */
 import "element-ui/lib/theme-chalk/index.css";
-//theme2
-// import "@/assets/custom-theme/custom.scss";
+
+/* custom style */
 import "@/assets/custom-theme/custom2.scss";
 
-import locale from "element-ui/lib/locale/lang/zh-TW";
+/* sweet alert */
 import VueSweetalert2 from "vue-sweetalert2";
-import VueContextMenu from "vue-contextmenu";
-import VueQuillEditor from "vue-quill-editor";
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-import "@/styles/index.scss"; // global css
 
-import VCharts from "v-charts";
+import VueContextMenu from "vue-contextmenu";
+
+/* s */
+import "@/styles/index.scss";
 
 import App from "./App";
 import router from "./router";
 import store from "./store";
 import api from "./api/ytApis";
 
-import "@/icons"; // icon
-import "@/permission"; // permission control
-import "@/assets/public/css/iconfont/iconfont.css";
-import "@/assets/public/css/iconfont/iconfont.js";
-import "@/assets/public/css/comIconfont/iconfont/iconfont.css";
-import "@/assets/public/css/comIconfont/iconfont/iconfont.js";
-// all(建議放套件Css下層)
+/* icon */
+import "@/icons";
+
+/* permission control */
+import "@/permission";
+
+/* iconfont */
+import "@/assets/iconfont/iconfont.css";
+import "@/assets/iconfont/iconfont.js";
+
+/* all.scss(建議放套件Css下層) */
 import "../src/assets/all.scss";
-
-// 请假条表单和详情
-import FrmLeaveReqAdd from "@/views/forms/userDefine/frmLeaveReq/add";
-import FrmLeaveReqDetail from "@/views/forms/userDefine/frmLeaveReq/detail";
-
-import vueEsign from "vue-esign";
-Vue.use(vueEsign);
 
 Vue.use(ElementUI, { locale });
 Vue.use(VueSweetalert2);
 Vue.use(VueContextMenu);
-Vue.use(VueQuillEditor);
 Vue.use(VCharts);
 
 const alertT = Vue.prototype.$swal.mixin({
@@ -88,8 +86,6 @@ Vue.prototype.$alertM = alertM;
 Vue.prototype.$layer = layer(Vue, {
   msgtime: 3,
 });
-Vue.component("FrmLeaveReqAdd", FrmLeaveReqAdd);
-Vue.component("FrmLeaveReqDetail", FrmLeaveReqDetail);
 new Vue({
   el: "#app",
   router,
