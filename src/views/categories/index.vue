@@ -2,23 +2,25 @@
   <div class="categories-wrap">
     <div class="categories-box">
       <div class="categories-container flex-row">
-        <div style="border-right: 1px solid #ccc;">
+        <div style="border-right: 1px solid #ccc">
           <div class="buttons-box filter-container">
             <el-button
               :icon="`iconfont icon-${btn.icon}`"
               :type="btn.class"
+              plain
               size="mini"
               v-for="btn of categoryBtns"
               v-bind:key="btn.Id"
               class="filter-item"
               @click="onBtnClicked(btn.domId)"
-            >{{btn.name}}</el-button>
+              >{{ btn.name }}</el-button
+            >
             <div @keyup.13="handleSearchCategoryTypes">
               <el-input
                 placeholder="請輸入內容"
                 v-model="typesListQuery.key"
                 size="mini"
-                style="margin-top: 10px;width: 130px;"
+                style="margin-top: 10px; width: 130px"
               >
                 <i slot="prefix" class="el-input__icon el-icon-search"></i>
               </el-input>
@@ -28,12 +30,18 @@
                 v-waves
                 icon="el-icon-search"
                 @click="handleSearchCategoryTypes"
-              >搜索</el-button>
+                >搜索</el-button
+              >
             </div>
           </div>
           <el-card shadow="never" class="body-small categories-menu-card">
             <div slot="header" class="clearfix">
-              <el-button type="text" style="padding: 0 11px" @click="getAllCategories">全部字典>></el-button>
+              <el-button
+                type="text"
+                style="padding: 0 11px"
+                @click="getAllCategories"
+                >全部字典>></el-button
+              >
             </div>
             <el-tree
               :current-node-key="listQuery.TypeId"
@@ -47,7 +55,7 @@
             >
               <span class="custom-tree-node" slot-scope="{ node }">
                 <span>
-                  <i class="el-icon-menu" style="margin-right: 10px;"></i>
+                  <i class="el-icon-menu" style="margin-right: 10px"></i>
                   {{ node.label }}
                 </span>
               </span>
@@ -56,11 +64,14 @@
         </div>
         <el-main class="categories-content flex-item">
           <sticky :className="'sub-navbar'">
-            <div class="filter-container" style="white-space: nowrap; overflow-x: auto;">
+            <div
+              class="filter-container"
+              style="white-space: nowrap; overflow-x: auto"
+            >
               <el-input
                 @keyup.enter.native="handleFilter"
                 size="mini"
-                style="width: 200px;"
+                style="width: 200px"
                 class="filter-item"
                 :placeholder="'名稱'"
                 v-model="listQuery.key"
@@ -72,16 +83,19 @@
                 v-waves
                 icon="el-icon-search"
                 @click="handleFilter"
-              >搜索</el-button>
+                >搜索</el-button
+              >
               <el-button
                 :icon="`iconfont icon-${btn.icon}`"
                 :type="btn.class"
+                plain
                 size="mini"
                 v-for="btn of typesBtns"
                 v-bind:key="btn.Id"
                 class="filter-item"
                 @click="onBtnClicked(btn.domId)"
-              >{{btn.name}}</el-button>
+                >{{ btn.name }}</el-button
+              >
             </div>
           </sticky>
           <el-table
@@ -93,21 +107,29 @@
             border
             fit
             highlight-current-row
-            style="width: 100%;"
+            style="width: 100%"
             @row-click="rowClick"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" align="center" width="55"></el-table-column>
-            <template v-for="(headerItem,index) in headerList">
-              <el-table-column :label="headerItem.description" min-width="120px" :key="index">
+            <el-table-column
+              type="selection"
+              align="center"
+              width="55"
+            ></el-table-column>
+            <template v-for="(headerItem, index) in headerList">
+              <el-table-column
+                :label="headerItem.description"
+                min-width="120px"
+                :key="index"
+              >
                 <template slot-scope="scope">
-                  <span>{{scope.row[headerItem.key]}}</span>
+                  <span>{{ scope.row[headerItem.key] }}</span>
                 </template>
               </el-table-column>
             </template>
           </el-table>
           <pagination
-            v-show="total>0"
+            v-show="total > 0"
             :total="total"
             :page.sync="listQuery.page"
             :limit.sync="listQuery.limit"
@@ -136,9 +158,13 @@
             <el-input size="small" v-model="categoryTypesInfo.name"></el-input>
           </el-form-item>
         </el-form>
-        <div style="text-align:right;margin-top: 10px;">
-          <el-button size="small" type="cancel" @click="addTypesDialog = false">取消</el-button>
-          <el-button size="small" type="primary" @click="handleAddCategories">確定</el-button>
+        <div style="text-align: right; margin-top: 10px">
+          <el-button size="small" type="cancel" @click="addTypesDialog = false"
+            >取消</el-button
+          >
+          <el-button size="small" type="primary" @click="handleAddCategories"
+            >確定</el-button
+          >
         </div>
       </el-dialog>
       <el-dialog
@@ -156,7 +182,11 @@
           label-width="100px"
         >
           <el-form-item size="small" :label="'Id'" prop="id">
-            <el-input v-model="temp.id" :disabled="true" placeholder="系統自動處理"></el-input>
+            <el-input
+              v-model="temp.id"
+              :disabled="true"
+              placeholder="系統自動處理"
+            ></el-input>
           </el-form-item>
 
           <el-form-item size="small" :label="'代碼'" prop="dtCode">
@@ -172,9 +202,13 @@
           </el-form-item>
 
           <el-form-item size="small" :label="'是否可用'" prop="enable">
-            <el-select class="filter-item" v-model="temp.enable" placeholder="Please select">
+            <el-select
+              class="filter-item"
+              v-model="temp.enable"
+              placeholder="Please select"
+            >
               <el-option
-                v-for="item in  statusOptions"
+                v-for="item in statusOptions"
                 :key="item.key"
                 :label="item.display_name"
                 :value="item.key"
@@ -183,7 +217,11 @@
           </el-form-item>
 
           <el-form-item size="small" :label="'排序號'">
-            <el-input-number v-model="temp.sortNo" :min="0" :max="10"></el-input-number>
+            <el-input-number
+              v-model="temp.sortNo"
+              :min="0"
+              :max="10"
+            ></el-input-number>
           </el-form-item>
 
           <el-form-item size="small" :label="'描述'" prop="description">
@@ -202,9 +240,19 @@
           </el-form-item>
         </el-form>
         <div slot="footer">
-          <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
-          <el-button size="mini" v-if="dialogStatus=='create'" type="primary" @click="createData">確認</el-button>
-          <el-button size="mini" v-else type="primary" @click="updateData">確認</el-button>
+          <el-button size="mini" @click="dialogFormVisible = false"
+            >取消</el-button
+          >
+          <el-button
+            size="mini"
+            v-if="dialogStatus == 'create'"
+            type="primary"
+            @click="createData"
+            >確認</el-button
+          >
+          <el-button size="mini" v-else type="primary" @click="updateData"
+            >確認</el-button
+          >
         </div>
       </el-dialog>
     </div>
