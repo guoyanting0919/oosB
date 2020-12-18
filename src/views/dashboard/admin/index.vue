@@ -34,7 +34,7 @@ export default {
       let formData = new FormData();
       formData.append("files", file.file, file.file.name);
       vm.$http
-        .post("http://oss.yummydesign.com.tw/sys/api/Files/Upload", formData)
+        .post("http://simpleweb.unitgo.tw/api/Files/Upload", formData)
         .then((response) => {
           console.log("Success!");
           console.log({ response });

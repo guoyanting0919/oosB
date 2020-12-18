@@ -26,6 +26,20 @@ $info: #227294;
 $infoHover: #3b91b6;
 $disableGray: #949494;
 
+/* dark mode */
+$darkPrimary: darken(
+  $color: $primary,
+  $amount: 30,
+);
+$darkPrimary2: darken(
+  $color: $primary,
+  $amount: 35,
+);
+$darkPrimary3: darken(
+  $color: $primary,
+  $amount: 50,
+);
+
 //sidebar
 $subMenuBg: lighten($primary, 44%);
 $menuHover: lighten($primary, 40%);

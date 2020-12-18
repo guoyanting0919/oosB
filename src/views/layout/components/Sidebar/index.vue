@@ -5,8 +5,7 @@
   >
     <el-menu
       mode="vertical"
-      class="test"
-      :style="{ background: themeStatus ? '#fffff' : '#dbf3ff' }"
+      :class="{ dark: !themeStatus }"
       :show-timeout="200"
       :default-active="$route.path"
       :collapse="isCollapse"
@@ -52,3 +51,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.dark {
+  background: $darkPrimary;
+}
+</style>

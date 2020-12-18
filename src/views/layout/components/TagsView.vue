@@ -172,8 +172,8 @@ export default {
       // margin-top: 4px;
       &.active {
         color: #fff;
-        background-color: #409eff;
-        border-color: #409eff;
+        background-color: $darkPrimary;
+        border-color: $darkPrimary;
         &::before {
           content: "";
           background: #fff;

@@ -5,21 +5,30 @@
     >
       <el-menu-item
         :index="item.path"
-        :class="{ 'submenu-title-noDropdown': !isNest }"
+        :class="{ 'submenu-title-noDropdown': !isNest, dark: !themeStatus }"
       >
-        <i :class="`iconfont icon-${item.meta.icon}`"></i>
+        <i
+          :class="`iconfont icon-${item.meta.icon}`"
+          :style="{ color: themeStatus ? '' : '#fff' }"
+        ></i>
         <span v-if="item.meta && item.meta.title" slot="title">{{
           item.meta.title
         }}</span>
       </el-menu-item>
     </template>
 
-    <el-submenu v-else :index="item.path">
+    <el-submenu v-else :index="item.path" :class="{ dark: !themeStatus }">
       <template slot="title">
-        <i :class="`iconfont icon-${item.meta.icon}`"></i>
-        <span v-if="item.meta && item.meta.title" slot="title">{{
-          item.meta.title
-        }}</span>
+        <i
+          :class="`iconfont icon-${item.meta.icon}`"
+          :style="{ color: themeStatus ? '' : '#fff' }"
+        ></i>
+        <span
+          :style="{ color: themeStatus ? '' : '#fff' }"
+          v-if="item.meta && item.meta.title"
+          slot="title"
+          >{{ item.meta.title }}</span
+        >
       </template>
 
       <template v-for="child in routes">
@@ -31,11 +40,25 @@
             :item="child"
             :key="child.path"
           ></sidebar-item>
-          <el-menu-item v-else :key="child.name" :index="child.path">
-            <i :class="`iconfont icon-${child.meta.icon}`"></i>
-            <span v-if="child.meta && child.meta.title" slot="title">{{
-              child.meta.title
-            }}</span>
+          <el-menu-item
+            :class="{ dark: !themeStatus }"
+            v-else
+            :key="child.name"
+            :index="child.path"
+          >
+            <i
+              :class="{
+                dark: !themeStatus,
+                [`iconfont icon-${child.meta.icon}`]: true,
+              }"
+              :style="{ color: themeStatus ? '' : '#fff' }"
+            ></i>
+            <span
+              :style="{ color: themeStatus ? '' : '#fff' }"
+              v-if="child.meta && child.meta.title"
+              slot="title"
+              >{{ child.meta.title }}</span
+            >
           </el-menu-item>
         </template>
       </template>
@@ -44,6 +67,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "SidebarItem",
   props: {
@@ -66,6 +90,10 @@ export default {
       routes: [],
     };
   },
+
+  computed: {
+    ...mapGetters(["themeStatus"]),
+  },
   watch: {
     item() {
       this.groupRouters();
@@ -84,10 +112,36 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .menu-wrapper .iconfont {
   margin-right: 5px;
   font-size: 16px;
   vertical-align: middle;
+}
+.el-menu-item:focus.dark {
+  background: $darkPrimary;
+}
+.el-menu-item:hover.dark {
+  background: $darkPrimary2;
+}
+.dark.el-menu-item {
+  color: #ffffff;
+  background: $darkPrimary2;
+
+  &:hover {
+    background: $darkPrimary2;
+  }
+
+  &:focus {
+    background: $darkPrimary3;
+  }
+}
+
+.submenu-title-noDropdown.dark {
+  background: $darkPrimary;
+}
+
+::v-deep .dark .el-submenu__title:hover {
+  background: darken($color: $primary, $amount: 35) !important;
 }
 </style>

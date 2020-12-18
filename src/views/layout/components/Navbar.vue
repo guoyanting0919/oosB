@@ -14,12 +14,16 @@
       <el-breadcrumb separator="/" class="breadItems">
         <el-breadcrumb-item
           class="breadLink"
+          :class="{ dark: !themeStatus }"
           v-for="(item, index) in $route.matched"
           :key="index"
         >
-          <router-link :to="item.path" class="breadLink">{{
-            item.meta.title || item.name
-          }}</router-link>
+          <router-link
+            :class="{ dark: !themeStatus }"
+            :to="item.path"
+            class="breadLink"
+            >{{ item.meta.title || item.name }}</router-link
+          >
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -161,4 +165,15 @@ export default {
 //     pointer-events: none;
 //   }
 // }
+.breadLink.dark {
+  color: #ffffff;
+
+  .el-breadcrumb__inner {
+    color: #ffffff !important;
+
+    a {
+      color: #ffffff !important;
+    }
+  }
+}
 </style>
