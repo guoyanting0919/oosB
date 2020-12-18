@@ -5,7 +5,7 @@
         <el-input
           @keyup.enter.native="handleFilter"
           size="mini"
-          style="width: 200px;"
+          style="width: 200px"
           class="filter-item"
           :placeholder="'名稱'"
           v-model="listQuery.key"
@@ -17,35 +17,50 @@
           v-waves
           icon="el-icon-search"
           @click="handleFilter"
-        >搜索</el-button>
-        <permission-btn moduleName="dataPrivilegeRules" size="mini" v-on:btn-event="onBtnClicked"></permission-btn>
+          >搜索</el-button
+        >
+        <permission-btn
+          moduleName="dataPrivilegeRules"
+          size="mini"
+          v-on:btn-event="onBtnClicked"
+        ></permission-btn>
       </div>
     </sticky>
     <div class="app-container flex-item">
-      <div class="bg-white" style="height: 100%;">
+      <Title title="數據權限"></Title>
+      <div class="bg-white" style="overflow-y: auto; height: calc(100% - 50px)">
         <el-table
           ref="mainTable"
-          height="calc(100% - 52px)"
+          height="100%"
           :key="tableKey"
           :data="list"
           v-loading="listLoading"
           border
           fit
           highlight-current-row
-          style="width: 100%;"
+          style="width: 100%"
           @row-click="rowClick"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" align="center" width="55"></el-table-column>
-          <template v-for="(headerItem,index) in headerList">
-            <el-table-column :label="headerItem.description" min-width="120px" :key="index">
+          <el-table-column
+            type="selection"
+            align="center"
+            width="55"
+          ></el-table-column>
+          <template v-for="(headerItem, index) in headerList">
+            <el-table-column
+              :label="headerItem.description"
+              min-width="120px"
+              :key="index"
+            >
               <template slot-scope="scope">
                 <span
                   v-if="headerItem.key === 'privilegeRules'"
                   class="ruleSpan ellipsis"
                   @click.stop="handleUpdate(scope.row)"
-                >{{scope.row[headerItem.key]}}</span>
-                <span v-else>{{scope.row[headerItem.key]}}</span>
+                  >{{ scope.row[headerItem.key] }}</span
+                >
+                <span v-else>{{ scope.row[headerItem.key] }}</span>
               </template>
             </el-table-column>
           </template>
@@ -58,18 +73,24 @@
             class-name="small-padding fixed-width"
           >
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">編輯</el-button>
               <el-button
-                v-if="scope.row.disable!=true"
+                type="primary"
+                size="mini"
+                @click="handleUpdate(scope.row)"
+                >編輯</el-button
+              >
+              <el-button
+                v-if="scope.row.disable != true"
                 size="mini"
                 type="danger"
-                @click="handleModifyStatus(scope.row,true)"
-              >停用</el-button>
+                @click="handleModifyStatus(scope.row, true)"
+                >停用</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
         <pagination
-          v-show="total>0"
+          v-show="total > 0"
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
@@ -94,8 +115,17 @@
         >
           <el-row>
             <el-col :span="12">
-              <el-form-item label-width="60px" size="small" :label="'數據ID'" prop="id">
-                <el-input v-model="temp.id" :disabled="true" placeholder="系統自動處理"></el-input>
+              <el-form-item
+                label-width="60px"
+                size="small"
+                :label="'數據ID'"
+                prop="id"
+              >
+                <el-input
+                  v-model="temp.id"
+                  :disabled="true"
+                  placeholder="系統自動處理"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -132,7 +162,11 @@
           <el-row>
             <el-col :span="6">
               <el-form-item label-width="60px" size="small" :label="'排序號'">
-                <el-input-number v-model="temp.sortNo" :min="0" :max="10"></el-input-number>
+                <el-input-number
+                  v-model="temp.sortNo"
+                  :min="0"
+                  :max="10"
+                ></el-input-number>
               </el-form-item>
             </el-col>
             <el-col :span="4">
@@ -147,20 +181,50 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item hidden size="small" :label="'權限規則'" prop="privilegeRules">
-            <el-input v-model="temp.privilegeRules" readonly style="padding-right: 26px;"></el-input>
+          <el-form-item
+            hidden
+            size="small"
+            :label="'權限規則'"
+            prop="privilegeRules"
+          >
+            <el-input
+              v-model="temp.privilegeRules"
+              readonly
+              style="padding-right: 26px"
+            ></el-input>
             <span
-              style="position: absolute;right: 0;top:0;bottom:0;display:inline-block;background: #fff;border: 1px solid #DCDFE6;padding: 0 10px;border-radius: 0 4px 4px 0;cursor:pointer;"
-              @click="dialogRuleVisible = true;"
+              style="
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                display: inline-block;
+                background: #fff;
+                border: 1px solid #dcdfe6;
+                padding: 0 10px;
+                border-radius: 0 4px 4px 0;
+                cursor: pointer;
+              "
+              @click="dialogRuleVisible = true"
             >
               <i class="el-icon-more"></i>
             </span>
           </el-form-item>
         </el-form>
         <div slot="footer">
-          <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
-          <el-button size="mini" v-if="dialogStatus=='create'" type="primary" @click="createData">確認</el-button>
-          <el-button size="mini" v-else type="primary" @click="updateData">確認</el-button>
+          <el-button size="mini" @click="dialogFormVisible = false"
+            >取消</el-button
+          >
+          <el-button
+            size="mini"
+            v-if="dialogStatus == 'create'"
+            type="primary"
+            @click="createData"
+            >確認</el-button
+          >
+          <el-button size="mini" v-else type="primary" @click="updateData"
+            >確認</el-button
+          >
         </div>
       </el-dialog>
 
@@ -183,6 +247,7 @@ import waves from "@/directive/waves"; // 水波紋指令
 import Sticky from "@/components/Sticky";
 import permissionBtn from "@/components/PermissionBtn";
 import Pagination from "@/components/Pagination";
+import Title from "@/components/ConsoleTableTitle";
 import elDragDialog from "@/directive/el-dragDialog";
 import addRule from "./addRule";
 import { mapGetters, mapActions } from "vuex";
@@ -193,6 +258,7 @@ export default {
     permissionBtn,
     Pagination,
     addRule,
+    Title,
   },
   directives: {
     waves,
@@ -491,11 +557,14 @@ export default {
 };
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
-.dialog-mini .el-select {
+<style rel="stylesheet/scss" lang="scss" scoped>
+::v-deep .el-table__body-wrapper {
+  height: 100% !important;
+}
+::v-deep .dialog-mini .el-select {
   width: 100%;
 }
-.data-rule-wrap {
+::v-deep .data-rule-wrap {
   .ruleSpan {
     cursor: pointer;
     color: #409eff;
@@ -519,15 +588,15 @@ export default {
     overflow: hidden;
   }
 }
-.part-box {
+::v-deep .part-box {
   width: 200px;
   border: 1px solid #e4e4e4;
 }
-.table-box {
+::v-deep .table-box {
   border: 1px solid #e4e4e4;
   border-left: 0;
 }
-.rule-group-box {
+::v-deep .rule-group-box {
   border-radius: 5px;
   overflow: hidden;
   margin-bottom: 10px;

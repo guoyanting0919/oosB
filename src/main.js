@@ -1,5 +1,7 @@
 import Vue from "vue";
 import layer from "vue-layer";
+import axios from "axios";
+import VueAxios from "vue-axios";
 
 /* css reset */
 import "normalize.css/normalize.css";
@@ -43,6 +45,7 @@ import "@/assets/iconfont/iconfont.js";
 /* all.scss(建議放套件Css下層) */
 import "../src/assets/all.scss";
 
+Vue.use(VueAxios, axios);
 Vue.use(ElementUI, { locale });
 Vue.use(VueSweetalert2);
 Vue.use(VueContextMenu);

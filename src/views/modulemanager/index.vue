@@ -28,7 +28,8 @@
       </div>
     </sticky>
     <div class="app-container flex-item">
-      <el-row class="fh">
+      <Title title="模塊管理"></Title>
+      <el-row class="fh" style="overflow-y: auto; height: calc(100% - 50px)">
         <el-col :span="10" class="fh ls-border">
           <el-card
             shadow="never"
@@ -432,6 +433,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import waves from "@/directive/waves"; // 水波紋指令
 import Sticky from "@/components/Sticky";
 import permissionBtn from "@/components/PermissionBtn";
+import Title from "@/components/ConsoleTableTitle";
 import elDragDialog from "@/directive/el-dragDialog";
 import iconData from "@/assets/iconfont/iconfont.json";
 export default {
@@ -442,6 +444,7 @@ export default {
     Treeselect,
     treeTable,
     Pagination,
+    Title,
   },
   directives: {
     waves,

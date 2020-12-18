@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@riophae/vue-treeselect": "0.0.36",
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "blob": "^0.1.0",
     "core-js": "^3.6.4",
     "echarts": "^3.8.5",
@@ -27,6 +27,7 @@
     "nprogress": "0.2.0",
     "v-charts": "^1.19.0",
     "vue": "^2.6.11",
+    "vue-axios": "^3.2.0",
     "vue-codemirror-lite": "^1.0.4",
     "vue-contextmenu": "^1.5.10",
     "vue-count-to": "^1.0.13",

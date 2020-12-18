@@ -5,6 +5,8 @@
   >
     <el-menu
       mode="vertical"
+      class="test"
+      :style="{ background: themeStatus ? '#fffff' : '#dbf3ff' }"
       :show-timeout="200"
       :default-active="$route.path"
       :collapse="isCollapse"
