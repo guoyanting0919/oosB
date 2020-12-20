@@ -7,6 +7,17 @@
   text-align: center;
 }
 
+.d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.xsBtn {
+  padding: 0.25rem !important;
+  margin-left: 0.5rem !important;
+}
+
 // 共用scrollBar
 .customScrollBar {
   &::-webkit-scrollbar {

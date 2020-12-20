@@ -6,3 +6,11 @@ export function upload(data) {
     data,
   });
 }
+
+export function getFileById(params) {
+  return request({
+    url: "/Files/getFile",
+    method: "get",
+    params,
+  });
+}

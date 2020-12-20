@@ -78,6 +78,7 @@ export default {
     return {
       /* 權限按鈕 */
       buttons: [],
+      multipleSelection: [],
       list: [{ name: "aaaa" }], // 菜單列表
       total: 10,
       listLoading: false,
@@ -120,7 +121,9 @@ export default {
       this.$cl(domId);
     },
     rowClick() {},
-    handleSelectionChange() {},
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     handleCurrentChange(val) {
       this.listQuery.page = val.page;
       this.listQuery.limit = val.limit;
