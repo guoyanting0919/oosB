@@ -61,6 +61,12 @@
           ></el-table-column>
           <el-table-column
             align="center"
+            prop="createDate"
+            width="170"
+            label="投稿日期"
+          ></el-table-column>
+          <el-table-column
+            align="center"
             prop="files"
             width="100"
             label="下載稿件"
@@ -74,7 +80,7 @@
                   type="primary"
                   plain
                 >
-                  <i class="iconfont icon-download"></i>
+                  <i class="iconfont icon-Clouddownload"></i>
                 </el-button>
               </div>
             </template>
@@ -108,9 +114,20 @@
                 >
                   <i class="iconfont icon-edit"></i>
                 </el-button>
+                <el-tooltip
+                  placement="top"
+                  v-if="
+                    scope.row.initStatusId === 'INITSTATUS_PASS' ||
+                    scope.row.initStatusId === 'INITSTATUS_UNPASS'
+                  "
+                >
+                  <div slot="content">{{ scope.row.initStatusSuggest }}</div>
+                  <i class="iconfont icon-mouse"></i>
+                </el-tooltip>
               </div>
             </template>
           </el-table-column>
+
           <el-table-column
             align="center"
             prop="reviewStatusName"
@@ -140,6 +157,16 @@
                 >
                   <i class="iconfont icon-edit"></i>
                 </el-button>
+                <el-tooltip
+                  placement="top"
+                  v-if="
+                    scope.row.reviewStatusId === 'REVIEWSTATUS_PASS' ||
+                    scope.row.reviewStatusId === 'REVIEWSTATUS_UNPASS'
+                  "
+                >
+                  <div slot="content">{{ scope.row.reviewStatusSuggest }}</div>
+                  <i class="iconfont icon-mouse"></i>
+                </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -183,9 +210,14 @@
           >
             <template slot-scope="scope">
               <div class="d-flex">
-                <p>
-                  {{ scope.row.period || "-" }}
-                </p>
+                <a
+                  target="blank"
+                  :href="scope.row.periodUrl"
+                  v-if="scope.row.period"
+                  >{{ scope.row.period }}期
+                  <i class="iconfont icon-link"></i>
+                </a>
+                <p v-if="!scope.row.period">-</p>
                 <el-button
                   v-if="
                     scope.row.useSituation === '採用' && scope.row.period === ''
@@ -651,6 +683,7 @@ export default {
   padding: 0 0.5rem;
   background: $success;
   border-radius: 0.25rem;
+  width: 58px;
 }
 
 .unPass {

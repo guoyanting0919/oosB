@@ -4,11 +4,11 @@
       <!-- loginTitle -->
       <div class="loginTitle">
         <h1 class="cityTitle" @click="loginBy('System', '123456')">
-          {{ title }}
+          線上投稿管理後台
         </h1>
-        <!-- <h5 class="cityDescrip" @click="loginBy('r')">
-          長照交通接送統一預約服務及管理系統
-        </h5> -->
+        <h5 class="cityDescrip" @click="loginBy('r')">
+          工業污染防治刊物及綠色技術工程實務論文研討會
+        </h5>
       </div>
       <!-- adminLogin -->
       <div class="adminLogin" v-if="isForget == 1">

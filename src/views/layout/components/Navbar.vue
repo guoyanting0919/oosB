@@ -1,8 +1,8 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
-    <div class="logo" style="height: 50px">
-      <!-- <img class="user-avatar" :src="logo" /> -->
-      <div class="user-avatar-text">LOGO</div>
+    <div class="logo" style="height: 40px; padding: 0 0.5rem">
+      <img style="height: 30px; width: 184px" class="user-avatar" :src="logo" />
+      <!-- <div class="user-avatar-text">LOGO</div> -->
     </div>
     <hamburger
       class="hamburger-container"
@@ -50,7 +50,7 @@
             />
           </span>
         </el-dropdown-item>
-        <el-dropdown-item>
+        <!-- <el-dropdown-item>
           <span>
             切換主題
             <el-switch
@@ -60,7 +60,7 @@
               v-model="theme"
             />
           </span>
-        </el-dropdown-item>
+        </el-dropdown-item> -->
         <el-dropdown-item command="logout" divided>
           <span>退出</span>
         </el-dropdown-item>
@@ -72,7 +72,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import Hamburger from "@/components/Hamburger";
-import logo from "@/assets/images/尖石logo.png";
+import logo from "@/assets/images/LOGO.png";
 
 export default {
   data: function () {

@@ -61,6 +61,12 @@
           ></el-table-column>
           <el-table-column
             align="center"
+            prop="createDate"
+            width="170"
+            label="投稿日期"
+          ></el-table-column>
+          <el-table-column
+            align="center"
             prop="files"
             width="100"
             label="下載稿件"
@@ -71,9 +77,10 @@
                   size="mini"
                   class="xsBtn"
                   @click="handleDownload(scope.row.files)"
-                  type="warning"
+                  type="primary"
+                  plain
                 >
-                  <i class="iconfont icon-download"></i>
+                  <i class="iconfont icon-Clouddownload"></i>
                 </el-button>
               </div>
             </template>
@@ -93,7 +100,8 @@
                   size="mini"
                   class="xsBtn"
                   @click="handleDialog('summaryStatus', true, scope.row)"
-                  type="warning"
+                  type="primary"
+                  plain
                 >
                   <i class="iconfont icon-edit"></i>
                 </el-button>
@@ -108,17 +116,34 @@
           >
             <template slot-scope="scope">
               <div class="d-flex">
-                <p>
+                <p
+                  :class="{
+                    pass: scope.row.statusId === 'INITSTATUS_PASS',
+                    unPass: scope.row.statusId === 'INITSTATUS_UNPASS',
+                  }"
+                >
                   {{ scope.row.statusName || "-" }}
                 </p>
+
                 <el-button
                   size="mini"
                   class="xsBtn"
                   @click="handleDialog('reviewStatus', true, scope.row)"
-                  type="warning"
+                  type="primary"
+                  plain
                 >
                   <i class="iconfont icon-edit"></i>
                 </el-button>
+                <el-tooltip
+                  placement="top"
+                  v-if="
+                    scope.row.statusId === 'INITSTATUS_PASS' ||
+                    scope.row.statusId === 'INITSTATUS_UNPASS'
+                  "
+                >
+                  <div slot="content">{{ scope.row.suggest }}</div>
+                  <i class="iconfont icon-mouse"></i>
+                </el-tooltip>
               </div>
             </template>
           </el-table-column>
@@ -137,7 +162,8 @@
                   size="mini"
                   class="xsBtn"
                   @click="handleDialog('draftDate', true, scope.row)"
-                  type="warning"
+                  type="primary"
+                  plain
                 >
                   <i class="iconfont icon-edit"></i>
                 </el-button>
@@ -152,11 +178,19 @@
           >
             <template slot-scope="scope">
               <div class="d-flex">
-                <p>
-                  {{ scope.row.submissionFile }}
+                <p v-if="scope.row.submissionFile">
+                  <el-button
+                    size="mini"
+                    class="xsBtn"
+                    @click="handleDownload(scope.row.submissionFile)"
+                    type="danger"
+                    plain
+                  >
+                    <i class="iconfont icon-Clouddownload"></i>
+                  </el-button>
                 </p>
                 <el-upload
-                  v-if="!scope.row.submissionFile"
+                  v-else
                   :show-file-list="false"
                   accept=".jpeg"
                   class="upload-demo"
@@ -169,6 +203,7 @@
                     class="xsBtn"
                     size="small"
                     type="primary"
+                    plain
                   >
                     <i class="iconfont icon-Cloudupload"></i
                   ></el-button>
@@ -218,7 +253,9 @@
         <el-button @click="handleDialog('summaryStatus', false)"
           >取 消</el-button
         >
-        <el-button type="primary" @click="handleSummaryStatus">確 定</el-button>
+        <el-button type="primary" plain @click="handleSummaryStatus"
+          >確 定</el-button
+        >
       </span>
     </el-dialog>
 
@@ -270,7 +307,9 @@
         <el-button @click="handleDialog('reviewStatus', false)"
           >取 消</el-button
         >
-        <el-button type="primary" @click="handleReviewStatus">確 定</el-button>
+        <el-button type="primary" plain @click="handleReviewStatus"
+          >確 定</el-button
+        >
       </span>
     </el-dialog>
 
@@ -299,7 +338,9 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleDialog('draftDate', false)">取 消</el-button>
-        <el-button type="primary" @click="handleDraftDate">確 定</el-button>
+        <el-button type="primary" plain @click="handleDraftDate"
+          >確 定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -576,5 +617,19 @@ export default {
 };
 </script>
 
-<style>
+<style lang='scss' scoped>
+.pass {
+  color: #ffffff;
+  padding: 0 0.5rem;
+  background: $success;
+  border-radius: 0.25rem;
+  width: 58px;
+}
+
+.unPass {
+  color: #ffffff;
+  padding: 0 0.5rem;
+  background: $danger;
+  border-radius: 0.25rem;
+}
 </style>
